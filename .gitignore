@@ -1,4 +1,7 @@
-# Visual Studio
+############################
+# ARCHIVOS DE VISUAL STUDIO
+############################
+
 .vs/
 *.vcxproj.user
 *.suo
@@ -6,33 +9,60 @@
 *.cache
 *.db
 *.opendb
-*.tlog
-*.log
-*.pdb
-*.idb
-*.ipch
-*.obj
-*.ilk
-*.pch
-*.tmp
-*.sdf
-*.sqlite
 *.VC.db
 *.VC.opendb
+*.sdf
+*.sqlite
 
-# Build
+############################
+# CARPETAS DE COMPILACIÓN
+############################
+
 Debug/
 Release/
 x64/
 x86/
+bin/
+tmp/
 
-# Otros temporales
-*.exe
-*.dll
-*.manifest
+############################
+# ARCHIVOS TEMPORALES
+############################
+
+*.obj
+*.idb
+*.pdb
+*.ipch
+*.tlog
+*.log
+*.ilk
+*.pch
+*.tmp
 *.res
 *.aps
 *.ncb
 *.sbr
 *.tlh
 *.tli
+
+############################
+# EJECUTABLES Y LIBRERÍAS
+############################
+
+*.exe
+*.dll
+*.lib
+*.app
+*.out
+*.so
+*.dylib
+*.a
+*.la
+*.lai
+
+############################
+# OTROS
+############################
+
+*.manifest
+*.lastbuildstate
