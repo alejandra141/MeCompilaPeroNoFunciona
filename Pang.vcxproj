@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bolos_Stroker.cpp" />
     <ClCompile Include="Boxeador_Kickboxing.cpp" />
     <ClCompile Include="Boxeador_Normal.cpp" />
     <ClCompile Include="Pang.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Tablero.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bolos_Stroker.h" />
     <ClInclude Include="Boxeador_Kickboxing.h" />
     <ClInclude Include="Boxeador_Normal.h" />
     <ClInclude Include="Color.h" />
