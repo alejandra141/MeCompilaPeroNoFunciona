@@ -159,6 +159,10 @@
     <ClCompile Include="Bolos_Stroker.cpp" />
     <ClCompile Include="Boxeador_Kickboxing.cpp" />
     <ClCompile Include="Boxeador_Normal.cpp" />
+    <ClCompile Include="CombateBaloncesto.cpp" />
+    <ClCompile Include="CombateBolos.cpp" />
+    <ClCompile Include="CombateBoxeo.cpp" />
+    <ClCompile Include="Combates.cpp" />
     <ClCompile Include="Jugador_Baloncesto.cpp" />
     <ClCompile Include="Pang.cpp" />
     <ClCompile Include="Cuadrado.cpp" />
@@ -170,6 +174,10 @@
     <ClInclude Include="Boxeador_Kickboxing.h" />
     <ClInclude Include="Boxeador_Normal.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="CombateBaloncesto.h" />
+    <ClInclude Include="CombateBolos.h" />
+    <ClInclude Include="CombateBoxeo.h" />
+    <ClInclude Include="Combates.h" />
     <ClInclude Include="Jugador_Baloncesto.h" />
     <ClInclude Include="Linea.h" />
     <ClInclude Include="Cuadrado.h" />
