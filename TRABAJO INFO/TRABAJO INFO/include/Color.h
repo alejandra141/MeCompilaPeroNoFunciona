@@ -1,5 +1,6 @@
 #pragma once
-#include "freeglut.h"
+#include <GL/freeglut.h>
+
 
 using unchar = unsigned char;
 

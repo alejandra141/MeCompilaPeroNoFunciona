@@ -131,7 +131,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="scr\Bolos_Cranker.cpp" />
+    <ClCompile Include="scr\Bolos_Stroker.cpp" />
+    <ClCompile Include="scr\Boxeador_Kickboxing.cpp" />
+    <ClCompile Include="scr\Boxeador_Normal.cpp" />
+    <ClCompile Include="scr\CombateBaloncesto.cpp" />
+    <ClCompile Include="scr\CombateBolos.cpp" />
+    <ClCompile Include="scr\CombateBoxeo.cpp" />
+    <ClCompile Include="scr\Combates.cpp" />
+    <ClCompile Include="scr\Cuadrado.cpp" />
+    <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
+    <ClCompile Include="scr\Tablero.cpp" />
     <ClCompile Include="Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Bolos_Cranker.h" />
+    <ClInclude Include="include\Bolos_Stroker.h" />
+    <ClInclude Include="include\Boxeador_Kickboxing.h" />
+    <ClInclude Include="include\Boxeador_Normal.h" />
+    <ClInclude Include="include\Color.h" />
+    <ClInclude Include="include\CombateBaloncesto.h" />
+    <ClInclude Include="include\CombateBolos.h" />
+    <ClInclude Include="include\CombateBoxeo.h" />
+    <ClInclude Include="include\Combates.h" />
+    <ClInclude Include="include\Cuadrado.h" />
+    <ClInclude Include="include\Jugador_Baloncesto.h" />
+    <ClInclude Include="include\Linea.h" />
+    <ClInclude Include="include\Tablero.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
