@@ -1,2 +1,0 @@
-# MeCompilaPeroNoFunciona
-Trabajo de infórmatica 

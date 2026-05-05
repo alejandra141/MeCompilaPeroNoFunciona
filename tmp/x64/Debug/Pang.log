@@ -1,5 +1,0 @@
-﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v180\Microsoft.CppBuild.targets(537,5): warning MSB8004: El directorio Output no termina con una barra diagonal final. Esta instancia de compilación agregará la barra diagonal porque es necesaria para que se pueda evaluar correctamente el directorio Output.
-  Pang.cpp
-  Tablero.cpp
-  Generando código...
-  Pang.vcxproj -> C:\Users\amayi\OneDrive\Escritorio\UNI\Tercero\2do CUATRI\Informática\Trabajo Informática\bin\Pang.exe
