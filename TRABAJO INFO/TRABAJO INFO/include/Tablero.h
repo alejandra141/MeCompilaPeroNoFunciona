@@ -4,8 +4,8 @@
 
 class Tablero {
 private:
-	Cuadrado tablero{ { -5,0,-5 }, {5,0,5}, {135,206,235} };
-	Cuadrado tablero{ { -4.6,0.01,-4.6 }, {4.6,0.01,4.6}, {34,139,34} };
+	Cuadrado fondo{ { -5,0,-5 }, {5,0,5}, {135,206,235} };
+	Cuadrado tablero_{ { -4.6,0.01,-4.6 }, {4.6,0.01,4.6}, {34,139,34} };
 	Cuadrado borde{ { -5,0,-5 }, {5,0,5}, {50,105,50} };
 	//Fila 1
 	Cuadrado casilla1{ { -4.6,0.02,-4.6 }, {-3.5,0.02,-3.55}, {0,0,0} };
@@ -22,7 +22,6 @@ private:
 	Cuadrado casilla10{ { -3.5,0.02,-1.55 }, {-2.5,0.02,-0.55}, {255,255,255} };
 
 
-
 public:
 	void dibuja() const;
-}
+};

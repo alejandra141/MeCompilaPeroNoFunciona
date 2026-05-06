@@ -1,9 +1,9 @@
 #include "Tablero.h"
 
 void Tablero::dibuja() const {
-	tablero.dibuja();
+	fondo.dibuja();
+	tablero_.dibuja();
 	borde.dibuja();
-	tablero.dibuja();
 	casilla1.dibuja();
 	casilla2.dibuja();
 	casilla3.dibuja();

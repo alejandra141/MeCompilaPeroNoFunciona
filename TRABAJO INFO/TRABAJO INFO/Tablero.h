@@ -4,7 +4,7 @@
 
 class Tablero {
 private:
-	Cuadrado tablero{ { -5,0,-5 }, {5,0,5}, {135,206,235} };
+	Cuadrado fondo{ { -5,0,-5 }, {5,0,5}, {135,206,235} };
 	Cuadrado tablero{ { -4.6,0.01,-4.6 }, {4.6,0.01,4.6}, {34,139,34} };
 	Cuadrado borde{ { -5,0,-5 }, {5,0,5}, {50,105,50} };
 	//Fila 1
