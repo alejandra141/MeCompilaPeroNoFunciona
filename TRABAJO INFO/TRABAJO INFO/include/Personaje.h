@@ -29,5 +29,5 @@ public:
     void mueve()  {
 
     }
-    Bando getBando() const { return bando; }
+    Bando getBando() const {  }
 };
