@@ -141,6 +141,7 @@
     <ClCompile Include="scr\Combates.cpp" />
     <ClCompile Include="scr\Cuadrado.cpp" />
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
+    <ClCompile Include="scr\Turnos.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="include\Cuadrado.h" />
     <ClInclude Include="include\Jugador_Baloncesto.h" />
     <ClInclude Include="include\Linea.h" />
+    <ClInclude Include="include\Turnos.h" />
     <ClInclude Include="include\Tablero.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

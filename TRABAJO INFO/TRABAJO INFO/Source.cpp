@@ -1,9 +1,18 @@
 #include "GL/freeglut.h"
 #include "math.h"
 #include "Tablero.h"
+#include <iostream>
+#include "Turnos.h"
+
+using std::cout;
+using std::endl;
+
+#define MOUSE_LEFT_BUTTON 0
+#define MOUSE_RIGHT_BUTTON 1
 
 
 Tablero tablero;
+Turnos turno; // turno todavía está un poco en proceso 
 
 
 //los callback, funciones que seran llamadas automaticamente por la glut
@@ -12,6 +21,9 @@ Tablero tablero;
 void OnDraw(void);		 //esta funcion sera llamada para dibujar
 void OnTimer(int value); //esta funcion sera llamada cuando transcurra una temporizacion
 void OnKeyboardDown(unsigned char key, int x, int y); //cuando se pulse una tecla	
+
+void OnMouseClick(int button, int state, int x, int y); // para el ratón
+
 
 int main(int argc, char* argv[])
 {
@@ -35,6 +47,7 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(OnDraw);
 	glutTimerFunc(25, OnTimer, 0);//le decimos que dentro de 25ms llame 1 vez a la funcion OnTimer()
 	glutKeyboardFunc(OnKeyboardDown);
+	glutMouseFunc(OnMouseClick); //la función del ratón
 
 	//pasarle el control a GLUT,que llamara a los callbacks
 	glutMainLoop();
@@ -77,3 +90,31 @@ void OnTimer(int value)
 	glutPostRedisplay();
 
 }
+
+void OnMouseClick(int b, int state, int x, int y)
+{
+	bool down = (state == GLUT_DOWN);
+	int button = -1;
+
+	if (b == GLUT_LEFT_BUTTON) {
+		button = MOUSE_LEFT_BUTTON;
+	}
+	else if (b == GLUT_RIGHT_BUTTON) {
+		button = MOUSE_RIGHT_BUTTON;
+		std::cout << "MOUSE_RIGHT_BUTTON" << std::endl;
+	}
+
+	// Ignorar otros botones
+	if (button == -1)
+		return;
+
+	int modifiers = glutGetModifiers();
+
+	bool ctrlKey = (modifiers & GLUT_ACTIVE_CTRL) != 0;
+	bool sKey = (modifiers & GLUT_ACTIVE_SHIFT) != 0;
+
+	//pantalla.MouseButton(x, y, button, down, sKey, ctrlKey);ESTO ES POR SI QUEREMOS QUE EN LA PANTALLA SALGAN INSTRUCCIONES
+
+	glutPostRedisplay();
+}
+
