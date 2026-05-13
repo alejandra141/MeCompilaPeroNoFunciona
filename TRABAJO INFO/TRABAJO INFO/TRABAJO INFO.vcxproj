@@ -141,9 +141,9 @@
     <ClCompile Include="scr\Combates.cpp" />
     <ClCompile Include="scr\Cuadrado.cpp" />
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
-    <ClCompile Include="scr\Turnos.cpp" />
     <ClCompile Include="scr\Personajes.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
+    <ClCompile Include="scr\Textura.cpp" />
     <ClCompile Include="scr\Turnos.cpp" />
     <ClCompile Include="scr\Vector2D.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -161,9 +161,9 @@
     <ClInclude Include="include\Cuadrado.h" />
     <ClInclude Include="include\Jugador_Baloncesto.h" />
     <ClInclude Include="include\Linea.h" />
-    <ClInclude Include="include\Turnos.h" />
     <ClInclude Include="include\Personaje.h" />
     <ClInclude Include="include\Tablero.h" />
+    <ClInclude Include="include\Textura.h" />
     <ClInclude Include="include\Turnos.h" />
     <ClInclude Include="include\Vector2D.h" />
   </ItemGroup>
