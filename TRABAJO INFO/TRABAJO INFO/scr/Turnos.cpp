@@ -1,8 +1,9 @@
 #include "Turnos.h"
 
-// DEFINICIÓN VARIABLE
-Bando turno = BUENOS;
-
-void cambiarTurno() {
-    turno = (turno == BUENOS ? MALOS : BUENOS);
-}
+void Turnos::cambiarTurno()
+{
+	if (turnoActual == BUENOS)
+		turnoActual = MALOS;
+	else
+		turnoActual = BUENOS;
+};

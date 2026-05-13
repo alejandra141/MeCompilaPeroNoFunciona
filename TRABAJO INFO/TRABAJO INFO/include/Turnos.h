@@ -1,8 +1,19 @@
 #pragma once
 
-enum Bando { BUENOS, MALOS };
+enum bandos
+{
+	BUENOS,
+	MALOS
+};
 
-//  DECLARACIÓN 
-extern Bando turno;
+class Turnos {
+private:
+	bandos turnoActual;
 
-void cambiarTurno();
+public:
+	Turnos() { turnoActual = BUENOS; };
+	bandos getTurnoActual() { return turnoActual; };
+
+	void cambiarTurno();
+};
+
