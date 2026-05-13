@@ -24,6 +24,9 @@ x64/
 x86/
 bin/
 tmp/
+git add -f lib/
+git commit -m "Añadir librería DLL necesaria para el proyecto"
+git push
 
 ############################
 # ARCHIVOS TEMPORALES
@@ -50,8 +53,6 @@ tmp/
 ############################
 
 *.exe
-*.dll
-*.lib
 *.app
 *.out
 *.so
