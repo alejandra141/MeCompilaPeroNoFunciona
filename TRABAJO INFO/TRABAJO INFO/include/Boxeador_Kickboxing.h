@@ -1,12 +1,27 @@
 #pragma once
-class Boxeador_Kickboxing
-{
-private:
-    int vida;
-    int fuerza;
-    int defensa;
-    float velocidad;
-    float agilidad;
-    int estela;
-};
+#include "Personaje.h"
 
+class Boxeador_Kickboxing : public Personaje {
+public:
+    Boxeador_Kickboxing(Bando b, float px, float pz)
+        : Personaje(b, px, pz)
+    {
+        // Estadísticas específicas del boxeador normal
+        vida = 120;
+        fuerza = 20;
+        defensa = 12;
+        velocidad = 1.1f;
+        agilidad = 1.0f;
+        estela = 1;
+    }
+
+    void dibuja()   {
+
+    }
+    void mueve()   {
+
+    }
+    void habilidadEspecial()  {
+       
+    }
+};

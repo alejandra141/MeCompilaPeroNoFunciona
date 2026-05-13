@@ -142,7 +142,10 @@
     <ClCompile Include="scr\Cuadrado.cpp" />
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
     <ClCompile Include="scr\Turnos.cpp" />
+    <ClCompile Include="scr\Personajes.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
+    <ClCompile Include="scr\Turnos.cpp" />
+    <ClCompile Include="scr\Vector2D.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,7 +162,10 @@
     <ClInclude Include="include\Jugador_Baloncesto.h" />
     <ClInclude Include="include\Linea.h" />
     <ClInclude Include="include\Turnos.h" />
+    <ClInclude Include="include\Personaje.h" />
     <ClInclude Include="include\Tablero.h" />
+    <ClInclude Include="include\Turnos.h" />
+    <ClInclude Include="include\Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
