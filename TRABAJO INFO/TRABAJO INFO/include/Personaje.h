@@ -10,7 +10,7 @@ private:
     Textura tex;
 
 public:
-    Bando bando;
+    bandos bando;
     int vida;
     int fuerza;
     int defensa;
@@ -19,20 +19,11 @@ public:
     int estela;
     vector2D posicion;
 
-    Personaje(Bando b, float px, float py)
-        : bando(b), posicion(px, py),
-        vida(100), fuerza(10), defensa(5),
-        velocidad(1.0f), agilidad(1.0f), estela(1)
-    {
-    }
+    Personaje(bandos b, float px, float py, const char* rutaTextura);
 
 
-    void dibuja() const  {
-        
-    }
+    void dibuja() const;
 
-    void mueve()  {
 
-    }
-    Bando getBando() const {  }
+    bandos getBando() const { return bando; }
 };

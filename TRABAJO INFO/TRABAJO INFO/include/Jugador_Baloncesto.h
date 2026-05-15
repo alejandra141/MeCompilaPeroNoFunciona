@@ -3,12 +3,12 @@
 
 class Jugador_Baloncesto : public Personaje {
 public:
-    Jugador_Baloncesto(Bando b, float px, float pz)
-        : Personaje(b, px, pz)
+    Jugador_Baloncesto(bandos b, float px, float py)
+        : Personaje(b, px, py, "Personajes/Espana/buenos/Jugador_Baloncesto_ESP.png")
     {
-        // Estadísticas específicas del boxeador normal
-        vida = 120;
-        fuerza = 20;
+        // Estadísticas específicas del jugador de baloncesto
+        vida = 130;
+        fuerza = 22;
         defensa = 12;
         velocidad = 1.1f;
         agilidad = 1.0f;

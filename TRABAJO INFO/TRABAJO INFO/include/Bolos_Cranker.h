@@ -3,8 +3,8 @@
 
 class Bolos_Cranker : public Personaje {
 public:
-    Bolos_Cranker(Bando b, float px, float pz)
-        : Personaje(b, px, pz)
+    Bolos_Cranker(bandos b, float px, float py)
+        : Personaje(b, px, py, "Personajes/Espana/buenos/Cranker_ESP.png")
     {
         // Estadísticas específicas del boxeador normal
         vida = 120;

@@ -3,8 +3,8 @@
 
 class Bolos_Stroker : public Personaje {
 public:
-    Bolos_Stroker(Bando b, float px, float pz)
-        : Personaje(b, px, pz)
+    Bolos_Stroker(bandos b, float px, float py)
+        : Personaje(b, px, py, "Personajes/Espana/buenos/Bolos_Stroker_ESP.png")
     {
         // Estadísticas específicas del boxeador normal
         vida = 120;

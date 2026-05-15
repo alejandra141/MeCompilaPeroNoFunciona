@@ -3,8 +3,8 @@
 
 class Boxeador_Normal : public Personaje {
 public:
-    Boxeador_Normal(Bando b, float px, float pz)
-        : Personaje(b, px, pz)
+    Boxeador_Normal(bandos b, float px, float py)
+        : Personaje(b, px, py, "Personajes/Espana/buenos/BoxeadorNormal_ESP.png")
     {
         // Estadísticas específicas del boxeador normal
         vida = 120;
