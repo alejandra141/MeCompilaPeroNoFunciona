@@ -1,12 +1,10 @@
-#pragma once
-class Boxeador_Normal
-{
-private:
-    int vida;
-    int fuerza;
-    int defensa;
-    float velocidad;
-    float agilidad;
-    int estela;
-};
+//Boxeador_Normal.h
 
+#pragma once
+#include "Boxeador.h"
+
+class Boxeador_Normal : public Boxeador {
+public:
+    // El constructor asignará los valores base fijos
+    Boxeador_Normal(int numJugador);
+};
