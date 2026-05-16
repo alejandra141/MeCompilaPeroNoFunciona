@@ -1,5 +1,4 @@
 #pragma once
-#include "Personaje.h"
 
 class Bolos_Stroker : public Personaje {
 public:
