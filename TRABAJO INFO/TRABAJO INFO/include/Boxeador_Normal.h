@@ -1,9 +1,7 @@
-//Boxeador_Normal.h
-
 #pragma once
-#include "Boxeador.h"
+#include "Personaje.h"
 
-class Boxeador_Normal : public Boxeador {
+class Boxeador_Normal : public Personaje {
 public:
     Boxeador_Normal(bandos b, float px, float py)
         : Personaje(b, px, py, "Personajes/Espana/buenos/BoxeadorNormal_ESP.png")
@@ -26,6 +24,4 @@ public:
     void habilidadEspecial()  {
         
     }
-    // El constructor asignará los valores base fijos
-    Boxeador_Normal(int numJugador);
 };
