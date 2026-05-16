@@ -9,7 +9,4 @@ struct Color {
 	unchar v; 
 	unchar a;
 
-void color() const {
-	glColor3ub(r, v, a); 
-}
 };

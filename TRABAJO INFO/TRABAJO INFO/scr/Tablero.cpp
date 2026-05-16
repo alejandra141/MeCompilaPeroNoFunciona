@@ -1,29 +1,7 @@
 #include "Tablero.h"
 
-
-
-
 void Tablero::dibuja() const {
-
-	glEnable(GL_TEXTURE_2D);
-
 	fondo.dibuja();
 	tablero_.dibuja();
-	borde.dibuja();
-	casilla1.dibuja();
-	casilla2.dibuja();
-	casilla3.dibuja();
-	casilla4.dibuja();
-	casilla5.dibuja();
-	casilla6.dibuja();
-	casilla7.dibuja();
-
-	casilla8.dibuja();
-	casilla9.dibuja();
-	casilla10.dibuja();
-
-	jugador1.dibuja();
-
-
-
-};
+	
+}

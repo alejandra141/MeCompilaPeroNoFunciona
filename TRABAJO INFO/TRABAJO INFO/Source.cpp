@@ -32,15 +32,7 @@ int main(int argc, char* argv[])
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_COLOR_MATERIAL);
 
-    // ACTIVAR 2D
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(-10, 10, -10, 10);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glEnable(GL_TEXTURE_2D);
+   
 
     // CALLBACKS
     glutDisplayFunc(OnDraw);
@@ -56,13 +48,24 @@ void OnDraw(void)
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-5, 5, -5, 5);
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
+
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+
     tablero.dibuja();
 
     glutSwapBuffers();
 }
+
+
+
+
 
 void OnKeyboardDown(unsigned char key, int x, int y)
 {

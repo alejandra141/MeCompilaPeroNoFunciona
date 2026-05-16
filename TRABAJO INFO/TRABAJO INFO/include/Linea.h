@@ -1,9 +1,6 @@
 #pragma once
 
-struct Linea{
-	double x{};
-	double y{};
-	double z{};
-
-
+struct Linea {
+    double x{};
+    double y{};
 };
