@@ -1,19 +1,11 @@
 #include "GL/freeglut.h"
 #include "math.h"
-#include "Tablero.h"
 #include <iostream>
-#include "Turnos.h"
+#include "FlujoJuego.h"
 
-using std::cout;
-using std::endl;
+FlujoJuego flujo;
 
-#define MOUSE_LEFT_BUTTON 0
-#define MOUSE_RIGHT_BUTTON 1
-
-Tablero tablero;
-Turnos turno;
-
-// DECLARACIÓN DE CALLBACKS
+// CALLBACKS
 void OnDraw(void);
 void OnTimer(int value);
 void OnKeyboardDown(unsigned char key, int x, int y);
@@ -26,15 +18,11 @@ int main(int argc, char* argv[])
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutCreateWindow("MiJuego");
 
-    // DESACTIVAR TODO LO 3D
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_COLOR_MATERIAL);
 
-   
-
-    // CALLBACKS
     glutDisplayFunc(OnDraw);
     glutTimerFunc(25, OnTimer, 0);
     glutKeyboardFunc(OnKeyboardDown);
@@ -55,44 +43,24 @@ void OnDraw(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
-
-    tablero.dibuja();
+    flujo.dibujar();   // ← AHORA dibuja el estado actual (tablero o combate)
 
     glutSwapBuffers();
 }
 
-
-
-
-
 void OnKeyboardDown(unsigned char key, int x, int y)
 {
+    flujo.tecla(key);  // ← Cambia de pantalla si pulsas 1,2,3
 }
 
 void OnTimer(int value)
 {
+    flujo.actualizar();  // ← Actualiza el estado actual
     glutTimerFunc(100, OnTimer, 0);
     glutPostRedisplay();
 }
 
 void OnMouseClick(int b, int state, int x, int y)
 {
-    bool down = (state == GLUT_DOWN);
-    int button = -1;
-
-    if (b == GLUT_LEFT_BUTTON)
-        button = MOUSE_LEFT_BUTTON;
-    else if (b == GLUT_RIGHT_BUTTON)
-        button = MOUSE_RIGHT_BUTTON;
-
-    if (button == -1)
-        return;
-
-    int modifiers = glutGetModifiers();
-    bool ctrlKey = (modifiers & GLUT_ACTIVE_CTRL) != 0;
-    bool sKey = (modifiers & GLUT_ACTIVE_SHIFT) != 0;
-
-    glutPostRedisplay();
+    // si quieres usar ratón más adelante
 }
