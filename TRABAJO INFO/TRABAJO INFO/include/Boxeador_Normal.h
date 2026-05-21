@@ -1,3 +1,16 @@
+//Boxeador_Normal.h
+
+#pragma once
+#include "Boxeador.h"
+
+class Boxeador_Normal : public Boxeador {
+public:
+    // El constructor asignará los valores base fijos
+    Boxeador_Normal(int numJugador);
+};
+
+
+/*LORENA
 #pragma once
 #include "Personaje.h"
 
@@ -14,14 +27,5 @@ public:
         agilidad = 1.0f;
         estela = 1;
     }
-
-    void dibuja()  {
-       
-    }
-    void mueve()  {
-
-    }
-    void habilidadEspecial()  {
-        
-    }
 };
+*/
