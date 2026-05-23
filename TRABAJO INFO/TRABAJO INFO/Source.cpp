@@ -2,7 +2,9 @@
 #include "math.h"
 #include <iostream>
 #include "FlujoJuego.h"
+#include "Tablero.h"
 
+Tablero tablero;
 FlujoJuego flujo;
 
 // CALLBACKS
@@ -13,6 +15,7 @@ void OnMouseClick(int button, int state, int x, int y);
 
 int main(int argc, char* argv[])
 {
+    
     glutInit(&argc, argv);
     glutInitWindowSize(800, 600);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -34,8 +37,9 @@ int main(int argc, char* argv[])
 
 void OnDraw(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    tablero.dibuja();
     // --- PROYECCIÓN 3D ---
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
