@@ -1,17 +1,18 @@
 
 #pragma once
 #include "ETSIDI.h"
+#include "Linea.h"
 
 class Canasta {
 private:
-    float x, y, z;          
+    Linea pos;      
+    Linea vel;
     float ancho, alto;      
     GLuint texID;
 
 public:
-    Canasta(float px = 0, float py = 0, float pz = 0);
-
+    Canasta(const Linea& p);
     void dibuja();
     void mueve(float t);
-    void setPos(float px, float py, float pz);
+    void setPos(const Linea& p);
 };

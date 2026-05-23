@@ -27,8 +27,8 @@ EstadoCombate::~EstadoCombate() {
     delete combate;
 }
 
-void EstadoCombate::actualizar() {
-    combate->actualizar();
+void EstadoCombate::mueve() {
+    combate->mueve();
 }
 
 void EstadoCombate::dibujar() {

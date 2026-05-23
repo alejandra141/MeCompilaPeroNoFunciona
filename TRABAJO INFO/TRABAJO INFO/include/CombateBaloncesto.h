@@ -11,7 +11,8 @@ private:
 public:
     CombateBaloncesto();
 
-    void actualizar() override;
+  
+    void mueve() ;
     void dibujar() override;
     void tecla(unsigned char key) override;
 };

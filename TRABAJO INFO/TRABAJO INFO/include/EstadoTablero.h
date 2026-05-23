@@ -11,7 +11,7 @@ private:
 public:
     EstadoTablero(FlujoJuego* f);
 
-    void actualizar() override;
+    void mueve() override;
     void dibujar() override;
     void tecla(unsigned char key) override;
 };

@@ -1,29 +1,32 @@
 #include "Canasta.h"
+#include <iostream>    
 
-Canasta::Canasta(float px, float py, float pz) { //constructor con parámetros para la posición inicial de la canasta   guarda la posicion inicial  define el tamaño y guarda el ID de la txtura 
+Canasta::Canasta(const Linea& p) {
+    pos = p;
 
-    x = px;
-    y = py;
-    z = pz;
+    ancho = 60.0f;
+    alto = 50.0f;
 
-    ancho = 35.0f;
-    alto = 35.0f;
+    vel = { 3.0f, 0.0f, 0.0f };   // velocidad horizontal
 
-    texID = ETSIDI::getTexture("elementos/canasta.png").id;
+    texID = ETSIDI::getTexture("elementos/canasta_1.png").id;
 }
 
-void Canasta::setPos(float px, float py, float pz) {  //va a servir para mover la canasta a lo largo del juego, actualizando su posición según los parámetros dados
-    x = px;
-    y = py;
-    z = pz;
+void Canasta::setPos(const Linea& p) {
+    pos = p;
 }
 
 void Canasta::mueve(float t) {
-    
+    std::cout << "Moviendo canasta. X = " << pos.x << std::endl;
+    pos.x += vel.x * t;
+
+    if (pos.x > 9) vel.x = -vel.x;
+    if (pos.x < -9) vel.x = -vel.x;
 }
 
 void Canasta::dibuja() {
 
+  
     glDisable(GL_LIGHTING);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -34,14 +37,14 @@ void Canasta::dibuja() {
 
     glBegin(GL_POLYGON);
 
-    glTexCoord2d(0, 1); glVertex3f(x - ancho / 2, y, z);
-    glTexCoord2d(1, 1); glVertex3f(x + ancho / 2, y, z);
-    glTexCoord2d(1, 0); glVertex3f(x + ancho / 2, y + alto, z);
-    glTexCoord2d(0, 0); glVertex3f(x - ancho / 2, y + alto, z);
+    glTexCoord2d(0, 1); glVertex3f(pos.x - ancho / 2, pos.y, pos.z);
+    glTexCoord2d(1, 1); glVertex3f(pos.x + ancho / 2, pos.y, pos.z);
+    glTexCoord2d(1, 0); glVertex3f(pos.x + ancho / 2, pos.y + alto, pos.z);
+    glTexCoord2d(0, 0); glVertex3f(pos.x - ancho / 2, pos.y + alto, pos.z);
 
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
-    glDisable(GL_BLEND);
-}
+    }
+

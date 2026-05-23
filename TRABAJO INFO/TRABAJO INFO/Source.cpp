@@ -39,7 +39,7 @@ void OnDraw(void)
 {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    tablero.dibuja();
+   
     // --- PROYECCIÓN 3D ---
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -66,7 +66,7 @@ void OnKeyboardDown(unsigned char key, int x, int y)
 
 void OnTimer(int value)
 {
-    flujo.actualizar();  // ← Actualiza el estado actual
+    flujo.mueve();  // ← Actualiza el estado actual
     glutTimerFunc(100, OnTimer, 0);
     glutPostRedisplay();
 }

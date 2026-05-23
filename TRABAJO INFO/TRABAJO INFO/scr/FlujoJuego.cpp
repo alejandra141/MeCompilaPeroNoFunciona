@@ -14,8 +14,8 @@ void FlujoJuego::cambiarEstado(EstadoJuego* nuevo) {
     estadoActual = nuevo;
 }
 
-void FlujoJuego::actualizar() {
-    estadoActual->actualizar();
+void FlujoJuego::mueve() {
+    estadoActual->mueve();
 }
 
 void FlujoJuego::dibujar() {

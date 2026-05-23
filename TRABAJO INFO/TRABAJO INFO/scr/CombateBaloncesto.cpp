@@ -3,14 +3,13 @@
 #include "GL/freeglut.h"
 #include "ETSIDI.h"
 
-CombateBaloncesto::CombateBaloncesto()
-    : canasta(2, -20, -4)   // posición inicial de la canasta
+CombateBaloncesto::CombateBaloncesto() //constructor canasta con posición inicial   
+    : canasta(Linea{ 0, -25, -4 })
+    
 {
 }
 
-void CombateBaloncesto::actualizar() {
-    // Lógica del combate de baloncesto
-}
+
 
 void CombateBaloncesto::dibujar() {
     glDisable(GL_LIGHTING);      // que la luz no afecte al fondo
@@ -41,3 +40,11 @@ void CombateBaloncesto::dibujar() {
 void CombateBaloncesto::tecla(unsigned char key) {
     // Teclas del combate de baloncesto
 }
+
+
+void CombateBaloncesto::mueve()
+{
+    float t = 0.2f;  
+    canasta.mueve(t);   
+}
+

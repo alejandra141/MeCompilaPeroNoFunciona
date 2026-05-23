@@ -27,7 +27,7 @@ public:
 
     // Funciones principales del combate
     void iniciarPelea();    // Aquí sonará la campana de inicio
-    void actualizar();      // Aquí se comprueban las imágenes y teclas
+    void mueve();      // Aquí se comprueban las imágenes y teclas
     void finalizarPelea();  // Aquí sonará el K.O. o victoria
 
 

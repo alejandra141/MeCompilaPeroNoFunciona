@@ -4,7 +4,7 @@
 
 EstadoTablero::EstadoTablero(FlujoJuego* f) : flujo(f) {}
 
-void EstadoTablero::actualizar() {}
+void EstadoTablero::mueve() {}
 
 void EstadoTablero::dibujar() {
     tablero.dibuja();

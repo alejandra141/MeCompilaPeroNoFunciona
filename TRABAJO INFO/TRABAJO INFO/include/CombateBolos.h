@@ -4,7 +4,7 @@
 
 class CombateBolos : public Combates {
 public:
-    void actualizar() override;
+    void mueve() override;
     void dibujar() override;
     void tecla(unsigned char key) override;
 };
