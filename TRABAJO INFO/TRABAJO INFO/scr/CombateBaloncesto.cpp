@@ -42,9 +42,9 @@ void CombateBaloncesto::tecla(unsigned char key) {
 }
 
 
-void CombateBaloncesto::mueve()
+void CombateBaloncesto::mueve(double dt)
 {
     float t = 0.2f;  
-    canasta.mueve(t);   
+    canasta.mueve(dt);   
 }
 

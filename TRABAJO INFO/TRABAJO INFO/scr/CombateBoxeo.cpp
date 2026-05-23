@@ -114,7 +114,7 @@ void CombateBoxeo::procesarGolpe(Boxeador* atacante, Boxeador* victima) {
 
 
 
-void CombateBoxeo::mueve() {
+void CombateBoxeo::mueve(double dt) {
     // Si el combate no ha terminado, ambos boxeadores botan
     if (!estaTerminado()) {
         jugador1->actualizarBalanceo();

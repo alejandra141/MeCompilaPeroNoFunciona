@@ -3,6 +3,9 @@
 #include <iostream>
 #include "FlujoJuego.h"
 #include "Tablero.h"
+#include <chrono>
+using namespace std::chrono;
+
 
 Tablero tablero;
 FlujoJuego flujo;
@@ -66,10 +69,18 @@ void OnKeyboardDown(unsigned char key, int x, int y)
 
 void OnTimer(int value)
 {
-    flujo.mueve();  // ← Actualiza el estado actual
-    glutTimerFunc(100, OnTimer, 0);
+    static auto last = high_resolution_clock::now();
+    auto now = high_resolution_clock::now();
+    duration<double> elapsed = now - last;
+    double dt = elapsed.count();
+    last = now;
+
+    flujo.mueve(dt);   // ← le pasamos el dt real
+
     glutPostRedisplay();
+    glutTimerFunc(25, OnTimer, 0);
 }
+
 
 void OnMouseClick(int b, int state, int x, int y)
 {

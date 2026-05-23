@@ -12,7 +12,7 @@ public:
     EstadoCombate(FlujoJuego* f, int tipo);
     ~EstadoCombate();
 
-    void mueve() override;
+    void mueve(double dt) override;
     void dibujar() override;
     void tecla(unsigned char key) override;
 };

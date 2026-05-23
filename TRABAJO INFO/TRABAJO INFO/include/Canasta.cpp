@@ -7,7 +7,7 @@ Canasta::Canasta(const Linea& p) {
     ancho = 60.0f;
     alto = 50.0f;
 
-    vel = { 3.0f, 0.0f, 0.0f };   // velocidad horizontal
+    vel = { 10.0f, 0.0f, 0.0f };   // velocidad horizontal
 
     texID = ETSIDI::getTexture("elementos/canasta_1.png").id;
 }
@@ -20,8 +20,8 @@ void Canasta::mueve(float t) {
     std::cout << "Moviendo canasta. X = " << pos.x << std::endl;
     pos.x += vel.x * t;
 
-    if (pos.x > 9) vel.x = -vel.x;
-    if (pos.x < -9) vel.x = -vel.x;
+    if (pos.x > 15) vel.x = -vel.x;
+    if (pos.x < -15) vel.x = -vel.x;
 }
 
 void Canasta::dibuja() {

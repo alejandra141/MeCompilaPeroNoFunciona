@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void CombateBolos::mueve() {
+void CombateBolos::mueve(double dt) {
     // Lógica del combate de bolos
 }
 

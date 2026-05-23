@@ -11,7 +11,7 @@ public:
 
     void cambiarEstado(EstadoJuego* nuevo);
 
-    void mueve();
+    void mueve(double dt);
     void dibujar();
     void tecla(unsigned char key);
 };
