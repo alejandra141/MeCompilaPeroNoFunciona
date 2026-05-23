@@ -36,9 +36,9 @@ public:
 
     void detectarEntrada(char teclaPresionada);
 
-    /*LORENA
+    
     void dibujar() override;
-    void tecla(unsigned char key) override;*/
+    void tecla(unsigned char key) override;
 };
 
 

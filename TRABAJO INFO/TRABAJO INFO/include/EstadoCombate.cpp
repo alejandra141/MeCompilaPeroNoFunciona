@@ -10,7 +10,16 @@ EstadoCombate::EstadoCombate(FlujoJuego* f, int tipo) : flujo(f) {
     switch (tipo) {
     case 1: combate = new CombateBaloncesto(); break;
     case 2: combate = new CombateBolos(); break;
-    case 3: combate = new CombateBoxeo(); break;
+    case 3: {
+        // Creamos los dos boxeadores
+        Boxeador* p1 = new Boxeador_Normal(1);       // Jugador 1
+        Boxeador* p2 = new Boxeador_Kickboxing(2);   // Jugador 2 o IA
+
+        bool contraIA = false;  // true = IA, false = jugador 2
+
+        combate = new CombateBoxeo(p1, p2, contraIA);
+        break;
+    }
     }
 }
 

@@ -8,6 +8,7 @@ private:
     vector2D p1;   // esquina inferior izquierda
     vector2D p2;   // esquina superior derecha
     Textura tex;
+	int numJugador;
 
 public:
     bandos bando;

@@ -16,6 +16,7 @@ protected:
     float posX, posY;       // Posición actual
     float baseYa;           // Altura original (suelo)
     float tiempoBalanceo = 0; // Contador para el rebote
+	int numJugador;         // Para diferenciar entre jugador 1 y 2 (si es necesario)
 
 public:
     Boxeador(); // Constructor base

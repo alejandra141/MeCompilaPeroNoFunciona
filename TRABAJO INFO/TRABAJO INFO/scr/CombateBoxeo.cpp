@@ -156,3 +156,10 @@ bool CombateBoxeo::estaTerminado() {
     return (!jugador1->estaVivo() || !jugador2->estaVivo());
 }
 
+
+void CombateBoxeo::tecla(unsigned char key) {
+    
+}
+void CombateBoxeo::dibujar() {
+    
+}
