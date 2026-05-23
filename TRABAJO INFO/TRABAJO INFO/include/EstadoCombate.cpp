@@ -32,6 +32,7 @@ void EstadoCombate::actualizar() {
 }
 
 void EstadoCombate::dibujar() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //ESTO ES PARA LIMPIAR LO DE LA PANTALLA ANTERIOR
     combate->dibujar();
 }
 

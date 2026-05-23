@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Canasta.cpp" />
     <ClCompile Include="include\EstadoCombate.cpp" />
     <ClCompile Include="scr\Bolos_Cranker.cpp" />
     <ClCompile Include="scr\Bolos_Stroker.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="include\Boxeador.h" />
     <ClInclude Include="include\Boxeador_Kickboxing.h" />
     <ClInclude Include="include\Boxeador_Normal.h" />
+    <ClInclude Include="include\Canasta.h" />
     <ClInclude Include="include\Color.h" />
     <ClInclude Include="include\CombateBaloncesto.h" />
     <ClInclude Include="include\CombateBolos.h" />
