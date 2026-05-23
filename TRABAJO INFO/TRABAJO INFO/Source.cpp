@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 
     glDisable(GL_LIGHTING);
     glDisable(GL_LIGHT0);
-    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glDisable(GL_COLOR_MATERIAL);
 
     glutDisplayFunc(OnDraw);
@@ -34,16 +34,23 @@ int main(int argc, char* argv[])
 
 void OnDraw(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // --- PROYECCIÓN 3D ---
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(-5, 5, -5, 5);
+    gluPerspective(60.0, 800.0 / 600.0, 0.1, 200.0);
 
+    // --- CÁMARA ---
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    gluLookAt(0, 0, 20,   // cámara delante del tablero
+        0, 0, 0,    // mira al centro
+        0, 1, 0);   // arriba
+    
 
-    flujo.dibujar();   // ← AHORA dibuja el estado actual (tablero o combate)
+    // --- DIBUJO DEL JUEGO ---
+    flujo.dibujar();   // ← tu tablero 2D se dibuja en el plano Z=0
 
     glutSwapBuffers();
 }

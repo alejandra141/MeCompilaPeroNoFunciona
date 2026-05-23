@@ -3,8 +3,8 @@
 
 class Tablero {
 private:
-    Cuadrado fondo{ {-5, -5}, {5, 5}, {135,206,235} };          // azul cielo
-    Cuadrado tablero_{ {-4.5, -4.5}, {4.5, 4.5}, {34,139,34} }; // verde
+    Cuadrado fondo{ {-10, -10, 0}, {10, 10, 0}, {135,206,235} };          // azul cielo
+    Cuadrado tablero_{ {-9, -9, 0.1}, {9, 9, 0.1}, {34,139,34} }; // verde
 
     // CASILLAS (3x3)
     Cuadrado c1{ {-1, -1}, {1, 1}, {255,255,255} };
