@@ -6,20 +6,39 @@
 
 
 void Tablero::dibuja() const {
-    // --- FONDO (sin iluminación) ---
+    // FONDO 
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
+    fondo.dibuja(); 
 
-    fondo.dibuja();   // ahora sí se verá con su color real
-
-
-    // --- TABLERO (con iluminación) ---
-  
+    // TABLERO 
     tablero_.dibuja();
 
+    float lado = 2.0f;
+    for (int fila = 0; fila < 9; fila++) {
+        for (int col = 0; col < 9; col++) {
+
+            float x1 = -9.0f + (col * lado);
+            float y1 = -9.0f + (fila * lado);
+            float x2 = x1 + lado;
+            float y2 = y1 + lado;
+
+            Color colorActual;
+            switch (celdas[fila][col]) {
+            case 0: colorActual = NEGRO; break;
+            case 1: colorActual = BLANCO; break;
+            case 2: colorActual = MORADO; break;
+            default: colorActual = NEGRO;
+            }
+            Cuadrado celda({ x1, y1, 0.2f }, { x2, y2, 0.2f }, colorActual);
+            celda.dibuja(); 
+        }
+    }
     glEnable(GL_LIGHTING);
-    // --- PERSONAJE (con transparencia y textura) ---
+
+
+    // PERSONAJE 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
