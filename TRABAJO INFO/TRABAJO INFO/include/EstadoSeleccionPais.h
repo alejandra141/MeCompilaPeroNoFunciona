@@ -1,23 +1,18 @@
 #pragma once
 #include "EstadoJuego.h"
-#include "Tablero.h"
-#include "Jugador.h"
-
-
+#include "SeleccionPais.h"
 
 class FlujoJuego;
 
-class EstadoTablero : public EstadoJuego {
+class EstadoSeleccionPais : public EstadoJuego {
 private:
     FlujoJuego* flujo;
-    Jugador j1, j2;
-   
+    SelectorPais selector;
 
 public:
-    EstadoTablero(FlujoJuego* f,
-        const std::string& paisJ1,
-        const std::string& paisJ2);
+    EstadoSeleccionPais(FlujoJuego* f);
     void mueve(double dt) override;
     void dibujar()        override;
     void tecla(unsigned char key) override;
+    void click(float mx, float my);
 };

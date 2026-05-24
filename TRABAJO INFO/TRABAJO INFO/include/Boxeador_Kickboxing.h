@@ -1,14 +1,9 @@
-//Boxeador_Kickboxing.h
-
 #pragma once
-#include "Boxeador.h"
+#include "Personaje.h"
 
-class Boxeador_Kickboxing : public Boxeador {
+class BoxeadorKickboxing : public Personaje {
 public:
-    // El constructor asignará los valores de ventaja fijos
-    Boxeador_Kickboxing(int numJugador);
+    BoxeadorKickboxing(std::string pais, int numJugador);
+    std::vector<std::pair<int, int>> movimientosPosibles() override;
+    void cargarTextura() override;
 };
-
-
-
-

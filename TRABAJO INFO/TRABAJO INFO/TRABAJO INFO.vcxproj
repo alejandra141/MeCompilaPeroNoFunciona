@@ -136,6 +136,8 @@
   <ItemGroup>
     <ClCompile Include="include\Canasta.cpp" />
     <ClCompile Include="include\EstadoCombate.cpp" />
+    <ClCompile Include="include\Fisio.cpp" />
+    <ClCompile Include="include\Jugador.cpp" />
     <ClCompile Include="scr\Bolo.cpp" />
     <ClCompile Include="scr\Bolos_Cranker.cpp" />
     <ClCompile Include="scr\Bolos_Stroker.cpp" />
@@ -148,12 +150,15 @@
     <ClCompile Include="scr\Combates.cpp" />
     <ClCompile Include="scr\Cuadrado.cpp" />
     <ClCompile Include="scr\EstadoJuego.cpp" />
+    <ClCompile Include="scr\EstadoSeleccionPais.cpp" />
     <ClCompile Include="scr\EstadoTablero.cpp" />
     <ClCompile Include="scr\FlujoJuego.cpp" />
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
     <ClCompile Include="scr\Personajes.cpp" />
+    <ClCompile Include="scr\SeleccionPais.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
     <ClCompile Include="scr\Textura.cpp" />
+    <ClCompile Include="scr\TexturasJugadores.cpp" />
     <ClCompile Include="scr\Turnos.cpp" />
     <ClCompile Include="scr\Vector2D.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -174,13 +179,18 @@
     <ClInclude Include="include\Cuadrado.h" />
     <ClInclude Include="include\EstadoCombate.h" />
     <ClInclude Include="include\EstadoJuego.h" />
+    <ClInclude Include="include\EstadoSeleccionPais.h" />
     <ClInclude Include="include\EstadoTablero.h" />
+    <ClInclude Include="include\Fisio.h" />
     <ClInclude Include="include\FlujoJuego.h" />
+    <ClInclude Include="include\Jugador.h" />
     <ClInclude Include="include\Jugador_Baloncesto.h" />
     <ClInclude Include="include\Linea.h" />
     <ClInclude Include="include\Personaje.h" />
+    <ClInclude Include="include\SeleccionPais.h" />
     <ClInclude Include="include\Tablero.h" />
     <ClInclude Include="include\Textura.h" />
+    <ClInclude Include="include\TexturasJugadores.h" />
     <ClInclude Include="include\Turnos.h" />
     <ClInclude Include="include\Vector2D.h" />
   </ItemGroup>

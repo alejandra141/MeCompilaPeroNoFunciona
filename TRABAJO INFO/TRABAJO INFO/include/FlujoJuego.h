@@ -14,4 +14,5 @@ public:
     void mueve(double dt);
     void dibujar();
     void tecla(unsigned char key);
+    EstadoJuego* getEstado();
 };

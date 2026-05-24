@@ -4,6 +4,7 @@
 #include "FlujoJuego.h"
 #include "Tablero.h"
 #include <chrono>
+#include <EstadoSeleccionPais.h>
 using namespace std::chrono;
 
 
@@ -43,12 +44,12 @@ void OnDraw(void)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    
-    // --- PROYECCIÓN 3D ---
+    //  PROYECCIÓN 3D 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60.0, 800.0 / 600.0, 0.1, 200.0);
 
-    // --- CÁMARA ---
+    //  CÁMARA 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(0, 0, 20,   // cámara delante del tablero
@@ -56,8 +57,8 @@ void OnDraw(void)
         0, 1, 0);   // arriba
     
 
-    // --- DIBUJO DEL JUEGO ---
-    flujo.dibujar();   // ← tu tablero 2D se dibuja en el plano Z=0
+    //  DIBUJO DEL JUEGO 
+    flujo.dibujar();   
 
     glutSwapBuffers();
 }
@@ -82,7 +83,19 @@ void OnTimer(int value)
 }
 
 
-void OnMouseClick(int b, int state, int x, int y)
-{
-    // si quieres usar ratón más adelante
+
+void OnMouseClick(int button, int state, int x, int y) {
+    if (button != GLUT_LEFT_BUTTON || state != GLUT_DOWN) return;
+
+    // Convertir píxeles a coordenadas OpenGL
+    // fov=60, Z cámara=20, plano Z=0
+    float alturaVisible = 2.0f * tan(30.0f * 3.14159f / 180.0f) * 20.0f;
+    float anchoVisible = alturaVisible * (800.0f / 600.0f);
+    float mx = ((float)x / 800.0f - 0.5f) * anchoVisible;
+    float my = (0.5f - (float)y / 600.0f) * alturaVisible;
+
+    // Solo reenviar si estamos en selección
+    EstadoSeleccionPais* sel = dynamic_cast<EstadoSeleccionPais*>(flujo.getEstado());
+    if (sel) sel->click(mx, my);
 }
+

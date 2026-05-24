@@ -1,9 +1,9 @@
 #pragma once
 #include "Personaje.h"
 
-class BoxeadorNormal : public Personaje {
+class Fisio : public Personaje {
 public:
-    BoxeadorNormal(std::string pais, int numJugador);
+    Fisio(std::string pais, int numJugador);
     std::vector<std::pair<int, int>> movimientosPosibles() override;
     void cargarTextura() override;
 };

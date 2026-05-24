@@ -1,30 +1,18 @@
-//Boxeador_Kickboxing.cpp
-
 #include "Boxeador_Kickboxing.h"
+#include "ETSIDI.h"
 
-Boxeador_Kickboxing::Boxeador_Kickboxing(int numJugador) {
-    // Valores con ventaja 
-    vida = 130;    
-    fuerza = 20;  
-    defensa = 15;
-    velocidad = 1.2f;
-    agilidad = 1.2f;
-    estela = 1;
+BoxeadorKickboxing::BoxeadorKickboxing(std::string pais, int numJugador)
+    : Personaje("BoxeadorKickboxing", "boxeador_kickboxing", pais, 85, 17, 11, numJugador) {
+}
 
+void BoxeadorKickboxing::cargarTextura() {
+    std::string carpeta = (numJugador == 1) ? "buenos" : "malos";
+    std::string ruta = "Personajes/" + pais + "/" + carpeta + "/BoxeadorKickboxing.png";
 
-    // Posicionamiento según el jugador
-    if (numJugador == 1) {
-        posX = 100.0f;
-        baseYa = 300.0f;
-    }
-    else {
-        posX = 500.0f;
-        baseYa = 300.0f;
-    }
-    posY = baseYa; // Empezamos en el suelo   
+    unsigned int id = ETSIDI::getTexture(ruta.c_str()).id;
+    sprite.setTextura(id);
+}
 
-    // ---------------------------------------------------------
-    // IMAGEN: Aquí se cargaría el sprite del boxeador de Kickboxing
-    // Ejemplo: sprite.setTexture("assets/imagenes/boxeador_kickboxing.png");
-    // ---------------------------------------------------------
+std::vector<std::pair<int, int>> BoxeadorKickboxing::movimientosPosibles() {
+    return {};
 }

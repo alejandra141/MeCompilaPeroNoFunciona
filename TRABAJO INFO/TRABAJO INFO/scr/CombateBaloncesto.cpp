@@ -9,8 +9,6 @@ CombateBaloncesto::CombateBaloncesto() //constructor canasta con posición inici
 {
 }
 
-
-
 void CombateBaloncesto::dibujar() {
     glDisable(GL_LIGHTING);      // que la luz no afecte al fondo
     glEnable(GL_TEXTURE_2D);     // activar texturas

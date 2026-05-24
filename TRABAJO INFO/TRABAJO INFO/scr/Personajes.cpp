@@ -1,28 +1,42 @@
-
-
 #include "Personaje.h"
-#include <GL/freeglut.h>
 
-Personaje::Personaje(bandos b, float px, float py, const char* rutaTextura)
-    : bando(b), posicion(px, py),
-    vida(100), fuerza(10), defensa(5),
-    velocidad(1.0f), agilidad(1.0f), estela(1)
-{
-    p1 = { px, py };
-    p2 = { px + 3.0f, py + 3.0f };
-
-    tex.cargar(rutaTextura);
+Personaje::Personaje(std::string nombre, std::string tipo, std::string pais,
+    int vida, int ataque, int defensa, int numJugador)
+    : nombre(nombre), tipo(tipo), pais(pais),
+    vida(vida), ataque(ataque), defensa(defensa),
+    numJugador(numJugador), fila(-1), columna(-1),
+    vivo(true), esquivando(false) {
 }
 
-
-void Personaje::dibuja() const {
-    tex.activar();
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex2f(p1.x, p1.y);
-    glTexCoord2f(1, 0); glVertex2f(p2.x, p1.y);
-    glTexCoord2f(1, 1); glVertex2f(p2.x, p2.y);
-    glTexCoord2f(0, 1); glVertex2f(p1.x, p2.y);
-    glEnd();
+void Personaje::cargarTextura() {
+    std::string ruta = "Personajes/" + pais +
+        "/jugador" + std::to_string(numJugador) +
+        "/" + tipo + ".png";
+    sprite.setTextura(ETSIDI::getTexture(ruta.c_str()).id);
 }
 
+void Personaje::setPosicion(int f, int c) {
+    fila = f; columna = c;
+    float x = -9.0f + c * 2.0f + 1.0f;
+    float y = -9.0f + f * 2.0f + 1.0f;
+    sprite.setPosicion(x, y);
+}
+
+void Personaje::recibirDanio(int d) {
+    if (!esquivando) {
+        vida -= d;
+        if (vida <= 0) { vida = 0; vivo = false; }
+    }
+    esquivando = false;
+}
+
+void Personaje::dibuja()     const { sprite.dibuja(); }
+int  Personaje::getFila()    const { return fila; }
+int  Personaje::getColumna() const { return columna; }
+bool Personaje::estaVivo()   const { return vivo; }
+int  Personaje::getVida()    const { return vida; }
+int  Personaje::getFuerza()  const { return ataque; }
+std::string Personaje::getTipo()   const { return tipo; }
+std::string Personaje::getPais()   const { return pais; }
+std::string Personaje::getNombre() const { return nombre; }
+void Personaje::sanarVida(int cantidad) { vida += cantidad; }   

@@ -1,30 +1,18 @@
-//Boxeador_Normal.cpp
-
 #include "Boxeador_Normal.h"
+#include "ETSIDI.h"
 
-Boxeador_Normal::Boxeador_Normal(int numJugador) {
-    // Valores estándar para el combate normal
-    vida = 100;
-    fuerza = 10;
-    defensa = 10;
-    velocidad = 1.0f;
-    agilidad = 1.0f;
-    estela = 0;
+BoxeadorNormal::BoxeadorNormal(std::string pais, int numJugador)
+    : Personaje("BoxeadorNormal", "boxeador_normal", pais, 80, 15, 10, numJugador) {
+}
 
+void BoxeadorNormal::cargarTextura() {
+    std::string carpeta = (numJugador == 1) ? "buenos" : "malos";
+    std::string ruta = "Personajes/" + pais + "/" + carpeta + "/BoxeadorNormal.png";
 
-    // Posicionamiento según el jugador
-    if (numJugador == 1) {
-         posX = 100.0f;
-         baseYa = 300.0f;
-    }
-    else {
-         posX = 500.0f;
-         baseYa = 300.0f;
-    }
-    posY = baseYa; // Empezamos en el suelo   
+    unsigned int id = ETSIDI::getTexture(ruta.c_str()).id;
+    sprite.setTextura(id);
+}
 
-    // ---------------------------------------------------------
-    // IMAGEN: Aquí se cargaría el sprite del boxeador normal
-    // Ejemplo: sprite.setTexture("assets/imagenes/boxeador_normal.png");
-    // ---------------------------------------------------------
+std::vector<std::pair<int, int>> BoxeadorNormal::movimientosPosibles() {
+    return {};
 }
