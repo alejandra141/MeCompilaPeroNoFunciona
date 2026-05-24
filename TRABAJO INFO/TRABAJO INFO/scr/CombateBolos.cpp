@@ -40,12 +40,20 @@ void CombateBolos::dibujar() {
     //POR AQUÍ PINTAMOS UNOS BOLOS
     glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("elementos/bolo.png").id);
 
+    glEnable(GL_BLEND);                                
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+    glColor4f(1, 1, 1, 1);
+
+
     for (auto& b : bolos) {
         b.dibuja();
     }
 
+    glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
+
+ 
 
 }
 

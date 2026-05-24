@@ -11,18 +11,18 @@ private:
 
 	bool derribado{};
 
-	float tam{ 3.0f };
+	float anchoMitad{ 0.8f };
+	float alto{ 2.5f };
 
 public:
 
 	Bolo(float x, float y)
 		: posicion(x, y), derribado(false)
 	{
-		p1 = posicion;
-		p2 = { posicion.x + tam, posicion.y + tam };
+		p1 = { posicion.x - anchoMitad, posicion.y };
+		p2 = { posicion.x + anchoMitad, posicion.y + alto };
 
 	}
-
 
 	// Getters
 	vector2D getP1() const { return p1; }
