@@ -46,5 +46,6 @@ void Canasta::dibuja() {
 
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
-    }
+
+}
 

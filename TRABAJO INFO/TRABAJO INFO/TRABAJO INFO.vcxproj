@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="include\Canasta.cpp" />
     <ClCompile Include="include\EstadoCombate.cpp" />
+    <ClCompile Include="scr\Bolo.cpp" />
     <ClCompile Include="scr\Bolos_Cranker.cpp" />
     <ClCompile Include="scr\Bolos_Stroker.cpp" />
     <ClCompile Include="scr\Boxeador.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Bolo.h" />
     <ClInclude Include="include\Bolos_Cranker.h" />
     <ClInclude Include="include\Bolos_Stroker.h" />
     <ClInclude Include="include\Boxeador.h" />
