@@ -65,74 +65,67 @@ void CombateBolos::dibujar() {
 
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
-
- // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
-
-    // Puntero J1
-    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+ // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
+
+
+    // ── PUNTERO J1 (amarillo → verde neón) ──
     float cx1 = -5.0f;
-    float baseY = -4.0f;      // base del puntero (abajo)
-    float longitud = j1esEspecialista ? 5.0f : 3.0f;
-    float puntaX = cx1 + sin(anguloJ1) * longitud;
-    float puntaY = baseY + longitud;
+    float baseY = -9.0f;
+    float longitud = j1esEspecialista ? 6.0f : 4.0f;
+    float puntaX1 = cx1 + sin(anguloJ1) * longitud;
+    float puntaY1 = baseY + longitud;
 
-    // Sombra oscura
-    glColor4f(0.0f, 0.0f, 0.0f, 0.3f);
     glBegin(GL_TRIANGLES);
-    glVertex2f(cx1 - 0.3f, baseY);
-    glVertex2f(cx1 + 0.3f, baseY);
-    glVertex2f(puntaX, puntaY);
-    glEnd();
-
-    // Flecha principal — color azul eléctrico para J1
-    glColor4f(0.0f, 0.8f, 1.0f, 0.85f);
-    glBegin(GL_TRIANGLES);
+    glColor4f(1.0f, 1.0f, 0.0f, 0.9f);
     glVertex2f(cx1 - 0.2f, baseY);
+    glColor4f(1.0f, 0.5f, 0.0f, 0.9f);
     glVertex2f(cx1 + 0.2f, baseY);
-    glVertex2f(puntaX, puntaY);
+    glColor4f(0.0f, 1.0f, 0.2f, 0.9f);
+    glVertex2f(puntaX1, puntaY1);
     glEnd();
 
-    // Borde brillante
     glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
     glLineWidth(2.0f);
     glBegin(GL_LINE_LOOP);
     glVertex2f(cx1 - 0.2f, baseY);
     glVertex2f(cx1 + 0.2f, baseY);
-    glVertex2f(puntaX, puntaY);
+    glVertex2f(puntaX1, puntaY1);
     glEnd();
 
-    // Puntero J2 — color naranja para J2
+    // ── PUNTERO J2 (cyan → magenta) ──
     float cx2 = 5.0f;
-    float puntaX2 = cx2 + sin(anguloJ2) * longitud;
-    float puntaY2 = baseY + longitud;
+    float longitud2 = j2esEspecialista ? 6.0f : 4.0f;
+    float puntaX2 = cx2 + sin(anguloJ2) * longitud2;
+    float puntaY2 = baseY + longitud2;
 
-    glColor4f(0.0f, 0.0f, 0.0f, 0.3f);
     glBegin(GL_TRIANGLES);
-    glVertex2f(cx2 - 0.3f, baseY);
-    glVertex2f(cx2 + 0.3f, baseY);
-    glVertex2f(puntaX2, puntaY2);
-    glEnd();
-
-    glColor4f(1.0f, 0.5f, 0.0f, 0.85f);
-    glBegin(GL_TRIANGLES);
+    glColor4f(0.0f, 1.0f, 1.0f, 0.9f);
     glVertex2f(cx2 - 0.2f, baseY);
+    glColor4f(1.0f, 0.0f, 1.0f, 0.9f);
     glVertex2f(cx2 + 0.2f, baseY);
+    glColor4f(1.0f, 1.0f, 0.0f, 0.9f);
     glVertex2f(puntaX2, puntaY2);
     glEnd();
 
     glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
+    glLineWidth(2.0f);
     glBegin(GL_LINE_LOOP);
     glVertex2f(cx2 - 0.2f, baseY);
     glVertex2f(cx2 + 0.2f, baseY);
     glVertex2f(puntaX2, puntaY2);
     glEnd();
 
+    // ── FIN ──
     glDisable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
+    
+ 
 }
 
 
