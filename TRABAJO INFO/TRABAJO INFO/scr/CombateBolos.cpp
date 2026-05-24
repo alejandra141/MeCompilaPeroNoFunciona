@@ -5,7 +5,19 @@
 #include "bolo.h"
 
 void CombateBolos::mueve(double dt) {
-    // Lógica del combate de bolos
+    
+
+    // vale esto es para el apuntador, que se mueve de un lado al otro
+    float velocidad = 2.0f;
+
+    anguloJ1 += dirJ1 * velocidad * dt;
+    if (anguloJ1 > 1.0f) dirJ1 = -1;
+    if (anguloJ1 < -1.0f) dirJ1 = 1;
+
+    anguloJ2 += dirJ2 * velocidad * dt;
+    if (anguloJ2 > 1.0f) dirJ2 = -1;
+    if (anguloJ2 < -1.0f) dirJ2 = 1;
+
 }
 
 
@@ -14,7 +26,9 @@ void CombateBolos::tecla(unsigned char key) {
 }
 
 
-CombateBolos::CombateBolos() {
+CombateBolos::CombateBolos() : bolosDerribadosJ1(0), bolosDerribadosJ2(0), //esto es para hacer pruebas
+j1esEspecialista(false), j2esEspecialista(true), anguloJ1(0), dirJ1(1),
+anguloJ2(0), dirJ2(1) {
     crearBolos();
 }
 
@@ -53,8 +67,72 @@ void CombateBolos::dibujar() {
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
 
- 
+ // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
 
+    // Puntero J1
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    float cx1 = -5.0f;
+    float baseY = -4.0f;      // base del puntero (abajo)
+    float longitud = j1esEspecialista ? 5.0f : 3.0f;
+    float puntaX = cx1 + sin(anguloJ1) * longitud;
+    float puntaY = baseY + longitud;
+
+    // Sombra oscura
+    glColor4f(0.0f, 0.0f, 0.0f, 0.3f);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(cx1 - 0.3f, baseY);
+    glVertex2f(cx1 + 0.3f, baseY);
+    glVertex2f(puntaX, puntaY);
+    glEnd();
+
+    // Flecha principal — color azul eléctrico para J1
+    glColor4f(0.0f, 0.8f, 1.0f, 0.85f);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(cx1 - 0.2f, baseY);
+    glVertex2f(cx1 + 0.2f, baseY);
+    glVertex2f(puntaX, puntaY);
+    glEnd();
+
+    // Borde brillante
+    glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
+    glLineWidth(2.0f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(cx1 - 0.2f, baseY);
+    glVertex2f(cx1 + 0.2f, baseY);
+    glVertex2f(puntaX, puntaY);
+    glEnd();
+
+    // Puntero J2 — color naranja para J2
+    float cx2 = 5.0f;
+    float puntaX2 = cx2 + sin(anguloJ2) * longitud;
+    float puntaY2 = baseY + longitud;
+
+    glColor4f(0.0f, 0.0f, 0.0f, 0.3f);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(cx2 - 0.3f, baseY);
+    glVertex2f(cx2 + 0.3f, baseY);
+    glVertex2f(puntaX2, puntaY2);
+    glEnd();
+
+    glColor4f(1.0f, 0.5f, 0.0f, 0.85f);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(cx2 - 0.2f, baseY);
+    glVertex2f(cx2 + 0.2f, baseY);
+    glVertex2f(puntaX2, puntaY2);
+    glEnd();
+
+    glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(cx2 - 0.2f, baseY);
+    glVertex2f(cx2 + 0.2f, baseY);
+    glVertex2f(puntaX2, puntaY2);
+    glEnd();
+
+    glDisable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
 }
 
 
