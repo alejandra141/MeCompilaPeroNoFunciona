@@ -11,9 +11,51 @@ cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false){
 }
 
 
+void CombateBolos::comprobarColisiones() {
+
+	// estas son las colisiones de los bolos del J1, que son los bolos 0-5
+    if (bolaJ1.activa) {
+        for (int i = 0; i < 6; i++) {
+            if (!bolos[i].isDerribado()) {
+                float dx = bolaJ1.posicion.x - bolos[i].getPosicion().x;
+                float dy = bolaJ1.posicion.y - bolos[i].getPosicion().y;
+                if (sqrt(dx * dx + dy * dy) < 1.5f) {
+                    bolos[i].derribar();
+                    bolosDerribadosJ1++;
+                    tiempoEfectoJ1 = 1.5f;
+                }
+            }
+        }
+        if (bolaJ1.posicion.y > 8.0f)
+            bolaJ1.resetear();
+    }
+
+	// estas son las colisiones de los bolos del J2, que son los bolos 6-11
+    if (bolaJ2.activa) {
+        for (int i = 6; i < 12; i++) {
+            if (!bolos[i].isDerribado()) {
+                float dx = bolaJ2.posicion.x - bolos[i].getPosicion().x;
+                float dy = bolaJ2.posicion.y - bolos[i].getPosicion().y;
+                if (sqrt(dx * dx + dy * dy) < 1.5f) {
+                    bolos[i].derribar();
+                    bolosDerribadosJ2++;
+                    tiempoEfectoJ2 = 1.5f;
+                }
+            }
+        }
+        if (bolaJ2.posicion.y > 8.0f)
+            bolaJ2.resetear();
+    }
+
+    // Bajar temporizadores
+    // (esto se hace en mueve con el dt)
+}
+
+
 void CombateBolos::mueve(double dt) {
-    
-    if (dt > 0.05) dt = 0.05; // se me está congenlando el juego esto es para que no se ralle
+
+ 
+    if (dt > 0.016) dt = 0.016;
 
     // vale esto es para el apuntador, que se mueve de un lado al otro
     float velocidad = 2.0f;
@@ -43,19 +85,23 @@ void CombateBolos::mueve(double dt) {
     bolaJ2.mueve((float)dt);
 
     // si salen de pantalla reseteamos
-    if (bolaJ1.activa && bolaJ1.posicion.y > 10.0f)
-        bolaJ1.resetear();
-    if (bolaJ2.activa && bolaJ2.posicion.y > 10.0f)
-        bolaJ2.resetear();
+   // if (bolaJ1.activa && bolaJ1.posicion.y > 10.0f)
+   //     bolaJ1.resetear();
+    //if (bolaJ2.activa && bolaJ2.posicion.y > 10.0f)
+    //    bolaJ2.resetear();
+
+    comprobarColisiones();
+    if (tiempoEfectoJ1 > 0) tiempoEfectoJ1 -= (float)dt;
+    if (tiempoEfectoJ2 > 0) tiempoEfectoJ2 -= (float)dt;
 
 }
 
 
 void CombateBolos::tecla(unsigned char key) {
 
-	//ESTAS TECLAS SON PARA QUE MIENTRAS SE MANTENGA PULSADA SE VAYA CARGANDO LA POTENCIA, Y CUANDO SE SUELTE SE DISPARA    
-     if (key == 'w') cargandoJ1 = true; 
-     if (key == 'i') cargandoJ2 = true; 
+     //tenemos que poner que la potencia se cargue solo si la bola no está activa
+     if (key == 'w' && !bolaJ1.activa) cargandoJ1 = true;
+     if (key == 'i' && !bolaJ2.activa) cargandoJ2 = true;
     
 }
 
@@ -64,16 +110,29 @@ void CombateBolos::teclaSuelta(unsigned char key) {
 
     if (key == 'w' && !bolaJ1.activa) {
         cargandoJ1 = false;
-        bolaJ1.lanzar(-5.0f, -9.0f, sin(anguloJ1) * potenciaJ1, potenciaJ1 * 2.0f);
-        potenciaJ1 = 0;
-    }
-    if (key == 'i' && !bolaJ2.activa) {
-        cargandoJ2 = false;
-        bolaJ2.lanzar(5.0f, -9.0f, sin(anguloJ2) * potenciaJ2, potenciaJ2 * 2.0f);
-        potenciaJ2 = 0;
+
+        if (potenciaJ1 > 0) {  //hay que poner esto para solo lanzar si hay potencia en la barra
+            float velX = sin(anguloJ1) * potenciaJ1 * 1.5f;
+            float velY = potenciaJ1 * 3.0f;
+            bolaJ1.lanzar(-5.0f, -9.0f, velX, velY);
+        }
+        potenciaJ1 = 0; // reseteamos la potencia para que no se quede cargada después de lanzar
+
     }
 
+
+    if (key == 'i' && !bolaJ2.activa) {
+        cargandoJ2 = false;
+
+        if (potenciaJ2 > 0) {  //hay que poner esto para solo lanzar si hay potencia en la barra
+            float velX = sin(anguloJ2) * potenciaJ2 * 1.5f;
+            float velY = potenciaJ2 * 3.0f;
+            bolaJ2.lanzar(5.0f, -9.0f, velX, velY);
+        }
+        potenciaJ2 = 0;
+    }
 }
+
 
 void CombateBolos::dibujar() {
     
