@@ -6,7 +6,7 @@
 
 CombateBolos::CombateBolos() : bolosDerribadosJ1(0), bolosDerribadosJ2(0), //esto es para hacer pruebas
 j1esEspecialista(false), j2esEspecialista(true), anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1), potenciaJ1(0), potenciaJ2(0),
-cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false) {
+cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false){
     crearBolos();
 }
 
@@ -35,12 +35,6 @@ void CombateBolos::mueve(double dt) {
 
     if (cargandoJ2 && potenciaJ2 < maxPotencia)
         potenciaJ2 += velocidadCarga * (float)dt; // hay que poner un cast aquí dt es double vel es float
-
-
-	// SON PRUEBAS HAY QUE BORRARLAS EN UN FUTURO PERO AHORA MIS OJOS NO PUEDEN MÁS JAJAJAJA
-    // if (cargandoJ1) {
-    //     std::cout << "potenciaJ1: " << potenciaJ1 << std::endl;
-    //}
 
 }
 

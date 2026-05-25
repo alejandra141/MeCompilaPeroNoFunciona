@@ -3,6 +3,7 @@
 #include "Combates.h"
 #include "Bolo.h"
 #include <vector>
+#include "BolaBolos.h"
 
 
 using std::vector;
@@ -31,6 +32,18 @@ private:
 	bool cargandoJ2;
 	bool lanzandoJ1;
 	bool lanzandoJ2;
+
+	//vamos a poner ya las bolas por aquí
+	
+	BolaBolos bolaJ1;
+	BolaBolos bolaJ2;
+
+
+	// Efectos BOOM para el impacto jajaja
+	float tiempoEfectoJ1;
+	float tiempoEfectoJ2;
+
+
 
 public:
 
