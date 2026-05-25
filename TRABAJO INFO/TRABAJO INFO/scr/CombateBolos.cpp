@@ -3,6 +3,7 @@
 #include "ETSIDI.h"
 #include <iostream>
 #include "bolo.h"
+#include <string>
 
 CombateBolos::CombateBolos() : bolosDerribadosJ1(0), bolosDerribadosJ2(0), //esto es para hacer pruebas
 j1esEspecialista(false), j2esEspecialista(true), anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1), potenciaJ1(0), potenciaJ2(0),
@@ -282,8 +283,82 @@ void CombateBolos::dibujar() {
     glVertex2f(puntaX2, puntaY2);
     glEnd();
 
+
+    // vamos a dibujar un marcador bien chulo por aquí jujujuju
+
+
+    //este ha sido el primer intento lo voy a dejar por que me da miedo quitarlo jajjaaj
+
+    /*
+
+    // marcador de J1
+
+    glColor3f(1.0f, 1.0f, 0.0f);  // va a ir en amarillo chulo
+    glRasterPos2f(-13.0f, 5.0f);
+    std::string txtJ1 = "J1: " + std::to_string(bolosDerribadosJ1) + "/6";
+    for (char c : txtJ1)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+    // marcador de J2
+    glColor3f(0.0f, 1.0f, 1.0f);  // en cyan para que tenga contraste con el otro
+    glRasterPos2f(9.0f, 5.0f);
+    std::string txtJ2 = "J2: " + std::to_string(bolosDerribadosJ2) + "/6";
+    for (char c : txtJ2)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
     glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
+
+    */
+
+
+
+    // A VER EL MARACDOR SE VE BIEN MAL PONEMOS POR AQUÍ UN FONDO PARA QUE SE VEA MEJOR
+
+    // estas lineas se supone que hay que ponerlas para que se pinte por debajo el fondo 
+    glDisable(GL_DEPTH_TEST); // por aquí anda la clave del éxito
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // MARCADOR J1
+    // Fondo oscuro
+    glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
+    glBegin(GL_QUADS);
+    glVertex2f(-14.0f, 4.0f);
+    glVertex2f(-8.0f, 4.0f);
+    glVertex2f(-8.0f, 6.5f);
+    glVertex2f(-14.0f, 6.5f);
+    glEnd();
+
+    // Texto
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glRasterPos2f(-13.5f, 5.0f);
+    std::string txtJ1 = "J1: " + std::to_string(bolosDerribadosJ1) + " / 6";
+    for (char c : txtJ1)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+
+    // MARCADOR J2
+    // Fondo oscuro
+    glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
+    glBegin(GL_QUADS);
+    glVertex2f(8.0f, 4.0f);
+    glVertex2f(14.0f, 4.0f);
+    glVertex2f(14.0f, 6.5f);
+    glVertex2f(8.0f, 6.5f);
+    glEnd();
+
+    // Texto
+    glColor3f(0.0f, 1.0f, 1.0f);
+    glRasterPos2f(8.5f, 5.0f);
+    std::string txtJ2 = "J2: " + std::to_string(bolosDerribadosJ2) + " / 6";
+    for (char c : txtJ2)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+
+    // ponemos todo normal de nuevo
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
     
 }
 
