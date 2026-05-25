@@ -155,6 +155,7 @@
     <ClCompile Include="scr\EstadoTablero.cpp" />
     <ClCompile Include="scr\FlujoJuego.cpp" />
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
+    <ClCompile Include="scr\PelotaBaloncesto.cpp" />
     <ClCompile Include="scr\Personajes.cpp" />
     <ClCompile Include="scr\SeleccionPais.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="include\Jugador.h" />
     <ClInclude Include="include\Jugador_Baloncesto.h" />
     <ClInclude Include="include\Linea.h" />
+    <ClInclude Include="include\PelotaBaloncesto.h" />
     <ClInclude Include="include\Personaje.h" />
     <ClInclude Include="include\SeleccionPais.h" />
     <ClInclude Include="include\Tablero.h" />
