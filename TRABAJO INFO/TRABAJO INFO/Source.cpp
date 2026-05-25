@@ -57,7 +57,7 @@ void OnDraw(void)
     gluLookAt(0, 0, 20,   // cámara delante del tablero
         0, 0, 0,    // mira al centro
         0, 1, 0);   // arriba
-    
+   
 
     //  DIBUJO DEL JUEGO 
     flujo.dibujar();   

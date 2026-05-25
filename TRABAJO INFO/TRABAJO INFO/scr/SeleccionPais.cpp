@@ -15,6 +15,10 @@ SelectorPais::SelectorPais() : jugadorActual(1), ratonX(0), ratonY(0)
 
 bool SelectorPais::update(float mx, float my, bool click)
 {
+    // Conversión de coordenadas de pantalla a coordenadas OpenGL
+    float x = (mx / 800.0f) * 20.0f - 10.0f;
+    float y = ((600.0f - my) / 600.0f) * 20.0f - 10.0f;
+
     ratonX = mx;
     ratonY = my;
 
@@ -54,9 +58,11 @@ void SelectorPais::dibuja() const
     glLoadIdentity();
 
     glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
 
     for (auto& b : botones)
     {
+        glDisable(GL_TEXTURE_2D);
         glColor3f(0.2f, 0.2f, 0.8f);
         glBegin(GL_POLYGON);
         glVertex2f(b.x, b.y);
@@ -65,8 +71,13 @@ void SelectorPais::dibuja() const
         glVertex2f(b.x, b.y + b.h);
         glEnd();
 
-        ETSIDI::setTextColor(1, 1, 1);
-        ETSIDI::printxy(b.nombre.c_str(), b.x, b.y + b.h + 0.5f);
+        glPushAttrib(GL_ENABLE_BIT | GL_TEXTURE_BIT | GL_CURRENT_BIT); //la textura del texto tapaba todas las demás asi que la he encapsulado
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 30);
+        ETSIDI::setTextColor(1, 0, 0);
+        ETSIDI::printxy(b.nombre.c_str(),
+            b.x + 0.3f,
+            b.y + b.h * 0.4f);
+        glPopAttrib();
     }
 
     // Punto rojo para depurar

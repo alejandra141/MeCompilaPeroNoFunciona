@@ -16,4 +16,5 @@ public:
     void tecla(unsigned char key);
     void teclaSuelta(unsigned char key);
     EstadoJuego* getEstado();
+   
 };
