@@ -13,6 +13,7 @@ cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false){
 
 void CombateBolos::mueve(double dt) {
     
+    if (dt > 0.05) dt = 0.05; // se me está congenlando el juego esto es para que no se ralle
 
     // vale esto es para el apuntador, que se mueve de un lado al otro
     float velocidad = 2.0f;
@@ -36,6 +37,17 @@ void CombateBolos::mueve(double dt) {
     if (cargandoJ2 && potenciaJ2 < maxPotencia)
         potenciaJ2 += velocidadCarga * (float)dt; // hay que poner un cast aquí dt es double vel es float
 
+    // ESTO ES PARA MOVER LAS BOLAS DE BOLOS
+
+    bolaJ1.mueve((float)dt);
+    bolaJ2.mueve((float)dt);
+
+    // si salen de pantalla reseteamos
+    if (bolaJ1.activa && bolaJ1.posicion.y > 10.0f)
+        bolaJ1.resetear();
+    if (bolaJ2.activa && bolaJ2.posicion.y > 10.0f)
+        bolaJ2.resetear();
+
 }
 
 
@@ -50,23 +62,21 @@ void CombateBolos::tecla(unsigned char key) {
 //he creado esta clase para que se pueda cargar la potencia bien cuando sueltas la tecla
 void CombateBolos::teclaSuelta(unsigned char key) {
 
-    if (key == 'w') {
+    if (key == 'w' && !bolaJ1.activa) {
         cargandoJ1 = false;
-        lanzandoJ1 = true;
-        potenciaJ1 = 0; // para resetear por que no consigo que vaya
+        bolaJ1.lanzar(-5.0f, -9.0f, sin(anguloJ1) * potenciaJ1, potenciaJ1 * 2.0f);
+        potenciaJ1 = 0;
     }
-
-    if (key == 'i') {
+    if (key == 'i' && !bolaJ2.activa) {
         cargandoJ2 = false;
-        lanzandoJ2 = true;
+        bolaJ2.lanzar(5.0f, -9.0f, sin(anguloJ2) * potenciaJ2, potenciaJ2 * 2.0f);
         potenciaJ2 = 0;
     }
 
 }
 
 void CombateBolos::dibujar() {
-
-
+    
     glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 
@@ -93,6 +103,10 @@ void CombateBolos::dibujar() {
     for (auto& b : bolos) {
         b.dibuja();
     }
+
+    //zona de pintura de bolas
+    bolaJ1.dibuja();
+    bolaJ2.dibuja();
 
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
@@ -213,8 +227,6 @@ void CombateBolos::dibujar() {
     glEnable(GL_LIGHTING);
     
 }
-
-
 
 void CombateBolos::crearBolos() {
 
