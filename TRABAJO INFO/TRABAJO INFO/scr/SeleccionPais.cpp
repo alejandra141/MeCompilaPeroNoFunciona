@@ -44,6 +44,7 @@ bool SelectorPais::update(float mx, float my, bool click)
     }
 
     return false;
+   
 }
 
 void SelectorPais::dibuja() const
@@ -80,7 +81,7 @@ void SelectorPais::dibuja() const
         glPopAttrib();
     }
 
-    // Punto rojo para depurar
+    // Punto rojo pare ver sonde se pulsa
     glColor3f(1, 0, 0);
     glPointSize(10);
     glBegin(GL_POINTS);

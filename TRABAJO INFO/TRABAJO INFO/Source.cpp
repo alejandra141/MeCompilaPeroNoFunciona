@@ -106,5 +106,6 @@ void OnMouseClick(int button, int state, int x, int y) {
     // Solo reenviar si estamos en selección
     EstadoSeleccionPais* sel = dynamic_cast<EstadoSeleccionPais*>(flujo.getEstado());
     if (sel) sel->click(mx, my);
+    std::cout << "mx=" << x << " my=" << y << std::endl;
 }
 
