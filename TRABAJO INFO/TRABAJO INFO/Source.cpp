@@ -16,6 +16,7 @@ void OnDraw(void);
 void OnTimer(int value);
 void OnKeyboardDown(unsigned char key, int x, int y);
 void OnMouseClick(int button, int state, int x, int y);
+void OnKeyboardUp(unsigned char key, int x, int y); //este es el que he añadido el 25 de mayo
 
 int main(int argc, char* argv[])
 {
@@ -34,6 +35,7 @@ int main(int argc, char* argv[])
     glutTimerFunc(25, OnTimer, 0);
     glutKeyboardFunc(OnKeyboardDown);
     glutMouseFunc(OnMouseClick);
+    glutKeyboardUpFunc(OnKeyboardUp);
 
     glutMainLoop();
     return 0;
@@ -63,9 +65,16 @@ void OnDraw(void)
     glutSwapBuffers();
 }
 
+//este es para cuando pulsas una tecla
 void OnKeyboardDown(unsigned char key, int x, int y)
 {
     flujo.tecla(key);  // ← Cambia de pantalla si pulsas 1,2,3
+}
+
+//esto es para cuando sueltas una tecla
+void OnKeyboardUp(unsigned char key, int x, int y)
+{
+    flujo.teclaSuelta(key);
 }
 
 void OnTimer(int value)

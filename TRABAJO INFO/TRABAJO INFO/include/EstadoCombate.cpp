@@ -48,3 +48,6 @@ void EstadoCombate::tecla(unsigned char key) {
         combate->tecla(key);
     }
 }
+void EstadoCombate::teclaSuelta(unsigned char key) {
+    combate->teclaSuelta(key);
+}

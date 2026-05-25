@@ -17,12 +17,20 @@ private:
 	bool j1esEspecialista{};
 	bool j2esEspecialista{};
 
-	// cosas para los punteros
+	// cosas para las estelas
 	float anguloJ1;
 	float dirJ1;
 
 	float anguloJ2;
 	float dirJ2;
+
+	// esto es para la potencia del disparo
+	float potenciaJ1;
+	float potenciaJ2;
+	bool cargandoJ1;
+	bool cargandoJ2;
+	bool lanzandoJ1;
+	bool lanzandoJ2;
 
 public:
 
@@ -32,6 +40,7 @@ public:
     void dibujar() override;
     void tecla(unsigned char key) override;
 	void crearBolos();
+	void teclaSuelta(unsigned char key) override;
 
 };
 

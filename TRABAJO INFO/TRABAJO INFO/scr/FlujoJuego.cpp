@@ -14,4 +14,5 @@ void FlujoJuego::cambiarEstado(EstadoJuego* nuevo) {
 void FlujoJuego::mueve(double dt) { estadoActual->mueve(dt); }
 void FlujoJuego::dibujar() { estadoActual->dibujar(); }
 void FlujoJuego::tecla(unsigned char key) { estadoActual->tecla(key); }
+void FlujoJuego::teclaSuelta(unsigned char key) { estadoActual->teclaSuelta(key); 
 EstadoJuego* FlujoJuego::getEstado() { return estadoActual; }
