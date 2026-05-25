@@ -4,9 +4,11 @@
 #include <utility>
 #include "TexturasJugadores.h"
 #include "ETSIDI.h"
+#include "Linea.h"
 
 class Personaje {
-protected:
+private:
+    Linea posicion;
     std::string nombre;
     std::string tipo;
     std::string pais;
@@ -22,8 +24,15 @@ public:
         int vida, int ataque, int defensa, int numJugador);
 
     virtual void cargarTextura() = 0;
-    void setPosicion(int f, int c);
+    void setCasilla(int f, int c);
+    void setPosicion(const Linea& p);
     void dibuja() const;
+
+
+
+    int getNumJugador() const { return numJugador; }
+    std::string getPais() const;
+    TexturasJugadores& getSprite() { return sprite; }
 
     int  getFila()    const;
     int  getColumna() const;
@@ -31,7 +40,7 @@ public:
     int  getVida()    const;
     int  getFuerza()  const;   
     std::string getTipo()   const;
-    std::string getPais()   const;
+   
     std::string getNombre() const;
 
     void recibirDanio(int d);

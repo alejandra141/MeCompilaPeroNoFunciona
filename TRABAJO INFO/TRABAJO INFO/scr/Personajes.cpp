@@ -15,12 +15,15 @@ void Personaje::cargarTextura() {
     sprite.setTextura(ETSIDI::getTexture(ruta.c_str()).id);
 }
 
-void Personaje::setPosicion(int f, int c) {
-    fila = f; columna = c;
-    float x = -9.0f + c * 2.0f + 1.0f;
-    float y = -9.0f + f * 2.0f + 1.0f;
-    sprite.setPosicion(x, y);
+void Personaje::setCasilla(int f, int c) {
+    fila = f;
+    columna = c;
 }
+void Personaje::setPosicion(const Linea& p) {
+    posicion = p;
+    sprite.setPosicion(p.x, p.y);   // ← esto SI quieres que el sprite se mueva
+}
+
 
 void Personaje::recibirDanio(int d) {
     if (!esquivando) {

@@ -41,6 +41,7 @@ void Tablero::dibuja() const {
 
 
     // PARA PERSONAJES
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
@@ -53,6 +54,7 @@ void Tablero::dibuja() const {
     glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);    
 
 }
 	
@@ -65,11 +67,22 @@ Tablero::Tablero() {
             casillas[f][c] = nullptr;
 }
 
+Linea Tablero::centroCasilla(int fila, int col) const {
+    Linea c;
+    c.x = -9 + col * 2 + 1;   // centro X
+    c.y = -9 + fila * 2 + 1;  // centro Y
+    c.z = 0.3f;               // profundidad para que se vea sobre el tablero
+    return c;
+}
+
+
 //  Colocar un personaje en una casilla 
 void Tablero::colocar(Personaje* p, int fila, int col) {
+    Linea c = centroCasilla(fila, col);
+    p->setPosicion(c);   // si tu personaje acepta Linea
     casillas[fila][col] = p;
-    p->setPosicion(fila, col);   // calcula su x,y OpenGL internamente
 }
+
 
 //  Eliminar personaje del tablero (al morir) 
 void Tablero::eliminarPersonaje(Personaje* p) {
@@ -77,48 +90,58 @@ void Tablero::eliminarPersonaje(Personaje* p) {
 }
 
 
-//  Posiciones iniciales Jugador 2 (fila 8 = arriba) 
-void Tablero::inicializarJ2(Jugador& j2) {
-    auto& p = j2.getPiezas();
-    colocar(p[0], 8, 0);   // BoloCrancker  A8
-    colocar(p[1], 8, 6);   // BoloCrancker  G8
-    colocar(p[2], 8, 8);   // BoloCrancker  I8
-    colocar(p[3], 7, 0);   // BoloStronker  A7
-    colocar(p[4], 8, 2);   // BoloStronker  C8
-    colocar(p[5], 7, 8);   // BoloStronker  I7
-    colocar(p[6], 8, 3);   // Baloncesto    D8
-    colocar(p[7], 8, 5);   // Baloncesto    F8
-    colocar(p[8], 8, 4);   // Fisio         E8
-    colocar(p[9], 7, 1);   // BoxNormal     B7
-    colocar(p[10], 7, 2);   // BoxNormal     C7
-    colocar(p[11], 7, 3);   // BoxNormal     D7
-    colocar(p[12], 7, 4);   // BoxNormal     E7
-    colocar(p[13], 7, 5);   // BoxNormal     F7
-    colocar(p[14], 7, 6);   // BoxNormal     G7
-    colocar(p[15], 7, 7);   // BoxNormal     H7
-    colocar(p[16], 8, 1);   // BoxKick       B8
-    colocar(p[17], 8, 7);   // BoxKick       H8
+//  Posiciones iniciales Jugador 1 (fila 8 = arriba) 
+void Tablero::inicializarJ1(Jugador& j1) {
+    auto& p = j1.getPiezas();
+
+    colocar(p[0], 0, 8);   // A8 → ahora 8A
+    colocar(p[1], 6, 8);   // G8 → ahora 8G
+    colocar(p[2], 8, 8);   // I8 → ahora 8I
+
+    colocar(p[3], 0, 7);   // A7 → ahora 7A
+    colocar(p[4], 2, 8);   // C8 → ahora 8C
+    colocar(p[5], 8, 7);   // I7 → ahora 7I
+
+    colocar(p[6], 3, 8);   // D8 → ahora 8D
+    colocar(p[7], 5, 8);   // F8 → ahora 8F
+    colocar(p[8], 4, 8);   // E8 → ahora 8E
+
+    colocar(p[9], 1, 7);   // B7 → ahora 7B
+    colocar(p[10], 2, 7);  // C7 → ahora 7C
+    colocar(p[11], 3, 7);  // D7 → ahora 7D
+    colocar(p[12], 4, 7);  // E7 → ahora 7E
+    colocar(p[13], 5, 7);  // F7 → ahora 7F
+    colocar(p[14], 6, 7);  // G7 → ahora 7G
+    colocar(p[15], 7, 7);  // H7 → ahora 7H
+
+    colocar(p[16], 1, 8);  // B8 → ahora 8B
+    colocar(p[17], 7, 8);  // H8 → ahora 8H
 }
 
 //  Posiciones iniciales Jugador 1 (espejo, fila 0 = abajo) 
-void Tablero::inicializarJ1(Jugador& j1) {
-    auto& p = j1.getPiezas();
-    colocar(p[0], 0, 0);   // BoloCrancker  A1
-    colocar(p[1], 0, 6);   // BoloCrancker  G1
-    colocar(p[2], 0, 8);   // BoloCrancker  I1
-    colocar(p[3], 1, 0);   // BoloStronker  A2
-    colocar(p[4], 0, 2);   // BoloStronker  C1
-    colocar(p[5], 1, 8);   // BoloStronker  I2
-    colocar(p[6], 0, 3);   // Baloncesto    D1
-    colocar(p[7], 0, 5);   // Baloncesto    F1
-    colocar(p[8], 0, 4);   // Fisio         E1
-    colocar(p[9], 1, 1);   // BoxNormal     B2
-    colocar(p[10], 1, 2);   // BoxNormal     C2
-    colocar(p[11], 1, 3);   // BoxNormal     D2
-    colocar(p[12], 1, 4);   // BoxNormal     E2
-    colocar(p[13], 1, 5);   // BoxNormal     F2
-    colocar(p[14], 1, 6);   // BoxNormal     G2
-    colocar(p[15], 1, 7);   // BoxNormal     H2
-    colocar(p[16], 0, 1);   // BoxKick       B1
-    colocar(p[17], 0, 7);   // BoxKick       H1
+void Tablero::inicializarJ2(Jugador& j2) {
+    auto& p = j2.getPiezas();
+
+    colocar(p[0], 0, 0);   // A1 → ahora 1A
+    colocar(p[1], 6, 0);   // G1 → ahora 1G
+    colocar(p[2], 8, 0);   // I1 → ahora 1I
+
+    colocar(p[3], 0, 1);   // A2 → ahora 2A
+    colocar(p[4], 2, 0);   // C1 → ahora 1C
+    colocar(p[5], 8, 1);   // I2 → ahora 2I
+
+    colocar(p[6], 3, 0);   // D1 → ahora 1D
+    colocar(p[7], 5, 0);   // F1 → ahora 1F
+    colocar(p[8], 4, 0);   // E1 → ahora 1E
+
+    colocar(p[9], 1, 1);   // B2 → ahora 2B
+    colocar(p[10], 2, 1);  // C2 → ahora 2C
+    colocar(p[11], 3, 1);  // D2 → ahora 2D
+    colocar(p[12], 4, 1);  // E2 → ahora 2E
+    colocar(p[13], 5, 1);  // F2 → ahora 2F
+    colocar(p[14], 6, 1);  // G2 → ahora 2G
+    colocar(p[15], 7, 1);  // H2 → ahora 2H
+
+    colocar(p[16], 1, 0);  // B1 → ahora 1B
+    colocar(p[17], 7, 0);  // H1 → ahora 1H
 }

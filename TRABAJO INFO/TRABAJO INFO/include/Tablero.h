@@ -42,5 +42,7 @@ public:
     void inicializarJ1(Jugador& j1);
     void inicializarJ2(Jugador& j2);
     Personaje* getEn(int f, int c) const;
+    Linea centroCasilla(int fila, int col) const;
+
 
 };

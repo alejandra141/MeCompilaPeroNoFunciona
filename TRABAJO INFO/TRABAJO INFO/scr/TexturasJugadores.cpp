@@ -1,10 +1,21 @@
 #include "TexturasJugadores.h"
 
-TexturasJugadores::TexturasJugadores() : texID(0), cx(0), cy(0), cz(0.3f), mitad(2.0f) {}
+TexturasJugadores::TexturasJugadores()
+    : texID(0), cx(0), cy(0), cz(0.3f), mitad(2.5f),
+    offsetX(0.0f), offsetY(0.0f) {
+}
 
 void TexturasJugadores::setTextura(unsigned int id) { texID = id; }
 
-void TexturasJugadores::setPosicion(float x, float y) { cx = x; cy = y; }
+void TexturasJugadores::setPosicion(float x, float y) {
+    cx = x;
+    cy = y;
+    cz = 0.3f;   
+}
+void TexturasJugadores::setOffset(float ox, float oy) {
+    offsetX = ox;
+    offsetY = oy;
+}
 
 void TexturasJugadores::dibuja() const {
     if (texID == 0) return;
@@ -18,28 +29,16 @@ void TexturasJugadores::dibuja() const {
 
     glPushMatrix();
 
-    // 1. Mover al centro de la casilla
-    glTranslatef(cx, cy, cz);
+    glTranslatef(cx, cy, cz);        // mover al centro de la casilla
+    glTranslatef(offsetX, offsetY, 0); // corregir el desplazamiento propio del PNG
+    glScalef(mitad, mitad, 1.0f);     // escalar SIN moverlo
 
-    // 2. Tamaño REAL que tú quieres (mitad)
-    float tamReal = mitad * 2.0f;   // tamaño total del personaje
-
-    // 3. Tamaño máximo permitido dentro de la casilla
-    float tamCasilla = 2.0f;        // tu casilla mide 2 unidades
-    float tamMax = tamCasilla * 0.95f; // 95% de la casilla
-
-    // 4. Calcular escala automática
-    float escala = tamMax / tamReal;
-    if (escala > 1.0f) escala = 1.0f; // si es pequeño, no lo reduzcas
-
-    glScalef(escala, escala, 1.0f);
-
-    // 5. Dibujar un cuadrado base de 1x1
+    // 3. Dibujar un cuadrado centrado en (0,0)
     glBegin(GL_POLYGON);
-    glTexCoord2d(0, 1); glVertex3f(-1, -1, 0);
-    glTexCoord2d(1, 1); glVertex3f(1, -1, 0);
-    glTexCoord2d(1, 0); glVertex3f(1, 1, 0);
-    glTexCoord2d(0, 0); glVertex3f(-1, 1, 0);
+    glTexCoord2d(0, 1); glVertex3f(-1.5, -1, 0);
+    glTexCoord2d(1, 1); glVertex3f(1.5, -1, 0);
+    glTexCoord2d(1, 0); glVertex3f(1.5, 1, 0);
+    glTexCoord2d(0, 0); glVertex3f(-1.5, 1, 0);
     glEnd();
 
     glPopMatrix();
