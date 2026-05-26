@@ -15,4 +15,11 @@ public:
     void dibuja();
     void mueve(float t);
     void setPos(const Linea& p);
+
+
+    // getters necesarios para la detección de colisiones
+    float getPosX()  const { return pos.x; }
+    float getPosY()  const { return pos.y; }
+    float getPosZ()  const { return pos.z; }
+    float getRadio() const { return 1.5f; }
 };

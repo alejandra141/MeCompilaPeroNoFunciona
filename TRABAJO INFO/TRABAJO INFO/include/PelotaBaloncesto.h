@@ -1,17 +1,21 @@
 #pragma once
-#include "GL/freeglut.h"
 
 class PelotaBaloncesto {
 private:
     float x, y, z;
-    float dx, dy, dz;
-    float velocidad;
+    float velX, velY, velZ;
+    bool  activa;
+
+    static constexpr float GRAVEDAD = -4.0f;
 
 public:
-    PelotaBaloncesto(float px = 0, float py = 0, float pz = 0,
-        float vx = 0, float vy = 0, float vz = -1);
+    PelotaBaloncesto(float x, float y, float z,
+        float velX, float velY, float velZ);
 
-    void mueve(float dt);
-    void dibuja() const;
-    bool fuera() const;
+    void  mueve(float dt);
+    void  desactivar() { activa = false; }
+    bool  estaActiva() const { return activa; }
+    float getPosX()    const { return x; }
+    float getPosY()    const { return y; }
+    float getPosZ()    const { return z; }
 };
