@@ -15,6 +15,8 @@ public:
     void dibujar();
     void tecla(unsigned char key);
     void teclaSuelta(unsigned char key);
+    void teclaEspecial(int key);
+    void teclaEspecialSuelta(int key);
     EstadoJuego* getEstado();
    
 };
