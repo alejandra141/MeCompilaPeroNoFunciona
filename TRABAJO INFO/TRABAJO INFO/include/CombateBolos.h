@@ -43,7 +43,7 @@ private:
 	float tiempoEfectoJ1;
 	float tiempoEfectoJ2;
 
-	void comprobarColisiones();
+
 
 public:
 

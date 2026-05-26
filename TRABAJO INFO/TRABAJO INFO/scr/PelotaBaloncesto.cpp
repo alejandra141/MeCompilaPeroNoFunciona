@@ -1,17 +1,26 @@
 #include "PelotaBaloncesto.h"
+#include <cmath>
 
-PelotaBaloncesto::PelotaBaloncesto(float x, float y, float z,
-    float velX, float velY, float velZ)
-    : x(x), y(y), z(z), velX(velX), velY(velY), velZ(velZ), activa(true) {
+PelotaBaloncesto::PelotaBaloncesto(float px, float py, float pz,
+    float vx, float vy, float vz)
+    : x(px), y(py), z(pz), dx(vx), dy(vy), dz(vz), velocidad(20.0f)
+{
 }
 
 void PelotaBaloncesto::mueve(float dt) {
-    if (!activa) return;
-    velY += GRAVEDAD * dt;   // gravedad
-    x += velX * dt;
-    y += velY * dt;
-    z += velZ * dt;
+    x += dx * velocidad * dt;
+    y += dy * velocidad * dt;
+    z += dz * velocidad * dt;
+}
 
-    // desactivar si sale del mundo por abajo
-    if (y < -5.0f) activa = false;
+void PelotaBaloncesto::dibuja() const {
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glColor3f(1, 0.5f, 0);
+    glutSolidSphere(0.5, 16, 16);
+    glPopMatrix();
+}
+
+bool PelotaBaloncesto::fuera() const {
+    return (z < -60 || z > 10 || x < -30 || x > 30 || y < -30 || y > 30);
 }
