@@ -162,6 +162,7 @@
     <ClCompile Include="scr\Golem.cpp" />
     <ClCompile Include="scr\Hechicera.cpp" />
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
+    <ClCompile Include="scr\lerole.cpp" />
     <ClCompile Include="scr\Mago.cpp" />
     <ClCompile Include="scr\Manticora.cpp" />
     <ClCompile Include="scr\PelotaBaloncesto.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="include\Hechicera.h" />
     <ClInclude Include="include\Jugador.h" />
     <ClInclude Include="include\Jugador_Baloncesto.h" />
+    <ClInclude Include="include\lerole.h" />
     <ClInclude Include="include\Linea.h" />
     <ClInclude Include="include\Mago.h" />
     <ClInclude Include="include\Manticora.h" />
