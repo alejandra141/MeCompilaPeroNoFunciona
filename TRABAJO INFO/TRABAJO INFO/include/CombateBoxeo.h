@@ -16,7 +16,7 @@ private:
     bool esIA;         // true = Juega la máquina, false = Juega Jugador 2
     float cooldownIA = 0.0f;
 
-    void actualizarIA();
+    //void actualizarIA(); por ahora lo vamos a hacer sin IA
     // el "árbitro" procesa el daño
     void procesarGolpe(Boxeador* atacante, Boxeador* victima);
 
@@ -36,10 +36,15 @@ public:
 
     void detectarEntrada(char teclaPresionada);
 
-    
+
     void dibujar() override;
     void tecla(unsigned char key) override;
 };
+
+
+
+
+
 
 
 
