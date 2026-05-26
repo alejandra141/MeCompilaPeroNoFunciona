@@ -3,8 +3,6 @@
 #include "ETSIDI.h"
 
 
-
-
 void Tablero::dibuja() const {
 
     // FONDO 
