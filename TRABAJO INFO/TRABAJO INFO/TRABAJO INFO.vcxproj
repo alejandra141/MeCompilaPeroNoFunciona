@@ -176,7 +176,6 @@
     <ClCompile Include="scr\PersonajeTeletransporte.cpp" />
     <ClCompile Include="scr\PersonajeTerrestre.cpp" />
     <ClCompile Include="scr\SeleccionPais.cpp" />
-    <ClCompile Include="scr\Source.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
     <ClCompile Include="scr\Textura.cpp" />
     <ClCompile Include="scr\TexturasJugadores.cpp" />
