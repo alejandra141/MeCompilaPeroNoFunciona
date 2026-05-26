@@ -1,38 +1,49 @@
 #include "SeleccionPais.h"
-#include "ETSIDI.h"
-#include <GL/freeglut.h>
+#include <iostream>
 
-void SelectorPais::moverJ1(int dir) {
-    if (confirmadoJ1) return;
-    indiceJ1 += dir;
-    if (indiceJ1 < 0) indiceJ1 = nombres.size() - 1;
-    if (indiceJ1 >= nombres.size()) indiceJ1 = 0;
+SelectorPais::SelectorPais() : jugadorActual(1), ratonX(0), ratonY(0)
+{
+    // 5 países, alineados y visibles en tu ventana
+    botones = {
+        {"Espana",     "espana",     0, -8.0f, -2.0f, 3.0f, 3.0f},
+        {"Francia",    "francia",    0, -4.0f, -2.0f, 3.0f, 3.0f},
+        {"USA",        "usa",        0,  0.0f, -2.0f, 3.0f, 3.0f},
+        {"Italia",     "italia",     0,  4.0f, -2.0f, 3.0f, 3.0f},
+        {"Inglaterra", "inglaterra", 0,  8.0f, -2.0f, 3.0f, 3.0f},
+    };
 }
 
-void SelectorPais::moverJ2(int dir) {
-    if (confirmadoJ2) return;
-    indiceJ2 += dir;
-    if (indiceJ2 < 0) indiceJ2 = nombres.size() - 1;
-    if (indiceJ2 >= nombres.size()) indiceJ2 = 0;
-}
+bool SelectorPais::update(float mx, float my, bool click)
+{
+    ratonX = mx;
+    ratonY = my;
 
-bool SelectorPais::confirmarJ1() {
-    if (!confirmadoJ1) {
-        paisJ1 = nombres[indiceJ1];
-        confirmadoJ1 = true;
+    if (!click)
+        return false;
+
+    for (auto& b : botones)
+    {
+        if (mx >= b.x && mx <= b.x + b.w &&
+            my >= b.y && my <= b.y + b.h)
+        {
+            if (jugadorActual == 1)
+            {
+                paisJ1 = b.carpeta;
+                jugadorActual = 2;
+            }
+            else
+            {
+                paisJ2 = b.carpeta;
+                return true;
+            }
+        }
     }
-    return confirmadoJ1;
+
+    return false;
 }
 
-bool SelectorPais::confirmarJ2() {
-    if (!confirmadoJ2) {
-        paisJ2 = nombres[indiceJ2];
-        confirmadoJ2 = true;
-    }
-    return confirmadoJ2;
-}
-
-void SelectorPais::dibuja() const {
+void SelectorPais::dibuja() const
+{
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -44,36 +55,26 @@ void SelectorPais::dibuja() const {
 
     glDisable(GL_LIGHTING);
 
-    ETSIDI::setFont("fuentes/Bitwise.ttf", 30);
+    for (auto& b : botones)
+    {
+        glColor3f(0.2f, 0.2f, 0.8f);
+        glBegin(GL_POLYGON);
+        glVertex2f(b.x, b.y);
+        glVertex2f(b.x + b.w, b.y);
+        glVertex2f(b.x + b.w, b.y + b.h);
+        glVertex2f(b.x, b.y + b.h);
+        glEnd();
 
-    // --- TITULOS ---
-    ETSIDI::setTextColor(1, 1, 0);
-    ETSIDI::printxy("Jugador 2", -8, 8);
-    ETSIDI::printxy("Jugador 1", 4, 8);
-
-    // --- LISTA JUGADOR 1 ---
-    for (int i = 0; i < nombres.size(); i++) {
-        if (i == indiceJ1 && !confirmadoJ1)
-            ETSIDI::setTextColor(0, 1, 0);
-        else if (i == indiceJ1 && confirmadoJ1)
-            ETSIDI::setTextColor(0, 0.5f, 0);
-        else
-            ETSIDI::setTextColor(1, 1, 1);
-
-        ETSIDI::printxy(nombres[i].c_str(), -8, 5 - i * 2);
+        ETSIDI::setTextColor(1, 1, 1);
+        ETSIDI::printxy(b.nombre.c_str(), b.x, b.y + b.h + 0.5f);
     }
 
-    // --- LISTA JUGADOR 2 ---
-    for (int i = 0; i < nombres.size(); i++) {
-        if (i == indiceJ2 && !confirmadoJ2)
-            ETSIDI::setTextColor(0, 1, 0);
-        else if (i == indiceJ2 && confirmadoJ2)
-            ETSIDI::setTextColor(0, 0.5f, 0);
-        else
-            ETSIDI::setTextColor(1, 1, 1);
-
-        ETSIDI::printxy(nombres[i].c_str(), 4, 5 - i * 2);
-    }
+    // Punto rojo para depurar
+    glColor3f(1, 0, 0);
+    glPointSize(10);
+    glBegin(GL_POINTS);
+    glVertex2f(ratonX, ratonY);
+    glEnd();
 
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
@@ -83,3 +84,7 @@ void SelectorPais::dibuja() const {
 
     glEnable(GL_LIGHTING);
 }
+
+std::string SelectorPais::getPaisJ1() const { return paisJ1; }
+std::string SelectorPais::getPaisJ2() const { return paisJ2; }
+int SelectorPais::getJugadorActual() const { return jugadorActual; }

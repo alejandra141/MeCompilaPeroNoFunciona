@@ -19,7 +19,8 @@ protected:
 	int numJugador;         // Para diferenciar entre jugador 1 y 2 (si es necesario)
 
 public:
-    Boxeador(); // Constructor base
+    // Constructor parametrizado para asumir el rol de J1 o J2 directamente
+    Boxeador();
     virtual ~Boxeador() {} // Destructor virtual 
 
     // Funciones comunes que desarrollamos en el .cpp
@@ -27,8 +28,12 @@ public:
     void realizarPunetazo();
     void realizarPatada();
     void esquivar();
-
     void actualizarBalanceo(); 
+
+    void inicializar(int numJug); //pone las estadisticas y valores de los jugadores
+
+    void darPaso(int direccion); // 1 = Derecha, -1 = Izquierda
+    //void dibuja(); 
 
     // Métodos para consultar estado
    // bool getEsquivando() { return estaEsquivando; }
@@ -36,4 +41,11 @@ public:
     int getVida();
     int getFuerza();
     bool estaVivo();
+
+    // Getters necesarios para calcular colisiones externas
+    float getX() const { return posX; }
+    float getY() const { return posY; }
+    //float getAncho() const { return ancho; }
+    //float getAlto() const { return alto; }
+
 };
