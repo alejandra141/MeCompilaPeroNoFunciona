@@ -139,6 +139,7 @@
     <ClCompile Include="include\Fisio.cpp" />
     <ClCompile Include="include\Jugador.cpp" />
     <ClCompile Include="scr\Arquero.cpp" />
+    <ClCompile Include="scr\Basketboller.cpp" />
     <ClCompile Include="scr\BolaBolos.cpp" />
     <ClCompile Include="scr\Bolo.cpp" />
     <ClCompile Include="scr\Bolos_Cranker.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="scr\CombateBoxeo.cpp" />
     <ClCompile Include="scr\Combates.cpp" />
     <ClCompile Include="scr\Cuadrado.cpp" />
+    <ClCompile Include="scr\DisparoBasket.cpp" />
     <ClCompile Include="scr\Dragon.cpp" />
     <ClCompile Include="scr\EstadoJuego.cpp" />
     <ClCompile Include="scr\EstadoSeleccionPais.cpp" />
@@ -160,17 +162,21 @@
     <ClCompile Include="scr\FlujoJuego.cpp" />
     <ClCompile Include="scr\Goblin.cpp" />
     <ClCompile Include="scr\Golem.cpp" />
+    <ClCompile Include="scr\HABILIDADES_ESPECIALES.cpp" />
     <ClCompile Include="scr\Hechicera.cpp" />
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
     <ClCompile Include="scr\lerole.cpp" />
+    <ClCompile Include="scr\ListaDisparosBasket.cpp" />
     <ClCompile Include="scr\Mago.cpp" />
     <ClCompile Include="scr\Manticora.cpp" />
+    <ClCompile Include="scr\Pais.cpp" />
     <ClCompile Include="scr\PelotaBaloncesto.cpp" />
     <ClCompile Include="scr\Personajes.cpp" />
     <ClCompile Include="scr\PersonajeSaltador.cpp" />
     <ClCompile Include="scr\PersonajeTeletransporte.cpp" />
     <ClCompile Include="scr\PersonajeTerrestre.cpp" />
     <ClCompile Include="scr\SeleccionPais.cpp" />
+    <ClCompile Include="scr\Source.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
     <ClCompile Include="scr\Textura.cpp" />
     <ClCompile Include="scr\TexturasJugadores.cpp" />
@@ -182,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Arquero.h" />
+    <ClInclude Include="include\Basketboller.h" />
     <ClInclude Include="include\BolaBolos.h" />
     <ClInclude Include="include\Bolo.h" />
     <ClInclude Include="include\Bolos_Cranker.h" />
@@ -198,6 +205,7 @@
     <ClInclude Include="include\CombateBoxeo.h" />
     <ClInclude Include="include\Combates.h" />
     <ClInclude Include="include\Cuadrado.h" />
+    <ClInclude Include="include\DisparoBasket.h" />
     <ClInclude Include="include\Dragon.h" />
     <ClInclude Include="include\EstadoCombate.h" />
     <ClInclude Include="include\EstadoJuego.h" />
@@ -207,13 +215,16 @@
     <ClInclude Include="include\FlujoJuego.h" />
     <ClInclude Include="include\Goblin.h" />
     <ClInclude Include="include\Golem.h" />
+    <ClInclude Include="include\HABILIDADES_ESPECIALES.h" />
     <ClInclude Include="include\Hechicera.h" />
     <ClInclude Include="include\Jugador.h" />
     <ClInclude Include="include\Jugador_Baloncesto.h" />
     <ClInclude Include="include\lerole.h" />
     <ClInclude Include="include\Linea.h" />
+    <ClInclude Include="include\ListaDisparosBasket.h" />
     <ClInclude Include="include\Mago.h" />
     <ClInclude Include="include\Manticora.h" />
+    <ClInclude Include="include\Pais.h" />
     <ClInclude Include="include\PelotaBaloncesto.h" />
     <ClInclude Include="include\Personaje.h" />
     <ClInclude Include="include\PersonajeSaltador.h" />

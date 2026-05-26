@@ -7,7 +7,7 @@ enum class Pais {
     ITALIA,
     INGLATERRA,
     USA,
-    DESCONOCIDO;
+    DESCONOCIDO
 };
 
 Pais paisDesdeTexto(const std::string& p); //declaración de funcion que convierte texto de consola en un miembro de enum pais (QUITARCUANDO PANTALLA INICIO)
