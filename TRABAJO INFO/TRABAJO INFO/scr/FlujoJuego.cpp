@@ -19,9 +19,3 @@ void FlujoJuego::teclaSuelta(unsigned char key) {
 }
     EstadoJuego* FlujoJuego::getEstado() { return estadoActual; }
    
-void FlujoJuego::teclaEspecial(int key) {
-    estadoActual->teclaEspecial(key);
-}
-void FlujoJuego::teclaEspecialSuelta(int key) {
-    estadoActual->teclaEspecialSuelta(key);
-}

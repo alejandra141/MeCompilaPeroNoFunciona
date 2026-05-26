@@ -3,7 +3,7 @@
 
 Fisio::Fisio(std::string pais, int numJugador)
     : Personaje("Fisio", "fisio", pais, 60, 10, 8, numJugador) {
-    getSprite().setOffset(0.5f, -0.75f);   // EJEMPLO
+    getSprite().setOffset(0.0f, -0.3f);   // EJEMPLO
 }
 
 

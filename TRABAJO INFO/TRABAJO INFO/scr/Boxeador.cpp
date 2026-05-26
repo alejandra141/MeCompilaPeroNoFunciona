@@ -3,15 +3,60 @@
 #include "Boxeador.h"
 #include <iostream>
 #include <cmath>
+#include <cstdio> // Para sprintf_s si fuera necesario
 
-// Constructor base (lo dejamos vacío o con valores por defecto)
-Boxeador::Boxeador() : vida(), fuerza(), defensa(), velocidad(), agilidad(), estela() {}
+
+// Constructor base: lo dejamos limpio porque todo el peso va a la función inicializar
+Boxeador::Boxeador() {
+    vida = 0;
+    fuerza = 0;
+    defensa = 0;
+    velocidad = 0.0f;
+    agilidad = 0.0f;
+    estela = 0;
+    posX = 0.0f;
+    posY = 0.0f;
+    baseYa = 0.0f;
+    numJugador = 0;
+}
+
+void Boxeador::inicializar(int numJug) {
+    this->numJugador = numJug;
+
+    // Ambos comparten la misma altura en el suelo de la lona
+    baseYa = -7.5f;
+    posY = baseYa;
+
+    if (numJugador == 1) {
+        // Características del Boxeador NORMAL
+        vida = 100;
+        fuerza = 10;
+        defensa = 10;
+        velocidad = 1.0f;
+        agilidad = 1.0f;
+        estela = 0;
+
+
+        posX = -10.0f; // Lado izquierdo de la lona
+    }
+    else {
+        // Características del Boxeador KICKBOXING
+        vida = 130;
+        fuerza = 20;
+        defensa = 15;
+        velocidad = 1.2f;
+        agilidad = 1.2f;
+        estela = 1;
+
+
+        posX = 10.0f;  // Lado derecho de la lona
+    }
+}
 
 void Boxeador::recibirDanio(int danio) {
     // 1. Si está esquivando, el golpe falla y no hacemos nada más
     if (estaEsquivando) {
         estaEsquivando = false; // Gastamos el esquivo
-        // Aquí iría el SONIDO de "esquivo" (aire) si quieres
         return;
     }
 
@@ -23,29 +68,14 @@ void Boxeador::recibirDanio(int danio) {
 
     // 3. Controlamos que la vida no sea negativa
     if (vida < 0) vida = 0;
-
-    // ---------------------------------------------------------
-    // SONIDO: Aquí es donde suena el impacto real
-    // audio.reproducirPunetazo(); 
-    // ---------------------------------------------------------
 }
 
 void Boxeador::realizarPunetazo() {
-    std::cout << "¡Puñetazo lanzado con fuerza " << fuerza << "!" << std::endl;
-
-    // ---------------------------------------------------------
-    // SONIDO: Aquí va el efecto del guante cortando el aire o golpeando
-    // Ejemplo: gestorAudio.reproducir("assets/sonidos/boxeo/golpe.wav");
-    // ---------------------------------------------------------
+    std::cout << "¡Punietazo lanzado con fuerza " << fuerza << "!" << std::endl;
 }
 
 void Boxeador::realizarPatada() {
     std::cout << "¡Patada lanzada con fuerza " << (fuerza + 5) << "!" << std::endl;
-
-    // ---------------------------------------------------------
-    // SONIDO: Sonido de patada (solo para Kickboxing)
-    // Ejemplo: gestorAudio.reproducir("assets/sonidos/boxeo/patada.wav");
-    // ---------------------------------------------------------
 }
 
 int Boxeador::getVida() { return vida; }
@@ -59,6 +89,11 @@ void Boxeador::esquivar() {
 void Boxeador::actualizarBalanceo() {
     // Usamos la función seno (sin) para crear un movimiento de vaivén suave
     // El 0.05f controla la velocidad y el 5.0f la altura del bote
-    tiempoBalanceo += 0.05f;
-    posY = baseYa + (std::sin(tiempoBalanceo) * 5.0f);
+    tiempoBalanceo += 0.2f;
+    posY = baseYa + (std::sin(tiempoBalanceo) * 0.2f);
+}
+
+void Boxeador::darPaso(int direccion) {
+    // El boxeador avanza una distancia fija multiplicada por su velocidad de atributo (depende si es normal o kickboxing)
+    posX += direccion * velocidad * 1.5f;
 }

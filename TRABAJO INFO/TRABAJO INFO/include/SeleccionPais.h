@@ -1,41 +1,32 @@
-#ifndef SELECTORPAIS_H
-#define SELECTORPAIS_H
 
-#include <vector>
+#pragma once
 #include <string>
+#include <vector>
+#include <GL/freeglut.h>
+#include "ETSIDI.h"
+
+struct BotonPais {
+    std::string nombre;
+    std::string carpeta;
+    unsigned int texID;
+    float x, y, w, h;
+};
 
 class SelectorPais {
 private:
-    std::vector<std::string> nombres = {
-        "Espana", "Francia", "USA", "Italia", "Inglaterra"
-    };
+    std::vector<BotonPais> botones;
+    int jugadorActual;
+    std::string paisJ1, paisJ2;
 
-    int indiceJ1 = 0;
-    int indiceJ2 = 0;
-
-    bool confirmadoJ1 = false;
-    bool confirmadoJ2 = false;
-
-    std::string paisJ1;
-    std::string paisJ2;
+    // Para depurar el ratón
+    float ratonX, ratonY;
 
 public:
-    SelectorPais() = default;
-
-    void moverJ1(int dir);   // -1 arriba, +1 abajo
-    void moverJ2(int dir);
-
-    bool confirmarJ1();
-    bool confirmarJ2();
-
-    bool seleccionCompleta() const {
-        return confirmadoJ1 && confirmadoJ2;
-    }
-
+    SelectorPais();
+    bool update(float mx, float my, bool click);
     void dibuja() const;
 
-    std::string getPaisJ1() const { return paisJ1; }
-    std::string getPaisJ2() const { return paisJ2; }
+    std::string getPaisJ1() const;
+    std::string getPaisJ2() const;
+    int getJugadorActual() const;
 };
-
-#endif

@@ -3,7 +3,7 @@
 
 JugadorBaloncesto::JugadorBaloncesto(std::string pais, int numJugador)
     : Personaje("Baloncesto", "jugador_baloncesto", pais, 70, 20, 10, numJugador) {
-    getSprite().setOffset(1.0f, 0.5f);   // EJEMPLO
+    getSprite().setOffset(0.25f, 0.0f);   // EJEMPLO
 }
 
 
