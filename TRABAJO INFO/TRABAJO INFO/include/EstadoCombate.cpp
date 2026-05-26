@@ -13,8 +13,19 @@ EstadoCombate::EstadoCombate(FlujoJuego* f, int tipo,
     : flujo(f), paisJ1(pJ1), paisJ2(pJ2)
 {
     switch (tipo) {
-    case 1: combate = new CombateBaloncesto(); break;
-    case 2: combate = new CombateBolos();      break;
+    case 1: {
+        Basketboller* p1 = new Basketboller(pJ1, 3, -8.0f, -3.0f, 0.0f);  // sin estela
+        Basketboller* p2 = new Basketboller(pJ2, 10, 8.0f, -3.0f, 0.0f);  // con estela
+        combate = new CombateBaloncesto(p1, p2);
+        break;
+    }
+    case 2: {
+        Bolerito* p1 = new Bolerito(pJ1, false);
+        Bolerito* p2 = new Bolerito(pJ2, false);
+        combate = new CombateBolos(p1, p2);
+        break;
+
+    };
     case 3: {
         Boxeador* p1 = new Boxeador();   
         Boxeador* p2 = new Boxeador();

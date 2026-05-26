@@ -4,9 +4,11 @@
 #include <iostream>
 #include "bolo.h"
 
-CombateBolos::CombateBolos() : bolosDerribadosJ1(0), bolosDerribadosJ2(0), //esto es para hacer pruebas
-j1esEspecialista(false), j2esEspecialista(true), anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1), potenciaJ1(0), potenciaJ2(0),
-cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false){
+CombateBolos::CombateBolos(Bolerito* j1, Bolerito* j2) : 
+    bolosDerribadosJ1(0), bolosDerribadosJ2(0), //esto es para hacer pruebas
+    j1esEspecialista(j1->getEsEspecialista()), j2esEspecialista(j2->getEsEspecialista()), 
+    anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1), potenciaJ1(0), potenciaJ2(0),
+    cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false){
     crearBolos();
 }
 
@@ -170,7 +172,7 @@ void CombateBolos::dibujar() {
     glVertex2f(barraX2, barraBaseY + altoRelleno2);
     glEnd();
 
-    glEnable(GL_DEPTH_TEST);   // ← reactiva al final
+    glEnable(GL_DEPTH_TEST);   // ponemos la profundidad normal 
 
 
  // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
@@ -225,6 +227,57 @@ void CombateBolos::dibujar() {
 
     glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
+
+
+
+
+    // A VER EL MARACDOR SE VE BIEN MAL PONEMOS POR AQUÍ UN FONDO PARA QUE SE VEA MEJOR
+
+    // estas lineas se supone que hay que ponerlas para que se pinte por debajo el fondo 
+    glDisable(GL_DEPTH_TEST); // por aquí anda la clave del éxito
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // MARCADOR J1
+    // Fondo oscuro
+    glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
+    glBegin(GL_QUADS);
+    glVertex2f(-14.0f, 4.0f);
+    glVertex2f(-8.0f, 4.0f);
+    glVertex2f(-8.0f, 6.5f);
+    glVertex2f(-14.0f, 6.5f);
+    glEnd();
+
+    // Texto
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glRasterPos2f(-13.5f, 5.0f);
+    std::string txtJ1 = "J1: " + std::to_string(bolosDerribadosJ1) + " / 6";
+    for (char c : txtJ1)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+
+    // MARCADOR J2
+    // Fondo oscuro
+    glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
+    glBegin(GL_QUADS);
+    glVertex2f(8.0f, 4.0f);
+    glVertex2f(14.0f, 4.0f);
+    glVertex2f(14.0f, 6.5f);
+    glVertex2f(8.0f, 6.5f);
+    glEnd();
+
+
+    // Texto
+    glColor3f(0.0f, 1.0f, 1.0f);
+    glRasterPos2f(8.5f, 5.0f);
+    std::string txtJ2 = "J2: " + std::to_string(bolosDerribadosJ2) + " / 6";
+    for (char c : txtJ2)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+
+    // ponemos todo normal de nuevo
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
     
 }
 
