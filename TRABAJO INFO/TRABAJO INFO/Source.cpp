@@ -108,18 +108,6 @@ void OnTimer(int value)
 
 
 void OnMouseClick(int button, int state, int x, int y) {
-    if (button != GLUT_LEFT_BUTTON || state != GLUT_DOWN) return;
 
-    // Convertir píxeles a coordenadas OpenGL
-    // fov=60, Z cámara=20, plano Z=0
-    float alturaVisible = 2.0f * tan(30.0f * 3.14159f / 180.0f) * 20.0f;
-    float anchoVisible = alturaVisible * (800.0f / 600.0f);
-    float mx = ((float)x / 800.0f - 0.5f) * anchoVisible;
-    float my = (0.5f - (float)y / 600.0f) * alturaVisible;
-
-    // Solo reenviar si estamos en selección
-    EstadoSeleccionPais* sel = dynamic_cast<EstadoSeleccionPais*>(flujo.getEstado());
-    if (sel) sel->click(mx, my);
-    std::cout << "mx=" << x << " my=" << y << std::endl;
 }
 
