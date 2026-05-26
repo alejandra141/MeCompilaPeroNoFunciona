@@ -1,6 +1,6 @@
 #pragma once
 #include "Personaje.h"
-class PersonajeVolador :
+class PersonajeSaltador :
     public Personaje
 {
 };

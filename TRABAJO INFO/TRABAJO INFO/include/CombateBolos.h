@@ -4,7 +4,6 @@
 #include "Bolo.h"
 #include <vector>
 #include "BolaBolos.h"
-#include "Bolerito.h"
 
 
 using std::vector;
@@ -44,16 +43,11 @@ private:
 	float tiempoEfectoJ1;
 	float tiempoEfectoJ2;
 
-	//vamos a inicializar unos personajes auxiliares los boleritos
-	
-	Bolerito* jugador1;
-	Bolerito* jugador2;
 
-	void comprobarColisiones();// la voy a poner privada porque no quiero que se pueda llamar desde fuera
 
 public:
 
-	CombateBolos(Bolerito* j1, Bolerito* j2);
+	CombateBolos();	
 
     void mueve(double dt) override;
     void dibujar() override;
