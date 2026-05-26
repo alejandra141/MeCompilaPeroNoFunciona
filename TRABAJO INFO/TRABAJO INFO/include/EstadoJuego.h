@@ -5,5 +5,7 @@ public:
     virtual void dibujar() = 0;
     virtual void tecla(unsigned char key) = 0;
     virtual void teclaSuelta(unsigned char key) {};
+    virtual void teclaEspecial(int key) {};           
+    virtual void teclaEspecialSuelta(int key) {};     
     virtual ~EstadoJuego() {}
 };
