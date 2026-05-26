@@ -20,4 +20,6 @@ public:
     void dibujar() override;
     void tecla(unsigned char key) override;
     void teclaSuelta(unsigned char key) override;
+    void teclaEspecial(int key)        override;
+    void teclaEspecialSuelta(int key)  override;
 };

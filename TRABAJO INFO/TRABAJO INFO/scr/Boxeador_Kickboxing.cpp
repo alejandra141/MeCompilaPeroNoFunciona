@@ -1,11 +1,9 @@
-// Boxeador_Kickboxing.cpp
-
 #include "Boxeador_Kickboxing.h"
 #include "ETSIDI.h"
 
 BoxeadorKickboxing::BoxeadorKickboxing(std::string pais, int numJugador)
     : Personaje("BoxeadorKickboxing", "boxeador_kickboxing", pais, 85, 17, 11, numJugador) {
-    getSprite().setOffset(0.0f, -0.3f);   // EJEMPLO
+    getSprite().setOffset(0.5f, -1.0f);   // EJEMPLO
 }
 
 
