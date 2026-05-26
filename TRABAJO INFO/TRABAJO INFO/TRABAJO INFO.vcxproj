@@ -139,13 +139,13 @@
     <ClCompile Include="include\Fisio.cpp" />
     <ClCompile Include="include\Jugador.cpp" />
     <ClCompile Include="scr\BolaBolos.cpp" />
-    <ClCompile Include="scr\Bolerito.cpp" />
     <ClCompile Include="scr\Bolo.cpp" />
     <ClCompile Include="scr\Bolos_Cranker.cpp" />
     <ClCompile Include="scr\Bolos_Stroker.cpp" />
     <ClCompile Include="scr\Boxeador.cpp" />
     <ClCompile Include="scr\Boxeador_Kickboxing.cpp" />
     <ClCompile Include="scr\Boxeador_Normal.cpp" />
+    <ClCompile Include="scr\CategoriasMovimiento.cpp" />
     <ClCompile Include="scr\CombateBaloncesto.cpp" />
     <ClCompile Include="scr\CombateBolos.cpp" />
     <ClCompile Include="scr\CombateBoxeo.cpp" />
@@ -158,6 +158,9 @@
     <ClCompile Include="scr\Jugador_Baloncesto.cpp" />
     <ClCompile Include="scr\PelotaBaloncesto.cpp" />
     <ClCompile Include="scr\Personajes.cpp" />
+    <ClCompile Include="scr\PersonajeTeletransporte.cpp" />
+    <ClCompile Include="scr\PersonajeTerrestre.cpp" />
+    <ClCompile Include="scr\PersonajeVolador.cpp" />
     <ClCompile Include="scr\SeleccionPais.cpp" />
     <ClCompile Include="scr\Tablero.cpp" />
     <ClCompile Include="scr\Textura.cpp" />
@@ -168,7 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\BolaBolos.h" />
-    <ClInclude Include="include\Bolerito.h" />
     <ClInclude Include="include\Bolo.h" />
     <ClInclude Include="include\Bolos_Cranker.h" />
     <ClInclude Include="include\Bolos_Stroker.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="include\Boxeador_Kickboxing.h" />
     <ClInclude Include="include\Boxeador_Normal.h" />
     <ClInclude Include="include\Canasta.h" />
+    <ClInclude Include="include\CategoriasMovimiento.h" />
     <ClInclude Include="include\Color.h" />
     <ClInclude Include="include\CombateBaloncesto.h" />
     <ClInclude Include="include\CombateBolos.h" />
@@ -193,6 +196,9 @@
     <ClInclude Include="include\Linea.h" />
     <ClInclude Include="include\PelotaBaloncesto.h" />
     <ClInclude Include="include\Personaje.h" />
+    <ClInclude Include="include\PersonajeTeletransporte.h" />
+    <ClInclude Include="include\PersonajeTerrestre.h" />
+    <ClInclude Include="include\PersonajeVolador.h" />
     <ClInclude Include="include\SeleccionPais.h" />
     <ClInclude Include="include\Tablero.h" />
     <ClInclude Include="include\Textura.h" />
