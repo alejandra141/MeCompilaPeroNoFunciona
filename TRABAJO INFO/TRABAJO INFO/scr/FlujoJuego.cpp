@@ -1,5 +1,7 @@
 #include "FlujoJuego.h"
-#include "EstadoSeleccionPais.h"    
+#include "EstadoSeleccionPais.h"   
+#include "EstadoTablero.h"
+
 
 FlujoJuego::FlujoJuego() {
     estadoActual = new EstadoSeleccionPais(this);
@@ -24,4 +26,9 @@ void FlujoJuego::teclaEspecial(int key) {
 }
 void FlujoJuego::teclaEspecialSuelta(int key) {
     estadoActual->teclaEspecialSuelta(key);
+}
+
+EstadoTablero* FlujoJuego::getEstadoTablero() {
+    return dynamic_cast<EstadoTablero*>(estadoActual);
+    // devuelve nullptr si no estamos en el tablero
 }

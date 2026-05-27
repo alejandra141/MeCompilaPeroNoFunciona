@@ -28,3 +28,27 @@ void EstadoTablero::tecla(unsigned char key) {
     if (key == '2') flujo->cambiarEstado(new EstadoCombate(flujo, 2, j1.getPais(), j2.getPais()));
     if (key == '3') flujo->cambiarEstado(new EstadoCombate(flujo, 3, j1.getPais(), j2.getPais()));
 }
+
+void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int colDestino) {
+    int bandoEnemigo = tablero.getBandoPiezaEn(filaDestino, colDestino);
+
+    // si no hay enemigo, no pasa nada
+    if (bandoEnemigo == 0 || bandoEnemigo == atacante->getNumJugador()) return;
+
+    // si hay enemigo elegimos combate según el tipo de atacante
+    int tipoCombate = 1; // por defecto baloncesto 
+
+    // a ver aquí he puesto que según sea tal personaje haga su combate
+
+    std::string tipo = atacante->getTipo();
+    if (tipo == "boxeador_normal" || tipo == "boxeador_kickboxing")
+        tipoCombate = 3; // CombateBoxeo
+    else if (tipo == "bolo_cranker" || tipo == "bolo_stroker")
+        tipoCombate = 2; // CombateBolos
+    else
+        tipoCombate = 1; // CombateBaloncesto
+
+    flujo->cambiarEstado(new EstadoCombate(flujo, tipoCombate, paisJ1, paisJ2));
+}
+
+

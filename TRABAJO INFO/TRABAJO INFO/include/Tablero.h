@@ -50,4 +50,7 @@ public:
     int getBandoPiezaEn(int fila, int col) const;
 
 
+	// esto lo vamos a poner para detectar cuando dos personajes estan en la misma casilla y que se inicie el combate
+    Personaje* getPersonajeEn(int fila, int col) const;
+
 };

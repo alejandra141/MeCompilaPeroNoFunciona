@@ -163,3 +163,7 @@ int Tablero::getBandoPiezaEn(int fila, int col) const {
     return 0; // casilla vacía
 }
 
+Personaje* Tablero::getPersonajeEn(int fila, int col) const {
+    if (fila < 0 || fila >= 9 || col < 0 || col >= 9) return nullptr;
+    return casillas[fila][col];
+}

@@ -1,6 +1,8 @@
 #pragma once
 #include "EstadoJuego.h"
 
+class EstadoTablero;
+
 class FlujoJuego {
 private:
     EstadoJuego* estadoActual;
@@ -18,5 +20,5 @@ public:
     void teclaEspecial(int key);
     void teclaEspecialSuelta(int key);
     EstadoJuego* getEstado();
-   
+    EstadoTablero* getEstadoTablero();
 };
