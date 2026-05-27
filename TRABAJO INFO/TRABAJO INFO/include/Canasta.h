@@ -22,4 +22,5 @@ public:
     float getPosY() const { return pos.y + alto * 0.65f; }  
     float getPosZ() const { return pos.z; }
     float getRadio() const { return 7.5f; }
+    float getAncho() const { return ancho; }
 };

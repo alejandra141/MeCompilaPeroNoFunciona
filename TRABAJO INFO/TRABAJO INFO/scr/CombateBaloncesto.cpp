@@ -58,12 +58,12 @@ void CombateBaloncesto::mueve(double dt)
     float aroY = canasta.getPosY();
 
     // Rebote en la mitad del tablero
-    disparosJ1.reboteConTablero(aroY + 1.0f);
-    disparosJ2.reboteConTablero(aroY + 1.0f);
+    disparosJ1.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
+    disparosJ2.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
 
     // Canasta en la parte inferior del aro
-    if (disparosJ1.hayCanasta(aroX, aroY - 0.3f, 5.0f, 1.0f)) puntosJ1++;
-    if (disparosJ2.hayCanasta(aroX, aroY - 0.3f, 5.0f, 1.0f)) puntosJ2++;
+    if (disparosJ1.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ1++; std::cout << "CANASTA J1: " << puntosJ1 << std::endl; }
+    if (disparosJ2.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ2++; std::cout << "CANASTA J2: " << puntosJ2 << std::endl; }
 
     disparosJ1.limpiarInactivos();
     disparosJ2.limpiarInactivos();
@@ -93,8 +93,28 @@ void CombateBaloncesto::dibujar() {
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
 
-
+    //dibujar canasta
     canasta.dibuja();
+
+    //zona de canasta en rojo
+    float aroX = canasta.getPosX();
+    float aroY = canasta.getPosY();
+    float mitadZona = 3.0f / 2.0f;   
+    float altoZona = 1.5f;          
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glBegin(GL_LINE_LOOP);   
+    glVertex3f(aroX - mitadZona, aroY - altoZona, -1.0f);
+    glVertex3f(aroX + mitadZona, aroY - altoZona, -1.0f);
+    glVertex3f(aroX + mitadZona, aroY, -1.0f);
+    glVertex3f(aroX - mitadZona, aroY, -1.0f);
+    glEnd();
+    glEnable(GL_LIGHTING);
+
+
+
     // disparos
     disparosJ1.dibujar(estelaJ1);
     disparosJ2.dibujar(estelaJ2);
@@ -103,26 +123,29 @@ void CombateBaloncesto::dibujar() {
     if (cargandoJ1) {
         float porcentaje = potenciaJ1 / POTENCIA_MAX;
 
-        glDisable(GL_LIGHTING);      
+        glDisable(GL_LIGHTING);
         glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+
         // fondo gris
         glColor3f(0.3f, 0.3f, 0.3f);
-        glBegin(GL_POLYGON);
-        glVertex3f(-18.0f, -18.5f, -4.5f);
-        glVertex3f(-2.0f, -18.5f, -4.5f);
-        glVertex3f(-2.0f, -17.5f, -4.5f);
-        glVertex3f(-18.0f, -17.5f, -4.5f);
+        glBegin(GL_QUADS);
+        glVertex3f(-15.0f, -8.5f, -1.0f);
+        glVertex3f(1.0f, -8.5f, -1.0f);
+        glVertex3f(1.0f, -7.5f, -1.0f);
+        glVertex3f(-15.0f, -7.5f, -1.0f);
         glEnd();
 
-        // relleno verde → rojo
+        // relleno
         glColor3f(porcentaje, 1.0f - porcentaje, 0.0f);
-        glBegin(GL_POLYGON);
-        glVertex3f(-18.0f, -18.5f, -4.4f);
-        glVertex3f(-18.0f + 16.0f * porcentaje, -18.5f, -4.4f);
-        glVertex3f(-18.0f + 16.0f * porcentaje, -17.5f, -4.4f);
-        glVertex3f(-18.0f, -17.5f, -4.4f);
+        glBegin(GL_QUADS);
+        glVertex3f(-15.0f, -8.5f, -0.9f); //verde
+        glVertex3f(-15.0f + 16.0f * porcentaje, -8.5f, -0.9f);
+        glVertex3f(-15.0f + 16.0f * porcentaje, -7.5f, -0.9f);
+        glVertex3f(-15.0f, -7.5f, -0.9f);//rojo
         glEnd();
 
+        glEnable(GL_DEPTH_TEST);
         glEnable(GL_LIGHTING);
     }
 
@@ -132,25 +155,27 @@ void CombateBaloncesto::dibujar() {
 
         glDisable(GL_LIGHTING);
         glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
 
         // fondo gris
         glColor3f(0.3f, 0.3f, 0.3f);
-        glBegin(GL_POLYGON);
-        glVertex3f(2.0f, -18.5f, -4.5f);
-        glVertex3f(18.0f, -18.5f, -4.5f);
-        glVertex3f(18.0f, -17.5f, -4.5f);
-        glVertex3f(2.0f, -17.5f, -4.5f);
+        glBegin(GL_QUADS);
+        glVertex3f(2.0f, -8.5f, -1.0f);
+        glVertex3f(18.0f, -8.5f, -1.0f);
+        glVertex3f(18.0f, -7.5f, -1.0f);
+        glVertex3f(2.0f, -7.5f, -1.0f);
         glEnd();
 
-        // relleno verde → rojo
+        // relleno
         glColor3f(porcentaje, 1.0f - porcentaje, 0.0f);
-        glBegin(GL_POLYGON);
-        glVertex3f(2.0f, -18.5f, -4.4f);
-        glVertex3f(2.0f + 16.0f * porcentaje, -18.5f, -4.4f);
-        glVertex3f(2.0f + 16.0f * porcentaje, -17.5f, -4.4f);
-        glVertex3f(2.0f, -17.5f, -4.4f);
+        glBegin(GL_QUADS);
+        glVertex3f(2.0f, -8.5f, -0.9f);//verde
+        glVertex3f(2.0f + 16.0f * porcentaje, -8.5f, -0.9f);
+        glVertex3f(2.0f + 16.0f * porcentaje, -7.5f, -0.9f);
+        glVertex3f(2.0f, -7.5f, -0.9f); //rojo
         glEnd();
 
+        glEnable(GL_DEPTH_TEST);
         glEnable(GL_LIGHTING);
     }
 
@@ -159,19 +184,21 @@ void CombateBaloncesto::dibujar() {
         dibujarLineaApuntado(j1->getPosX(), j1->getPosY(), j1->getPosZ(), anguloJ1);
     if (estelaJ2)
         dibujarLineaApuntado(j2->getPosX(), j2->getPosY(), j2->getPosZ(), anguloJ2);
+    
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+
+    //Marcadores
+    ETSIDI::setTextColor(1, 1, 0);
+    ETSIDI::printxy(("J1: " + std::to_string(puntosJ1)).c_str(), -15, 9.0);
+    ETSIDI::printxy(("J2: " + std::to_string(puntosJ2)).c_str(), 10.0, 9.0);
 
     if (estado == FIN) {
+        ETSIDI::setTextColor(1, 0, 0);
         ETSIDI::printxy("FIN DE PARTIDA", -5, 5);
         ETSIDI::printxy("Pulsa C para volver", -5, 3);
-        return;
     }
-    
-    //Marcadores
-    glDisable(GL_LIGHTING);
-    ETSIDI::setTextColor(1, 1, 0);
-
-    ETSIDI::printxy(("J1: " + std::to_string(puntosJ1)).c_str(), -18, 13);
-    ETSIDI::printxy(("J2: " + std::to_string(puntosJ2)).c_str(), 14, 13);
 
     glEnable(GL_LIGHTING);
 
@@ -179,10 +206,10 @@ void CombateBaloncesto::dibujar() {
 
 void CombateBaloncesto::tecla(unsigned char key) {
     switch (key) {
-    case ' ':           if (!cargandoJ1) { cargandoJ1 = true; potenciaJ1 = 0.0f; } break;
-    case 13:            if (!cargandoJ2) { cargandoJ2 = true; potenciaJ2 = 0.0f; } break;
-    case 'a': case 'A': teclaIzqJ2 = true;  break;
-    case 'd': case 'D': teclaDerJ2 = true;  break;
+    case 13:           if (!cargandoJ1) { cargandoJ1 = true; potenciaJ1 = 0.0f; } break;
+    case ' ':            if (!cargandoJ2) { cargandoJ2 = true; potenciaJ2 = 0.0f; } break;
+    case 'a': case 'A': teclaIzqJ1 = true;  break;
+    case 'd': case 'D': teclaDerJ1 = true;  break;
 
         if (estado == FIN && (key == 'c' || key == 'C')) {
             // aquí llamas a tu máquina de estados
@@ -195,23 +222,23 @@ void CombateBaloncesto::tecla(unsigned char key) {
 
 void CombateBaloncesto::teclaSuelta(unsigned char key) {
     switch (key) {
-    case ' ':           if (cargandoJ1) { disparar(1, potenciaJ1); cargandoJ1 = false; potenciaJ1 = 0.0f; } break;
-    case 13:            if (cargandoJ2) { disparar(2, potenciaJ2); cargandoJ2 = false; potenciaJ2 = 0.0f; } break;
-    case 'a': case 'A': teclaIzqJ2 = false; break;
-    case 'd': case 'D': teclaDerJ2 = false; break;
+    case 13:           if (cargandoJ1) { disparar(1, potenciaJ1); cargandoJ1 = false; potenciaJ1 = 0.0f; } break;
+    case ' ':            if (cargandoJ2) { disparar(2, potenciaJ2); cargandoJ2 = false; potenciaJ2 = 0.0f; } break;
+    case 'a': case 'A': teclaIzqJ1 = false; break;
+    case 'd': case 'D': teclaDerJ1 = false; break;
     }
 }
 
 
 void CombateBaloncesto::teclaEspecial(int key) {
     std::cout << "teclaEspecial: " << key << std::endl;
-    if (key == GLUT_KEY_LEFT)  teclaIzqJ1 = true;
-    if (key == GLUT_KEY_RIGHT) teclaDerJ1 = true;
+    if (key == GLUT_KEY_LEFT)  teclaIzqJ2 = true;
+    if (key == GLUT_KEY_RIGHT) teclaDerJ2 = true;
 }
 
 void CombateBaloncesto::teclaEspecialSuelta(int key) {
-    if (key == GLUT_KEY_LEFT)  teclaIzqJ1 = false;
-    if (key == GLUT_KEY_RIGHT) teclaDerJ1 = false;
+    if (key == GLUT_KEY_LEFT)  teclaIzqJ2 = false;
+    if (key == GLUT_KEY_RIGHT) teclaDerJ2 = false;
 }
 
 
@@ -238,11 +265,11 @@ void CombateBaloncesto::comprobarColisiones() {
 
     if (disparosJ1.hayCanasta(aroX, aroY, aroZ, radio)) {
         puntosJ1++;
-        std::cout << "¡CANASTA J1! -> " << puntosJ1 << std::endl;
+        std::cout << "CANASTA J1 -> " << puntosJ1 << std::endl;
     }
     if (disparosJ2.hayCanasta(aroX, aroY, aroZ, radio)) {
         puntosJ2++;
-        std::cout << "¡CANASTA J2! -> " << puntosJ2 << std::endl;
+        std::cout << "CANASTA J2 -> " << puntosJ2 << std::endl;
     }
     if (puntosJ1 >= 5 || puntosJ2 >= 5)
         estado = FIN;

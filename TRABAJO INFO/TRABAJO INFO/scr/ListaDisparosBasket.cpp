@@ -31,13 +31,10 @@ void ListaDisparos::dibujar(bool conEstela) const {
 bool ListaDisparos::hayCanasta(float cx, float cy, float anchoZona, float altoZona) {
     for (auto& d : disparos) {
         if (!d.estaActivo()) continue;
-
         bool dentroX = d.getX() > (cx - anchoZona / 2) && d.getX() < (cx + anchoZona / 2);
         bool dentroY = d.getY() > (cy - altoZona) && d.getY() < cy;
-
-        bool entraPorDebajo = d.getVy() > 0;
-
-        if (dentroX && dentroY && entraPorDebajo) {
+        bool bajando = d.getVy() < 0;   // <- viene bajando, acaba de pasar el aro
+        if (dentroX && dentroY && bajando) {
             d.desactivar();
             return true;
         }
@@ -46,17 +43,14 @@ bool ListaDisparos::hayCanasta(float cx, float cy, float anchoZona, float altoZo
 }
 
 
-bool ListaDisparos::reboteConTablero(float yLinea) {
+bool ListaDisparos::reboteConTablero(float yLinea, float cx, float anchoCanasta) {
     bool rebote = false;
-
+    float mitad = anchoCanasta / 2.0f;
     for (auto& d : disparos) {
         if (!d.estaActivo()) continue;
-
-        // Si la pelota sube y toca la línea del tablero
-        if (d.getY() >= yLinea && d.getVy() > 0) {
-
-            // Rebote vertical simple
-            d.setVel(d.getVx(), -d.getVy(), d.getVz());
+        bool dentroX = d.getX() > (cx - mitad) && d.getX() < (cx + mitad);
+        if (dentroX && d.getY() >= yLinea && d.getVy() > 0) {
+            d.setVel(d.getVx(), -d.getVy() * 0.6f, d.getVz());  // 0.6 = amortiguación
             rebote = true;
         }
     }

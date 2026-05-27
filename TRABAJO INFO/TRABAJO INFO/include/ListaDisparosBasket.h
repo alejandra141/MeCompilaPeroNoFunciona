@@ -14,7 +14,7 @@ public:
     void actualizar(float dt);
     void limpiarInactivos();
     void dibujar(bool conEstela) const;
-    bool reboteConTablero(float yLinea);
+    bool reboteConTablero(float yLinea, float cx, float anchoCanasta);
     bool hayCanasta(float cx, float cy, float anchoZona, float altoZona);
     void reboteEntrePelotas();
 };
