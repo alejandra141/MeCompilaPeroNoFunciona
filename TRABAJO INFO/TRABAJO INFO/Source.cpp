@@ -17,6 +17,10 @@ void OnTimer(int value);
 void OnKeyboardDown(unsigned char key, int x, int y);
 void OnMouseClick(int button, int state, int x, int y);
 void OnKeyboardUp(unsigned char key, int x, int y); //este es el que he añadido el 25 de mayo
+void OnKeyboardSpecialDown(int key, int x, int y);
+void OnKeyboardSpecialUp(int key, int x, int y);
+
+
 
 int main(int argc, char* argv[])
 {
@@ -36,6 +40,9 @@ int main(int argc, char* argv[])
     glutKeyboardFunc(OnKeyboardDown);
     glutMouseFunc(OnMouseClick);
     glutKeyboardUpFunc(OnKeyboardUp);
+    glutSpecialFunc(OnKeyboardSpecialDown);
+    glutSpecialUpFunc(OnKeyboardSpecialUp);
+
 
     glutMainLoop();
     return 0;
@@ -91,7 +98,12 @@ void OnTimer(int value)
     glutTimerFunc(25, OnTimer, 0);
 }
 
-
+void OnKeyboardSpecialDown(int key, int x, int y) {
+    flujo.teclaEspecial(key);
+}
+void OnKeyboardSpecialUp(int key, int x, int y) {
+    flujo.teclaEspecialSuelta(key);
+}
 
 void OnMouseClick(int button, int state, int x, int y) {
     if (button != GLUT_LEFT_BUTTON || state != GLUT_DOWN) return;

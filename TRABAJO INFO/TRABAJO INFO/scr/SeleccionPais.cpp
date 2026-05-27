@@ -48,8 +48,8 @@ void SelectorPais::dibuja() const {
 
     // --- TITULOS ---
     ETSIDI::setTextColor(1, 1, 0);
-    ETSIDI::printxy("Jugador 2", -8, 8);
-    ETSIDI::printxy("Jugador 1", 4, 8);
+    ETSIDI::printxy("Jugador 2", 4, 8);
+    ETSIDI::printxy("Jugador 1", -8, 8);
 
     // --- LISTA JUGADOR 1 ---
     for (int i = 0; i < nombres.size(); i++) {
@@ -60,7 +60,7 @@ void SelectorPais::dibuja() const {
         else
             ETSIDI::setTextColor(1, 1, 1);
 
-        ETSIDI::printxy(nombres[i].c_str(), -8, 5 - i * 2);
+        ETSIDI::printxy(nombres[i].c_str(), 4, 5 - i * 2);
     }
 
     // --- LISTA JUGADOR 2 ---
@@ -72,7 +72,7 @@ void SelectorPais::dibuja() const {
         else
             ETSIDI::setTextColor(1, 1, 1);
 
-        ETSIDI::printxy(nombres[i].c_str(), 4, 5 - i * 2);
+        ETSIDI::printxy(nombres[i].c_str(), -8, 5 - i * 2);
     }
 
     glMatrixMode(GL_MODELVIEW);
