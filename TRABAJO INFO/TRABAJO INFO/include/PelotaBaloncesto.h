@@ -18,4 +18,13 @@ public:
     float getPosX()    const { return x; }
     float getPosY()    const { return y; }
     float getPosZ()    const { return z; }
+    float getVelX() const { return velX; }
+    float getVelY() const { return velY; }
+    float getVelZ() const { return velZ; }
+
+    void setVel(float vx, float vy, float vz) {
+        velX = vx;
+        velY = vy;
+        velZ = vz;
+    }
 };

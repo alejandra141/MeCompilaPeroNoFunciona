@@ -18,8 +18,8 @@ public:
 
 
     // getters necesarios para la detección de colisiones
-    float getPosX()  const { return pos.x; }
-    float getPosY()  const { return pos.y; }
-    float getPosZ()  const { return pos.z; }
-    float getRadio() const { return 1.5f; }
+    float getPosX() const { return pos.x; }
+    float getPosY() const { return pos.y + alto * 0.65f; }  
+    float getPosZ() const { return pos.z; }
+    float getRadio() const { return 7.5f; }
 };

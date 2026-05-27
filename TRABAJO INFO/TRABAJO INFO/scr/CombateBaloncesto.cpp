@@ -50,15 +50,25 @@ void CombateBaloncesto::mueve(double dt)
     if (cargandoJ2) { potenciaJ2 += VELOCIDAD_CARGA * dt; if (potenciaJ2 > POTENCIA_MAX) potenciaJ2 = POTENCIA_MAX; }
 
 
-
     disparosJ1.actualizar((float)dt);
     disparosJ2.actualizar((float)dt);
 
-    comprobarColisiones();
+ 
+    float aroX = canasta.getPosX();
+    float aroY = canasta.getPosY();
+
+    // Rebote en la mitad del tablero
+    disparosJ1.reboteConTablero(aroY + 1.0f);
+    disparosJ2.reboteConTablero(aroY + 1.0f);
+
+    // Canasta en la parte inferior del aro
+    if (disparosJ1.hayCanasta(aroX, aroY - 0.3f, 5.0f, 1.0f)) puntosJ1++;
+    if (disparosJ2.hayCanasta(aroX, aroY - 0.3f, 5.0f, 1.0f)) puntosJ2++;
 
     disparosJ1.limpiarInactivos();
     disparosJ2.limpiarInactivos();
 }
+
 
 
 
@@ -150,6 +160,21 @@ void CombateBaloncesto::dibujar() {
     if (estelaJ2)
         dibujarLineaApuntado(j2->getPosX(), j2->getPosY(), j2->getPosZ(), anguloJ2);
 
+    if (estado == FIN) {
+        ETSIDI::printxy("FIN DE PARTIDA", -5, 5);
+        ETSIDI::printxy("Pulsa C para volver", -5, 3);
+        return;
+    }
+    
+    //Marcadores
+    glDisable(GL_LIGHTING);
+    ETSIDI::setTextColor(1, 1, 0);
+
+    ETSIDI::printxy(("J1: " + std::to_string(puntosJ1)).c_str(), -18, 13);
+    ETSIDI::printxy(("J2: " + std::to_string(puntosJ2)).c_str(), 14, 13);
+
+    glEnable(GL_LIGHTING);
+
 }
 
 void CombateBaloncesto::tecla(unsigned char key) {
@@ -158,6 +183,10 @@ void CombateBaloncesto::tecla(unsigned char key) {
     case 13:            if (!cargandoJ2) { cargandoJ2 = true; potenciaJ2 = 0.0f; } break;
     case 'a': case 'A': teclaIzqJ2 = true;  break;
     case 'd': case 'D': teclaDerJ2 = true;  break;
+
+        if (estado == FIN && (key == 'c' || key == 'C')) {
+            // aquí llamas a tu máquina de estados
+        }
     }
 }
 
@@ -207,14 +236,17 @@ void CombateBaloncesto::comprobarColisiones() {
     float aroZ = canasta.getPosZ();
     float radio = canasta.getRadio();
 
-    if (disparosJ1.hayColisionConAro(aroX, aroY, aroZ, radio)) {
+    if (disparosJ1.hayCanasta(aroX, aroY, aroZ, radio)) {
         puntosJ1++;
         std::cout << "¡CANASTA J1! -> " << puntosJ1 << std::endl;
     }
-    if (disparosJ2.hayColisionConAro(aroX, aroY, aroZ, radio)) {
+    if (disparosJ2.hayCanasta(aroX, aroY, aroZ, radio)) {
         puntosJ2++;
         std::cout << "¡CANASTA J2! -> " << puntosJ2 << std::endl;
     }
+    if (puntosJ1 >= 5 || puntosJ2 >= 5)
+        estado = FIN;
+
 }
 
 void CombateBaloncesto::dibujarLineaApuntado(float x, float y, float z, float angulo) const {

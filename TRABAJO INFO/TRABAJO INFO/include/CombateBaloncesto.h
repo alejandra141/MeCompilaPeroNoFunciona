@@ -25,6 +25,8 @@ private:
     bool           teclaDerJ1;
     bool           teclaIzqJ2;
     bool           teclaDerJ2;
+    enum Estado { JUGANDO, FIN };
+    Estado estado = JUGANDO;
 
     static constexpr float POTENCIA_MAX = 15.0f;
     static constexpr float VELOCIDAD_CARGA = 8.0f;

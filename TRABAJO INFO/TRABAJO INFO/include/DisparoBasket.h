@@ -21,4 +21,15 @@ public:
     void desactivar();
     bool estaActivo()  const;
     bool colisionaConAro(float aroX, float aroY, float aroZ, float radio) const;
+
+    //para los rebotes 
+    float getX() const { return pelota.getPosX(); }
+    float getY() const { return pelota.getPosY(); }
+    float getZ() const { return pelota.getPosZ(); }
+
+    float getVx() const { return pelota.getVelX(); }
+    float getVy() const { return pelota.getVelY(); }
+    float getVz() const { return pelota.getVelZ(); }
+
+    void setVel(float vx, float vy, float vz) { pelota.setVel(vx, vy, vz); }
 };
