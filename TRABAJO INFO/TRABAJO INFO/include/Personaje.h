@@ -6,8 +6,13 @@
 #include "ETSIDI.h"
 #include "Linea.h"
 
+class Tablero; // cuidadillo esto lo quito amaya
+
 class Personaje {
-private:
+protected:
+    
+	int radioMovimiento = 1; // para asignar el movimiento de los personajes
+
     Linea posicion;
     std::string nombre;
     std::string tipo;
@@ -16,7 +21,7 @@ private:
     int fila, columna;
     int vida, ataque, defensa;
     bool vivo;
-    bool esquivando;   // ← nuevo
+    bool esquivando;   
     TexturasJugadores sprite;
 
 public:
@@ -53,6 +58,19 @@ public:
     virtual void esquivar() { esquivando = true; }
     virtual void actualizarBalanceo() {}
 
-    virtual std::vector<std::pair<int, int>> movimientosPosibles() = 0;
+
+    // virtual std::vector<std::pair<int, int>> movimientosPosibles() = 0;
+    virtual std::vector<std::pair<int, int>> movimientosPosibles() {
+        return std::vector<std::pair<int, int>>();
+    }
+
+    //MARTA
+    
+    // vale esto lo he metido aquí por que vamos a hacer que movimientos herede de personajes 
+    // y los personajes de movimientos como si fuera una doble herencia así para que todo sea más fácil
+    virtual bool esMovimientoValido(int destFila, int destColumna, Tablero* tablero)=0;
     virtual ~Personaje() {}
+
+    //MARTA
+
 };

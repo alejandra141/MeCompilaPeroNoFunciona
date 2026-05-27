@@ -2,7 +2,7 @@
 #include "ETSIDI.h"
 
 BoxeadorNormal::BoxeadorNormal(std::string pais, int numJugador)
-    : Personaje("BoxeadorNormal", "boxeador_normal", pais, 80, 15, 10, numJugador) {
+    : PersonajeTerrestre("BoxeadorNormal", "boxeador_normal", pais, 80, 15, 10, numJugador) {
     getSprite().setOffset(0.25f, -1.25f);   // EJEMPLO
 }
 

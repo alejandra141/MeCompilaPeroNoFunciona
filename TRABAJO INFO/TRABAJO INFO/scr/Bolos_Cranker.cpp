@@ -1,7 +1,7 @@
 #include "Bolos_Cranker.h"
 
 BoloCranker::BoloCranker(std::string pais, int numJugador)
-    : Personaje("Cranker", "bolo_cranker", pais, 90, 18, 12, numJugador) {
+    : PersonajeTerrestre("Cranker", "bolo_cranker", pais, 90, 18, 12, numJugador) {
     getSprite().setOffset(1.0f, -1.0f);   //para eliminar el offset al pegar la imagen
 }
 

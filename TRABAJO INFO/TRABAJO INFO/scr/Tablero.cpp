@@ -143,3 +143,23 @@ void Tablero::inicializarJ2(Jugador& j2) {
     colocar(p[16], 1, 0);  // B1 → ahora 1B
     colocar(p[17], 7, 0);  // H1 → ahora 1H
 }
+
+
+// devuelve true si la casilla contiene un personaje, false si está vacía
+bool Tablero::hayPiezaEn(int fila, int col) const {
+    // límites de la matriz (0-8)
+    if (fila < 0 || fila >= 9 || col < 0 || col >= 9) return false;
+
+    return (casillas[fila][col] != nullptr);
+}
+
+// devuelve el número de jugador (1 o 2) dueño de la pieza, o 0 si está vacía
+int Tablero::getBandoPiezaEn(int fila, int col) const {
+    if (fila < 0 || fila >= 9 || col < 0 || col >= 9) return 0;
+
+    if (casillas[fila][col] != nullptr) {
+        return casillas[fila][col]->getNumJugador();
+    }
+    return 0; // casilla vacía
+}
+

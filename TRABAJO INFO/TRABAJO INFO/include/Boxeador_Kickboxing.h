@@ -1,7 +1,7 @@
 #pragma once
-#include "Personaje.h"
+#include "PersonajeTeletransporte.h"
 
-class BoxeadorKickboxing : public Personaje {
+class BoxeadorKickboxing : public PersonajeTeletransporte {
 public:
     BoxeadorKickboxing(std::string pais, int numJugador);
     std::vector<std::pair<int, int>> movimientosPosibles() override;

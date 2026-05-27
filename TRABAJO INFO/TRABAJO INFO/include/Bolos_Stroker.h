@@ -1,7 +1,9 @@
 #pragma once
-#include "Personaje.h"
+#include "PersonajeSaltador.h"
 
-class BoloStronker : public Personaje {
+//este va a ser el jugador de bolos experto
+
+class BoloStronker : public PersonajeSaltador {
 public:
     BoloStronker(std::string pais, int numJugador);
     std::vector<std::pair<int, int>> movimientosPosibles() override;

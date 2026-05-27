@@ -2,7 +2,7 @@
 #include "ETSIDI.h"
 
 BoloStronker::BoloStronker(std::string pais, int numJugador)
-    : Personaje("Stronker", "bolo_stronker", pais, 110, 12, 15, numJugador) {
+    : PersonajeSaltador("Stronker", "bolo_stronker", pais, 110, 12, 15, numJugador) {
     getSprite().setOffset(1.0f, -1.5f);   // EJEMPLO
 }
 

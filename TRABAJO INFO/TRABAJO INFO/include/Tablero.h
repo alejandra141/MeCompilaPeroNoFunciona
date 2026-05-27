@@ -45,4 +45,9 @@ public:
     Linea centroCasilla(int fila, int col) const;
 
 
+    //metodos para enlazar con categorias movimiento
+    bool hayPiezaEn(int fila, int col) const;
+    int getBandoPiezaEn(int fila, int col) const;
+
+
 };
