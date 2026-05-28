@@ -4,6 +4,7 @@
 #include "Bolo.h"
 #include <vector>
 #include "BolaBolos.h"
+#include "Personaje.h"
 
 
 using std::vector;
@@ -45,6 +46,17 @@ private:
 
 	void comprobarColisiones();
 
+	// declaramos el tiempo que va a permanecer el juego mostrando fin juego antes de volver al tablero 
+	float tiempoFinJuego;
+
+	//los personajes van a entrar por punteros
+	Personaje* jugador1;
+	Personaje* jugador2;
+
+	//para saber el ganador del combate 
+	bool juegoTerminado;
+	int ganador;  // 1 o 2
+
 public:
 
 	CombateBolos();	
@@ -54,6 +66,12 @@ public:
     void tecla(unsigned char key) override;
 	void crearBolos();
 	void teclaSuelta(unsigned char key) override;
+	
+	//métodos para obtener el ganador y saber si el juego ha temrinado 
+	int getGanador() const { return ganador; }
+	bool isJuegoTerminado() const { return juegoTerminado && tiempoFinJuego <= 0; }
+
+	CombateBolos(Personaje* j1, Personaje* j2); //constructor para recibir los personajes que van a combatir
 
 };
 

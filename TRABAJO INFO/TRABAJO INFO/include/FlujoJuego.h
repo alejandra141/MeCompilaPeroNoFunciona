@@ -1,8 +1,6 @@
 #pragma once
 #include "EstadoJuego.h"
 
-//prueba commit
-
 class EstadoTablero;
 
 class FlujoJuego {
@@ -24,3 +22,5 @@ public:
     EstadoJuego* getEstado();
     EstadoTablero* getEstadoTablero();
 };
+
+

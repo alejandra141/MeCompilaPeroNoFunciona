@@ -7,7 +7,7 @@
 
 CombateBolos::CombateBolos() : bolosDerribadosJ1(0), bolosDerribadosJ2(0), //esto es para hacer pruebas
 j1esEspecialista(false), j2esEspecialista(true), anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1), potenciaJ1(0), potenciaJ2(0),
-cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false){
+cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false), tiempoFinJuego(0) {
     crearBolos();
 }
 
@@ -50,6 +50,19 @@ void CombateBolos::comprobarColisiones() {
 
     // Bajar temporizadores
     // (esto se hace en mueve con el dt)
+
+
+
+    if (bolosDerribadosJ1 >= 6 && !juegoTerminado) {
+        juegoTerminado = true;
+        ganador = 1;
+        tiempoFinJuego = 3.0f;  // 3 segundos antes de volver
+    }
+    if (bolosDerribadosJ2 >= 6 && !juegoTerminado) {
+        juegoTerminado = true;
+        ganador = 2;
+        tiempoFinJuego = 3.0f;
+    }
 }
 
 
@@ -94,6 +107,11 @@ void CombateBolos::mueve(double dt) {
     comprobarColisiones();
     if (tiempoEfectoJ1 > 0) tiempoEfectoJ1 -= (float)dt;
     if (tiempoEfectoJ2 > 0) tiempoEfectoJ2 -= (float)dt;
+
+    //esto es para volver al tablero cuando termina el juego y tal
+    if (juegoTerminado && tiempoFinJuego > 0) {
+        tiempoFinJuego -= (float)dt;
+    }
 
 }
 
@@ -287,32 +305,6 @@ void CombateBolos::dibujar() {
     // vamos a dibujar un marcador bien chulo por aquí jujujuju
 
 
-    //este ha sido el primer intento lo voy a dejar por que me da miedo quitarlo jajjaaj
-
-    /*
-
-    // marcador de J1
-
-    glColor3f(1.0f, 1.0f, 0.0f);  // va a ir en amarillo chulo
-    glRasterPos2f(-13.0f, 5.0f);
-    std::string txtJ1 = "J1: " + std::to_string(bolosDerribadosJ1) + "/6";
-    for (char c : txtJ1)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-
-    // marcador de J2
-    glColor3f(0.0f, 1.0f, 1.0f);  // en cyan para que tenga contraste con el otro
-    glRasterPos2f(9.0f, 5.0f);
-    std::string txtJ2 = "J2: " + std::to_string(bolosDerribadosJ2) + "/6";
-    for (char c : txtJ2)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-
-    glDisable(GL_BLEND);
-    glEnable(GL_LIGHTING);
-
-    */
-
-
-
     // A VER EL MARACDOR SE VE BIEN MAL PONEMOS POR AQUÍ UN FONDO PARA QUE SE VEA MEJOR
 
     // estas lineas se supone que hay que ponerlas para que se pinte por debajo el fondo 
@@ -359,6 +351,10 @@ void CombateBolos::dibujar() {
     // ponemos todo normal de nuevo
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
+
+
+
+    // vamos a poner 
     
 }
 

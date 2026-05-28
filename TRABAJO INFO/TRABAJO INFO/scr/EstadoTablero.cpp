@@ -21,9 +21,127 @@ void EstadoTablero::mueve(double dt) {}
 
 void EstadoTablero::dibujar() {
     tablero.dibuja();
+
+
+    // calcula centro geométrico de la casilla actual del cursor
+    Linea centro = tablero.centroCasilla(cursorFila, cursorCol);
+
+    // pintamos recuadro del cursos para que se vea donde estamos
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // tamaño del recuadro
+    float radio = 0.9f;
+
+    // color del cursor: ROJO si ya elegiste pieza y buscas destino
+    // BLANCO o MORADO si buscas pieza, depende del bando
+    if (modoDestino) {
+        glColor4ub(255, 0, 0, 100); // Rojo 
+    }
+    else {
+        if (gestionTurnos.getTurnoActual() == BUENOS) {
+            glColor4ub(255, 255, 255, 120); // Blanco 
+        }
+        else {
+            glColor4ub(147, 112, 219, 120); // Morado 
+        }
+    }
+
+    // dibujamos el cuadrado relleno del cursor 
+    glBegin(GL_POLYGON);
+    glVertex3f(centro.x - radio, centro.y - radio, centro.z + 0.05f);
+    glVertex3f(centro.x + radio, centro.y - radio, centro.z + 0.05f);
+    glVertex3f(centro.x + radio, centro.y + radio, centro.z + 0.05f);
+    glVertex3f(centro.x - radio, centro.y + radio, centro.z + 0.05f);
+    glEnd();
+
+
+    glLineWidth(3.0f);
+    if (modoDestino) glColor3ub(255, 0, 0); // borde rojo 
+    else glColor3ub(255, 255, 255);       // borde blanco 
+
+    glBegin(GL_LINE_LOOP);
+    glVertex3f(centro.x - radio, centro.y - radio, centro.z + 0.06f);
+    glVertex3f(centro.x + radio, centro.y - radio, centro.z + 0.06f);
+    glVertex3f(centro.x + radio, centro.y + radio, centro.z + 0.06f);
+    glVertex3f(centro.x - radio, centro.y + radio, centro.z + 0.06f);
+    glEnd();
+
+
+    glDisable(GL_BLEND);
+    glEnable(GL_LIGHTING);
+
 }
 
+
+void EstadoTablero::teclaEspecial(int key) {
+    if (key == GLUT_KEY_UP && cursorFila > 0)    cursorFila--;
+    if (key == GLUT_KEY_DOWN && cursorFila < 8)  cursorFila++;
+    if (key == GLUT_KEY_LEFT && cursorCol > 0)   cursorCol--;
+    if (key == GLUT_KEY_RIGHT && cursorCol < 8)  cursorCol++;
+
+    glutPostRedisplay();
+}
+
+
 void EstadoTablero::tecla(unsigned char key) {
+
+
+    // se pulsa espacio para seleccionar pieza o confirmar destino
+    if (key == ' ') {
+        if (!modoDestino) {
+            //  seleccionar una pieza en la posición actual del cursor
+            if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
+                Personaje* piezaAux = tablero.getPersonajeEn(cursorFila, cursorCol);
+
+                // comprobamos si la pieza pertenece al jugador del turno actual
+                bool esTurnoCorrecto = false;
+                if (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1) {
+                    esTurnoCorrecto = true; // Turno de la Luz / J1
+                }
+                else if (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2) {
+                    esTurnoCorrecto = true; // Turno de la Oscuridad / J2
+                }
+
+                // solo si es su turno, le dejamos "agarrar" la pieza
+                if (esTurnoCorrecto) {
+                    piezaSeleccionada = piezaAux;
+                    modoDestino = true;
+                }
+            }
+        }
+        else {
+            // ya teníamos una pieza, ahora confirmamos el destino
+            if (piezaSeleccionada != nullptr) {
+
+                if (piezaSeleccionada->esMovimientoValido(cursorFila, cursorCol, &tablero)) {
+
+                    if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
+                        // Si hay un enemigo -> saltamos al combate
+                        // NOTA: el cambio de turno real se hará al volver del combate
+                        comprobarColision(piezaSeleccionada, cursorFila, cursorCol);
+                    }
+                    else {
+                        tablero.eliminarPersonaje(piezaSeleccionada);
+                        tablero.colocar(piezaSeleccionada, cursorFila, cursorCol);
+
+                        // cambio de turno
+                        gestionTurnos.cambiarTurno();
+                    }
+
+                    // reseteamos el cursor
+                    piezaSeleccionada = nullptr;
+                    modoDestino = false;
+                }
+            }
+        }
+        glutPostRedisplay();
+    }
+
+
+
     if (key == '1') flujo->cambiarEstado(new EstadoCombate(flujo, 1, j1.getPais(), j2.getPais()));
     if (key == '2') flujo->cambiarEstado(new EstadoCombate(flujo, 2, j1.getPais(), j2.getPais()));
     if (key == '3') flujo->cambiarEstado(new EstadoCombate(flujo, 3, j1.getPais(), j2.getPais()));
