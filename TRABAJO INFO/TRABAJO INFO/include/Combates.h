@@ -13,6 +13,7 @@ public:
 	//se vaya cargando la potencia, tiene corchetes para que no de error al no implementarla 
     //en los otros combates, pero se puede sobreescribir en el combate de bolos
     virtual void teclaSuelta(unsigned char key) {};
+    virtual bool haTerminado() const { return false; } //ESTO ES LO QUE TENEMOS QUE USAR TODAS PARA DECIR QUE EL COMBATE HA TERMINADO Y VOLVER A TABLERO
 
     virtual ~Combates() {}
 };

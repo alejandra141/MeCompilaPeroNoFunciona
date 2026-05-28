@@ -3,10 +3,6 @@
 #include "GL/freeglut.h"
 #include "ETSIDI.h"
 
-#include "CombateBaloncesto.h"
-#include <iostream>
-#include "GL/freeglut.h"
-#include "ETSIDI.h"
 
 
 //CONSTRUCTOR
@@ -67,6 +63,8 @@ void CombateBaloncesto::mueve(double dt)
 
     disparosJ1.limpiarInactivos();
     disparosJ2.limpiarInactivos();
+
+    comprobarColisiones();
 }
 
 
@@ -198,6 +196,15 @@ void CombateBaloncesto::dibujar() {
         ETSIDI::setTextColor(1, 0, 0);
         ETSIDI::printxy("FIN DE PARTIDA", -5, 5);
         ETSIDI::printxy("Pulsa C para volver", -5, 3);
+
+        if (estado == FIN) {
+            ETSIDI::setTextColor(1, 1, 0);
+
+            if (ganador == 1)
+                ETSIDI::printxy("GANADOR: JUGADOR 1", -5, 1);
+            else if (ganador == 2)
+                ETSIDI::printxy("GANADOR: JUGADOR 2", -5, 1);
+        }
     }
 
     glEnable(GL_LIGHTING);
@@ -273,6 +280,17 @@ void CombateBaloncesto::comprobarColisiones() {
     }
     if (puntosJ1 >= 5 || puntosJ2 >= 5)
         estado = FIN;
+    
+    if (puntosJ1 >= 5) {
+        ganador = 1;
+        estado = FIN;
+    }
+
+    if (puntosJ2 >= 5) {
+        ganador = 2;
+        estado = FIN;
+    }
+
 
 }
 
