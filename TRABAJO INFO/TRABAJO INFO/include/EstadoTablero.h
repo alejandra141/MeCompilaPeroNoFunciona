@@ -15,7 +15,7 @@ private:
     std::string paisJ1, paisJ2; // esto es para las colisiones
 
 
-    int cursorFila = 4;        // cursor empieza en el centro del tablero 
+    int cursorFila = 4; // cursor empieza en el centro del tablero 
     int cursorCol = 4;
     Personaje* piezaSeleccionada = nullptr; // al principio no hay ninguna pieza agarrada
 

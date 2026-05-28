@@ -130,6 +130,7 @@ void CombateBolos::teclaSuelta(unsigned char key) {
             float velX = sin(anguloJ1) * potenciaJ1 * 1.5f;
             float velY = potenciaJ1 * 3.0f;
             bolaJ1.lanzar(-5.0f, -9.0f, velX, velY);
+            ETSIDI::play("sonidos/Bowling/Sample_0009.wav");
         }
         potenciaJ1 = 0; // reseteamos la potencia para que no se quede cargada después de lanzar
 
@@ -143,6 +144,7 @@ void CombateBolos::teclaSuelta(unsigned char key) {
             float velX = sin(anguloJ2) * potenciaJ2 * 1.5f;
             float velY = potenciaJ2 * 3.0f;
             bolaJ2.lanzar(5.0f, -9.0f, velX, velY);
+            ETSIDI::play("sonidos/Bowling/Sample_0009.wav");
         }
         potenciaJ2 = 0;
     }
