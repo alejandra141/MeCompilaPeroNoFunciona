@@ -1,6 +1,7 @@
 #include "EstadoTablero.h"
 #include "FlujoJuego.h"
 #include "EstadoCombate.h"
+#include <iostream>
 
 extern Tablero tablero;
 
@@ -119,54 +120,82 @@ void EstadoTablero::tecla(unsigned char key) {
         int fLogica = cursorCol;
         int cLogica = cursorFila;
 
-        if (!modoDestino) {
-            //  seleccionar una pieza en la posición actual del cursor
-            if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
-                Personaje* piezaAux = tablero.getPersonajeEn(fLogica, cLogica);
 
-                // comprobamos si la pieza pertenece al jugador del turno actual
-                bool esTurnoCorrecto = false;
-                if (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1) {
-                    esTurnoCorrecto = true; // Turno del J1
-                }
-                else if (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2) {
-                    esTurnoCorrecto = true; // Turno del J2
-                }
+        //TEMPORAL 
 
-                // solo si es su turno, le dejamos "agarrar" la pieza
-                if (esTurnoCorrecto) {
-                    piezaSeleccionada = piezaAux;
-                    modoDestino = true;
 
-                }
-            }
-        }
-        else {
-            // ya teníamos una pieza, ahora confirmamos el destino
-            if (piezaSeleccionada != nullptr) {
+        if (key == ' ') {
+            int fLogica = cursorFila;
+            int cLogica = cursorCol;
 
-                if (piezaSeleccionada->esMovimientoValido(fLogica, cLogica, &tablero)) {
+            // DEBUG - añade esto temporalmente
+            std::cout << "Cursor en fila=" << fLogica << " col=" << cLogica << std::endl;
+            std::cout << "Hay pieza: " << tablero.hayPiezaEn(fLogica, cLogica) << std::endl;
 
-                    if (tablero.hayPiezaEn(fLogica, cLogica)) {
-                        // Si hay un enemigo -> saltamos al combate
-                        comprobarColision(piezaSeleccionada, fLogica, cLogica);
+
+
+
+            if (!modoDestino) {
+                //  seleccionar una pieza en la posición actual del cursor
+                if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
+                    Personaje* piezaAux = tablero.getPersonajeEn(fLogica, cLogica);
+
+                    // comprobamos si la pieza pertenece al jugador del turno actual
+                    bool esTurnoCorrecto = false;
+                    if (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1) {
+                        esTurnoCorrecto = true; // Turno del J1
                     }
-                    else {
-                        tablero.eliminarPersonaje(piezaSeleccionada);
-                        tablero.colocar(piezaSeleccionada, fLogica, cLogica);
-
-                        // cambio de turno
-                        gestionTurnos.cambiarTurno();
+                    else if (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2) {
+                        esTurnoCorrecto = true; // Turno del J2
                     }
 
-                    // reseteamos el cursor
-                    piezaSeleccionada = nullptr;
-                    modoDestino = false;
+                    // solo si es su turno, le dejamos "agarrar" la pieza
+                    if (esTurnoCorrecto) {
+                        piezaSeleccionada = piezaAux;
+                        modoDestino = true;
+
+                    }
                 }
             }
-        }
-        glutPostRedisplay();
+            else {
+                // ya teníamos una pieza, ahora confirmamos el destino
+                if (piezaSeleccionada != nullptr) {
 
+
+                    //DEBUG TEMPORAL 
+
+                    // DEBUG
+                    std::cout << "Pieza en fila=" << piezaSeleccionada->getFila()
+                        << " col=" << piezaSeleccionada->getColumna() << std::endl;
+                    std::cout << "Destino fila=" << fLogica << " col=" << cLogica << std::endl;
+                    std::cout << "Movimiento valido: "
+                        << piezaSeleccionada->esMovimientoValido(fLogica, cLogica, &tablero)
+                        << std::endl;
+
+
+
+                    if (piezaSeleccionada->esMovimientoValido(fLogica, cLogica, &tablero)) {
+
+                        if (tablero.hayPiezaEn(fLogica, cLogica)) {
+                            // Si hay un enemigo -> saltamos al combate
+                            comprobarColision(piezaSeleccionada, fLogica, cLogica);
+                        }
+                        else {
+                            tablero.eliminarPersonaje(piezaSeleccionada);
+                            tablero.colocar(piezaSeleccionada, fLogica, cLogica);
+
+                            // cambio de turno
+                            gestionTurnos.cambiarTurno();
+                        }
+
+                        // reseteamos el cursor
+                        piezaSeleccionada = nullptr;
+                        modoDestino = false;
+                    }
+                }
+            }
+            glutPostRedisplay();
+        }
     }
 
 
