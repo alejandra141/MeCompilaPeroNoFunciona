@@ -28,7 +28,8 @@ void Tablero::dibuja() const {
             case 0: colorActual = NEGRO; break;
             case 1: colorActual = BLANCO; break;
             case 2: colorActual = MORADO; break;
-            default: colorActual = NEGRO;
+            case 3: colorActual = PODER; break;
+            default: colorActual = NEGRO; 
             }
             Cuadrado celda({ x1, y1, 0.2f }, { x2, y2, 0.2f }, colorActual);
             celda.dibuja(); 
