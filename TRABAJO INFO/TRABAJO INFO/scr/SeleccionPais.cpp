@@ -1,0 +1,89 @@
+#include "SeleccionPais.h"
+#include "ETSIDI.h"
+#include <GL/freeglut.h>
+
+void SelectorPais::moverJ1(int dir) {
+    if (confirmadoJ1) return;
+    indiceJ1 += dir;
+    if (indiceJ1 < 0) indiceJ1 = nombres.size() - 1;
+    if (indiceJ1 >= nombres.size()) indiceJ1 = 0;
+    ETSIDI::play("sonidos/Bowling/Sample_0002.wav");
+}
+
+void SelectorPais::moverJ2(int dir) {
+    if (confirmadoJ2) return;
+    indiceJ2 += dir;
+    if (indiceJ2 < 0) indiceJ2 = nombres.size() - 1;
+    if (indiceJ2 >= nombres.size()) indiceJ2 = 0;
+    ETSIDI::play("sonidos/Bowling/Sample_0002.wav");
+}
+
+bool SelectorPais::confirmarJ1() {
+    if (!confirmadoJ1) {
+        paisJ1 = nombres[indiceJ1];
+        confirmadoJ1 = true;
+        ETSIDI::play("sonidos/Bowling/Sample_0000.wav");
+    }
+    return confirmadoJ1;
+}
+
+bool SelectorPais::confirmarJ2() {
+    if (!confirmadoJ2) {
+        paisJ2 = nombres[indiceJ2];
+        confirmadoJ2 = true;
+        ETSIDI::play("sonidos/Bowling/Sample_0000.wav");
+    }
+    return confirmadoJ2;
+}
+
+void SelectorPais::dibuja() const {
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(-10, 10, -10, 10);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glDisable(GL_LIGHTING);
+
+    ETSIDI::setFont("fuentes/Bitwise.ttf", 30);
+
+    // --- TITULOS ---
+    ETSIDI::setTextColor(1, 1, 0);
+    ETSIDI::printxy("Jugador 2", 4, 8);
+    ETSIDI::printxy("Jugador 1", -8, 8);
+
+    // --- LISTA JUGADOR 1 ---
+    for (int i = 0; i < nombres.size(); i++) {
+        if (i == indiceJ1 && !confirmadoJ1)
+            ETSIDI::setTextColor(0, 1, 0);
+        else if (i == indiceJ1 && confirmadoJ1)
+            ETSIDI::setTextColor(0, 0.5f, 0);
+        else
+            ETSIDI::setTextColor(1, 1, 1);
+
+        ETSIDI::printxy(nombres[i].c_str(), 4, 5 - i * 2);
+    }
+
+    // --- LISTA JUGADOR 2 ---
+    for (int i = 0; i < nombres.size(); i++) {
+        if (i == indiceJ2 && !confirmadoJ2)
+            ETSIDI::setTextColor(0, 1, 0);
+        else if (i == indiceJ2 && confirmadoJ2)
+            ETSIDI::setTextColor(0, 0.5f, 0);
+        else
+            ETSIDI::setTextColor(1, 1, 1);
+
+        ETSIDI::printxy(nombres[i].c_str(), -8, 5 - i * 2);
+    }
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    glEnable(GL_LIGHTING);
+}
