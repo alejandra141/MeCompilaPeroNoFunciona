@@ -27,6 +27,8 @@ protected:
     //Acciones de victoria
     bool encarcelada = false;
 
+    int vidaMax; // para que el personaje se pueda curar solo hasta su vida máxima, no más
+
 public:
     Personaje(std::string nombre, std::string tipo, std::string pais,
         int vida, int ataque, int defensa, int numJugador);
@@ -36,7 +38,7 @@ public:
     void setPosicion(const Linea& p);
     void dibuja() const;
 
-
+    //getters
 
     int getNumJugador() const { return numJugador; }
     std::string getPais() const;
@@ -46,7 +48,12 @@ public:
     int  getColumna() const;
     bool estaVivo()   const;
     int  getVida()    const;
-    int  getFuerza()  const;   
+    int  getFuerza()  const;  
+
+    int getAtaque()  const { return ataque; }
+    int getDefensa() const { return defensa; }
+    int getVidaMax() const { return vidaMax; }
+
     std::string getTipo()   const;
    
     std::string getNombre() const;
@@ -80,4 +87,7 @@ public:
     bool estaEncarcelada() const { return encarcelada; }
     void encarcelar() { encarcelada = true; }
     void libertar() { encarcelada = false; }
+
+    //función para revivir a la peña
+    void revivir() { vivo = true; vida = vidaMax / 2; }
 };

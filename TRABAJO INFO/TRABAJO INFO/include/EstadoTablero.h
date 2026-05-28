@@ -25,6 +25,15 @@ private:
     Turnos gestionTurnos;
 
 
+	//para ver las stats de la pieza bajo el cursor, aunque no se haya seleccionado, para que se vea en la pantalla de abajo
+    Personaje* piezaHover = nullptr;
+
+    // hay que ponerle como un modo hechizo al fisio 
+    bool modoHechizo = false;   // estamos eligiendo objetivo de un hechizo
+    int  hechizoPendiente = 0;       // del 1 al 7 según el hechizo del Fisio
+    Personaje* primerObjetivo = nullptr; // para Intercambio que se necesitan dos piezas
+
+
 public:
     EstadoTablero(FlujoJuego* f,
         const std::string& paisJ1,

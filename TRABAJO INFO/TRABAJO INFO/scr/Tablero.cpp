@@ -23,8 +23,16 @@ void Tablero::dibuja() const {
             float x2 = x1 + lado;
             float y2 = y1 + lado;
 
+            int valorCelda = celdas[fila][col];
+
+            // ESTO ES PARA INVERTIR LOS COLORES DE LAS CELDAS
+            if (cicloInvertido) {
+                if (valorCelda == 0) valorCelda = 1;
+                else if (valorCelda == 1) valorCelda = 0;
+            }
+
             Color colorActual;
-            switch (celdas[fila][col]) {
+            switch (valorCelda) {
             case 0: colorActual = NEGRO; break;
             case 1: colorActual = BLANCO; break;
             case 2: colorActual = MORADO; break;
@@ -203,7 +211,7 @@ bool Tablero::controlaCincoPuntos(Jugador& j) const {
 //la segunda condicion es que se quede sin piezas, ya en Jugador.h: sinPiezas()
 
 //solo una pieza encarcelada
-bool rivalConUnaPiezaEncarcelada(Jugador& rival) {
+bool Tablero::rivalConUnaPiezaEncarcelada(Jugador& rival) {
     const auto& piezas = rival.getPiezas();
     int encarceladas = 0;
     for (const Personaje* p : piezas) {
@@ -214,7 +222,7 @@ bool rivalConUnaPiezaEncarcelada(Jugador& rival) {
 }
 
 // Ver quien ganó
-Jugador* verificarGanador(Tablero& t, Jugador& j1, Jugador& j2) {
+Jugador* Tablero::verificarGanador(Tablero& t, Jugador& j1, Jugador& j2) {
     // Revisamos j1
     if (t.controlaCincoPuntos(j1) ||
         j2.sinPiezas() ||

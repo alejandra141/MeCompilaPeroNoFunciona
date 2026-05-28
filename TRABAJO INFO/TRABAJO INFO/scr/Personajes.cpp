@@ -5,7 +5,9 @@ Personaje::Personaje(std::string nombre, std::string tipo, std::string pais,
     : nombre(nombre), tipo(tipo), pais(pais),
     vida(vida), ataque(ataque), defensa(defensa),
     numJugador(numJugador), fila(-1), columna(-1),
-    vivo(true), esquivando(false) {
+    vivo(true), esquivando(false), vidaMax(vida) {
+
+	//vidaMax = vida; // la vida máxima se establece al crear el personaje, igual a su vida inicial
 }
 
 void Personaje::cargarTextura() {

@@ -29,6 +29,8 @@ private:
 
     Personaje* casillas[9][9];  // punteros a los personajes en el tablero (es para colocar los personajes)
 
+    bool cicloInvertido = false; // esto es para los hechizos del fisio que es para invertir el turno 
+
 
 public:
     void dibuja() const;
@@ -62,6 +64,11 @@ public:
     bool controlaCincoPuntos(Jugador& j)const;
     bool rivalConUnaPiezaEncarcelada(Jugador& rival);
     Jugador* verificarGanador(Tablero& t, Jugador& j1, Jugador& j2); 
+
+
+	//métodos para invertir el color del tablero (para el hechizo del fisio)
+    void invertirCiclo() { cicloInvertido = !cicloInvertido; }
+    bool getCicloInvertido() const { return cicloInvertido; }
 
 
 };
