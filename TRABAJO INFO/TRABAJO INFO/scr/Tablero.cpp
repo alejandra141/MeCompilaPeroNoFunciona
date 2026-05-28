@@ -168,3 +168,49 @@ Personaje* Tablero::getPersonajeEn(int fila, int col) const {
     if (fila < 0 || fila >= 9 || col < 0 || col >= 9) return nullptr;
     return casillas[fila][col];
 }
+
+
+//Acciones de victoria
+//Piezas en las cinco posicones de poder 
+bool Tablero::controlaCincoPuntos(Jugador& j) const {
+    for (int i = 0; i < 9; i++) {
+        for (int k = 0; k < 9; k++) {
+            if (getCelda(i, k) == 3) {      // mira a ver si hay pieza
+                Personaje* p = getCasilla(i, k); // de quien es la pieza
+                if (p == nullptr) return false;//no hay nadie
+                if (!j.tienePieza(p)) return false;//es del rival
+            }
+        }
+    }
+    return true;
+}
+
+//la segunda condicion es que se quede sin piezas, ya en Jugador.h: sinPiezas()
+
+//solo una pieza encarcelada
+bool rivalConUnaPiezaEncarcelada(Jugador& rival) {
+    const auto& piezas = rival.getPiezas();
+    int encarceladas = 0;
+    for (const Personaje* p : piezas) {
+        if (p->estaEncarcelada()) encarceladas++;
+    }
+    // Solo tiene 1 pieza y está encarcelada
+    return (piezas.size() == 1 && encarceladas == 1);
+}
+
+// Ver quien ganó
+Jugador* verificarGanador( Tablero& t, Jugador& j1, Jugador& j2) {
+    // Revisamos j1
+    if (t.controlaCincoPuntos(j1) ||
+        j2.sinPiezas() ||   
+        rivalConUnaPiezaEncarcelada(j2))
+        return &j1;
+
+    // Revisamos j2
+    if (t.controlaCincoPuntos(j2) ||
+        j1.sinPiezas() ||   
+        rivalConUnaPiezaEncarcelada(j1))
+        return &j2;
+
+    return nullptr; // Nadie ganó aún
+}

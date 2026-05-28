@@ -54,4 +54,14 @@ public:
 	// esto lo vamos a poner para detectar cuando dos personajes estan en la misma casilla y que se inicie el combate
     Personaje* getPersonajeEn(int fila, int col) const;
 
+    //Acciones de victoria 
+    // Para poder obtener si ocupamos los cinco puntos de poder
+    int getCelda(int fila, int col) const { return celdas[fila][col]; }
+    Personaje* getCasilla(int fila, int col) const { return casillas[fila][col]; }
+
+    bool controlaCincoPuntos(Jugador& j)const;
+    bool rivalConUnaPiezaEncarcelada(Jugador& rival);
+    Jugador* verificarGanador(Tablero& t, Jugador& j1, Jugador& j2); 
+
+
 };

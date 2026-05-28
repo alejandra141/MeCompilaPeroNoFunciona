@@ -42,3 +42,8 @@ void Jugador::inicializarPiezas() {
 
     for (auto p : piezas) p->cargarTextura();
 }
+
+//Acciones de victoria
+bool Jugador::tienePieza(Personaje* p) const {
+    return std::find(piezas.begin(), piezas.end(), p) != piezas.end();
+}

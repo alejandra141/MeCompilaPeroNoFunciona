@@ -15,6 +15,8 @@ private:
     std::string pais;
     std::vector<Personaje*> piezas;
 
+  
+
 public:
     Jugador(int id);
     ~Jugador();
@@ -29,4 +31,8 @@ public:
     bool sinPiezas() const;
 
     void inicializarPiezas();
+
+    //Para acciones de victoria
+    bool tienePieza(Personaje* p) const;  //Miramos si hay pieza en casilla (para fin de juego)
+
 };

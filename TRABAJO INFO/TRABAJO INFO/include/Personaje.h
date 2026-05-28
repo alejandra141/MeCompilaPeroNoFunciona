@@ -24,6 +24,9 @@ protected:
     bool esquivando;   
     TexturasJugadores sprite;
 
+    //Acciones de victoria
+    bool encarcelada = false;
+
 public:
     Personaje(std::string nombre, std::string tipo, std::string pais,
         int vida, int ataque, int defensa, int numJugador);
@@ -73,4 +76,8 @@ public:
 
     //MARTA
 
+    //Acciones de victoria
+    bool estaEncarcelada() const { return encarcelada; }
+    void encarcelar() { encarcelada = true; }
+    void libertar() { encarcelada = false; }
 };
