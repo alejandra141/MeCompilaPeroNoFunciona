@@ -46,24 +46,25 @@ void EstadoCombate::dibujar() {
 
 
 
-void EstadoCombate::tecla(unsigned char key) {  //ESTO ES PRINCIPALMENTE PARA VOLVER DE COMBATE A TABLERO
+void EstadoCombate::tecla(unsigned char key) {  //ESTO ES PRINCIPALMente PARA VOLVER DE COMBATE A TABLERO
 
-    // CUANDO FINALIZA EL COMBATE
+    //CUANDO FINALIZA EL COMBATE
     if (combate->haTerminado()) {
         if (key == 'c' || key == 'C') {
             flujo->cambiarEstado(new EstadoTablero(flujo, paisJ1, paisJ2));
         }
         return; // No pasar teclas al combate
-    }
 
-    // MANUALMENTE VOLVER AL TABLER
-    if (key == 'b') {
-        flujo->cambiarEstado(new EstadoTablero(flujo, paisJ1, paisJ2));
-        return;
-    }
 
-	// PASAR TECLAS AL COMBATE  
-    combate->tecla(key);
+        // MANUALMENTE VOLVER AL TABLER
+        if (key == 'b') {
+            flujo->cambiarEstado(new EstadoTablero(flujo, paisJ1, paisJ2));
+            return;
+        }
+
+        // PASAR TECLAS AL COMBATE  
+        combate->tecla(key);
+    }
 }
 
 
