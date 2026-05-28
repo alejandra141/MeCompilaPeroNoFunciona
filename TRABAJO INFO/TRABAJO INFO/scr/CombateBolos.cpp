@@ -52,16 +52,14 @@ void CombateBolos::comprobarColisiones() {
     // (esto se hace en mueve con el dt)
 
 
-
-    if (bolosDerribadosJ1 >= 6 && !juegoTerminado) {
-        juegoTerminado = true;
+    if (bolosDerribadosJ1 >= 6 && estado == JUGANDO) {
+        estado = FIN;
         ganador = 1;
-        tiempoFinJuego = 3.0f;  // 3 segundos antes de volver
     }
-    if (bolosDerribadosJ2 >= 6 && !juegoTerminado) {
-        juegoTerminado = true;
+
+    if (bolosDerribadosJ2 >= 6 && estado == JUGANDO) {
+        estado = FIN;
         ganador = 2;
-        tiempoFinJuego = 3.0f;
     }
 }
 
@@ -108,10 +106,8 @@ void CombateBolos::mueve(double dt) {
     if (tiempoEfectoJ1 > 0) tiempoEfectoJ1 -= (float)dt;
     if (tiempoEfectoJ2 > 0) tiempoEfectoJ2 -= (float)dt;
 
-    //esto es para volver al tablero cuando termina el juego y tal
-    if (juegoTerminado && tiempoFinJuego > 0) {
-        tiempoFinJuego -= (float)dt;
-    }
+   
+
 
 }
 
@@ -355,6 +351,23 @@ void CombateBolos::dibujar() {
 
 
     // vamos a poner 
+
+    //SOY LORENA ESTO ES PARA QUE ANUNCIA EL GANADOR Y PULSANDO C VUELVES AL TABLERO 
+    if (estado == FIN) {
+
+        glDisable(GL_LIGHTING);
+        glDisable(GL_TEXTURE_2D);
+
+        ETSIDI::setTextColor(1, 1, 0);
+
+        if (ganador == 1)
+            ETSIDI::printxy("GANADOR: JUGADOR 1", -7, 5);
+        else if (ganador == 2)
+            ETSIDI::printxy("GANADOR: JUGADOR 2", -7, 5);
+
+        ETSIDI::setTextColor(1, 0, 0);
+        ETSIDI::printxy("Pulsa C para volver", -7, 3);
+    }
     
 }
 

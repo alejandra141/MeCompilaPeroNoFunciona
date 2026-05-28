@@ -54,8 +54,12 @@ private:
 	Personaje* jugador2;
 
 	//para saber el ganador del combate 
-	bool juegoTerminado;
+	
 	int ganador;  // 1 o 2
+
+	enum Estado { JUGANDO, FIN };
+	Estado estado = JUGANDO;
+
 
 public:
 
@@ -68,8 +72,9 @@ public:
 	void teclaSuelta(unsigned char key) override;
 	
 	//métodos para obtener el ganador y saber si el juego ha temrinado 
-	int getGanador() const { return ganador; }
-	bool isJuegoTerminado() const { return juegoTerminado && tiempoFinJuego <= 0; }
+	bool haTerminado() const override { return estado == FIN; }
+	int getGanador() const override { return ganador; }
+
 
 	CombateBolos(Personaje* j1, Personaje* j2); //constructor para recibir los personajes que van a combatir
 

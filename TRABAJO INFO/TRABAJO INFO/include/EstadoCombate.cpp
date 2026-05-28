@@ -54,7 +54,7 @@ void EstadoCombate::tecla(unsigned char key) {  //ESTO ES PRINCIPALMente PARA VO
             flujo->cambiarEstado(new EstadoTablero(flujo, paisJ1, paisJ2));
         }
         return; // No pasar teclas al combate
-
+    }
 
         // MANUALMENTE VOLVER AL TABLER
         if (key == 'b') {
@@ -65,7 +65,6 @@ void EstadoCombate::tecla(unsigned char key) {  //ESTO ES PRINCIPALMente PARA VO
         // PASAR TECLAS AL COMBATE  
         combate->tecla(key);
     }
-}
 
 
 
