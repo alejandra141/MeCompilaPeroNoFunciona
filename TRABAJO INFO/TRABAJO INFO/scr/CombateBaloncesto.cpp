@@ -213,8 +213,8 @@ void CombateBaloncesto::dibujar() {
 
 void CombateBaloncesto::tecla(unsigned char key) {
     switch (key) {
-    case 13:           if (!cargandoJ1) { cargandoJ1 = true; potenciaJ1 = 0.0f; } break;
-    case ' ':            if (!cargandoJ2) { cargandoJ2 = true; potenciaJ2 = 0.0f; } break;
+    case ' ':           if (!cargandoJ1) { cargandoJ1 = true; potenciaJ1 = 0.0f; } break;
+    case 13:            if (!cargandoJ2) { cargandoJ2 = true; potenciaJ2 = 0.0f; } break;
     case 'a': case 'A': teclaIzqJ1 = true;  break;
     case 'd': case 'D': teclaDerJ1 = true;  break;
 
@@ -229,8 +229,23 @@ void CombateBaloncesto::tecla(unsigned char key) {
 
 void CombateBaloncesto::teclaSuelta(unsigned char key) {
     switch (key) {
-    case 13:           if (cargandoJ1) { disparar(1, potenciaJ1); cargandoJ1 = false; potenciaJ1 = 0.0f; } break;
-    case ' ':            if (cargandoJ2) { disparar(2, potenciaJ2); cargandoJ2 = false; potenciaJ2 = 0.0f; } break;
+    case ' ':
+        if (cargandoJ1) {
+            disparar(1, potenciaJ1);
+            ETSIDI::play("sonidos/baloncesto/robar_balon.wav");   // ← SONIDO DE TIRO
+            cargandoJ1 = false;
+            potenciaJ1 = 0.0f;
+        }
+        break;
+
+    case 13:
+        if (cargandoJ2) {
+            disparar(2, potenciaJ2);
+            ETSIDI::play("sonidos/baloncesto/robar_balon.wav");   // ← SONIDO DE TIRO
+            cargandoJ2 = false;
+            potenciaJ2 = 0.0f;
+        }
+        break;
     case 'a': case 'A': teclaIzqJ1 = false; break;
     case 'd': case 'D': teclaDerJ1 = false; break;
     }
@@ -273,10 +288,13 @@ void CombateBaloncesto::comprobarColisiones() {
     if (disparosJ1.hayCanasta(aroX, aroY, aroZ, radio)) {
         puntosJ1++;
         std::cout << "CANASTA J1 -> " << puntosJ1 << std::endl;
+        ETSIDI::play("sonidos/baloncesto/canasta_fallida.wav");   // ← SONIDO DE CANASTA
     }
     if (disparosJ2.hayCanasta(aroX, aroY, aroZ, radio)) {
         puntosJ2++;
         std::cout << "CANASTA J2 -> " << puntosJ2 << std::endl;
+        ETSIDI::play("sonidos/baloncesto/canasta_fallida.wav");   // ← SONIDO DE CANASTA
+
     }
     if (puntosJ1 >= 5 || puntosJ2 >= 5)
         estado = FIN;
