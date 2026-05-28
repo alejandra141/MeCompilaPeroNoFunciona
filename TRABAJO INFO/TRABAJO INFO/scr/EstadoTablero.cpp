@@ -37,6 +37,7 @@ void EstadoTablero::dibujar() {
 
     // color del cursor: ROJO si ya elegiste pieza y buscas destino
     // BLANCO o MORADO si buscas pieza, depende del bando
+    /*
     if (modoDestino) {
         glColor4ub(255, 0, 0, 100); // Rojo 
     }
@@ -47,6 +48,16 @@ void EstadoTablero::dibujar() {
         else {
             glColor4ub(147, 112, 219, 120); // Morado 
         }
+    }
+    */
+
+    //NUEVO IF
+
+    if (modoDestino) {
+        glColor4ub(0, 150, 255, 100); // Azul eléctrico (buscando destino)
+    }
+    else {
+        glColor4ub(255, 128, 0, 100); // Naranja vibrante (buscando personaje)
     }
 
     // dibujamos el cuadrado relleno del cursor 
@@ -77,12 +88,23 @@ void EstadoTablero::dibujar() {
 
 
 void EstadoTablero::teclaEspecial(int key) {
-    if (key == GLUT_KEY_UP && cursorFila > 0)    cursorFila--;
-    if (key == GLUT_KEY_DOWN && cursorFila < 8)  cursorFila++;
-    if (key == GLUT_KEY_LEFT && cursorCol > 0)   cursorCol--;
-    if (key == GLUT_KEY_RIGHT && cursorCol < 8)  cursorCol++;
+
+    //mejorado para que no se salga de la matriz 9x9
+    if (key == GLUT_KEY_UP) {
+        if (cursorFila < 8) cursorFila++;
+    }
+    if (key == GLUT_KEY_DOWN) {
+        if (cursorFila > 0) cursorFila--;
+    }
+    if (key == GLUT_KEY_LEFT) {
+        if (cursorCol > 0) cursorCol--;
+    }
+    if (key == GLUT_KEY_RIGHT) {
+        if (cursorCol < 8) cursorCol++;
+    }
 
     glutPostRedisplay();
+
 }
 
 
@@ -91,24 +113,31 @@ void EstadoTablero::tecla(unsigned char key) {
 
     // se pulsa espacio para seleccionar pieza o confirmar destino
     if (key == ' ') {
+
+        // Como en las inicializaciones se usa colocar(pieza, columna, fila),
+        // cruzamos las variables aquí para que la matriz lógica lo entienda bien
+        int fLogica = cursorCol;
+        int cLogica = cursorFila;
+
         if (!modoDestino) {
             //  seleccionar una pieza en la posición actual del cursor
             if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
-                Personaje* piezaAux = tablero.getPersonajeEn(cursorFila, cursorCol);
+                Personaje* piezaAux = tablero.getPersonajeEn(fLogica, cLogica);
 
                 // comprobamos si la pieza pertenece al jugador del turno actual
                 bool esTurnoCorrecto = false;
                 if (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1) {
-                    esTurnoCorrecto = true; // Turno de la Luz / J1
+                    esTurnoCorrecto = true; // Turno del J1
                 }
                 else if (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2) {
-                    esTurnoCorrecto = true; // Turno de la Oscuridad / J2
+                    esTurnoCorrecto = true; // Turno del J2
                 }
 
                 // solo si es su turno, le dejamos "agarrar" la pieza
                 if (esTurnoCorrecto) {
                     piezaSeleccionada = piezaAux;
                     modoDestino = true;
+
                 }
             }
         }
@@ -116,16 +145,15 @@ void EstadoTablero::tecla(unsigned char key) {
             // ya teníamos una pieza, ahora confirmamos el destino
             if (piezaSeleccionada != nullptr) {
 
-                if (piezaSeleccionada->esMovimientoValido(cursorFila, cursorCol, &tablero)) {
+                if (piezaSeleccionada->esMovimientoValido(fLogica, cLogica, &tablero)) {
 
-                    if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
+                    if (tablero.hayPiezaEn(fLogica, cLogica)) {
                         // Si hay un enemigo -> saltamos al combate
-                        // NOTA: el cambio de turno real se hará al volver del combate
-                        comprobarColision(piezaSeleccionada, cursorFila, cursorCol);
+                        comprobarColision(piezaSeleccionada, fLogica, cLogica);
                     }
                     else {
                         tablero.eliminarPersonaje(piezaSeleccionada);
-                        tablero.colocar(piezaSeleccionada, cursorFila, cursorCol);
+                        tablero.colocar(piezaSeleccionada, fLogica, cLogica);
 
                         // cambio de turno
                         gestionTurnos.cambiarTurno();
@@ -138,6 +166,7 @@ void EstadoTablero::tecla(unsigned char key) {
             }
         }
         glutPostRedisplay();
+
     }
 
 
