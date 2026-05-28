@@ -20,6 +20,10 @@ private:
     // el "árbitro" procesa el daño
     void procesarGolpe(Boxeador* atacante, Boxeador* victima);
 
+	enum Estado { JUGANDO, FIN }; //SOY LORENA ESTO ES PARA FINALIZAR EL COMBATE Y ANUNCIAR EL GANADOR  
+    Estado estado = JUGANDO;
+    int ganador = 0;
+
 public:
     // El constructor recibe a los dos luchadores ya creados
     // El constructor que usará ALEJANDRA para elegir el tipo de boxeador
@@ -39,6 +43,9 @@ public:
 
     void dibujar() override;
     void tecla(unsigned char key) override;
+
+	bool haTerminado() const override { return estado == FIN; } // PARA EL FIN DEL COMBATE Y VOLVER A TABLERO
+    int getGanador() const override { return ganador; }
 };
 
 

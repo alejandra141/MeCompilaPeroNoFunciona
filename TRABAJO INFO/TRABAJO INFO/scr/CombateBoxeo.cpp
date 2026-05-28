@@ -174,6 +174,10 @@ void CombateBoxeo::procesarGolpe(Boxeador* atacante, Boxeador* victima) {
         // Si tras el impacto la víctima muere, llamamos al fin de la pelea
         if (!victima->estaVivo()) {
             finalizarPelea();
+            estado = FIN; //ACTIVAR EL ESTADO FIN
+
+            if (jugador1->estaVivo()) ganador = 1;  //DETERMINAR QUE JUGADOR ES EL GANADOR
+            else ganador = 2;
         }
     }
 }
@@ -182,7 +186,8 @@ void CombateBoxeo::procesarGolpe(Boxeador* atacante, Boxeador* victima) {
 
 void CombateBoxeo::mueve(double dt) {
     // Si el combate no ha terminado, ambos boxeadores botan
-    if (estaTerminado()) return;
+    if (estado == FIN) return;
+
 
     //los jugadores se balancean de forma automatica, sin necesidad de que el jugador pulse nada
     jugador1->actualizarBalanceo();
@@ -316,5 +321,20 @@ void CombateBoxeo::dibujar() {
     char vidaJ2[50];
     sprintf_s(vidaJ2, "Vida: %d", jugador2->getVida());
     ETSIDI::printxy(vidaJ2, 9, 8);
-}
 
+
+
+    if (estado == FIN) {  //SOY LORENA ESTO ES PARA QUE ANUNCIA EL GANADOR Y PULSANDO C VUELVES AL TABLERO  
+
+        ETSIDI::setTextColor(1, 1, 0);
+
+        if (ganador == 1)
+            ETSIDI::printxy("GANADOR: JUGADOR 1", -5, 5);
+        else if (ganador == 2)
+            ETSIDI::printxy("GANADOR: JUGADOR 2", -5, 15);
+
+        ETSIDI::setTextColor(1, 0, 0);
+        ETSIDI::printxy("Pulsa C para volver", -5, 3);
+    }
+
+}
