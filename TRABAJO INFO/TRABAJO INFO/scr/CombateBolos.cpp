@@ -1,8 +1,3 @@
-
-
-
-//CombateBolos.cpp
-
 #include "CombateBolos.h"
 #include "GL/freeglut.h"
 #include "ETSIDI.h"
