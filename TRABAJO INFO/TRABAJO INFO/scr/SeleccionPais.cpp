@@ -37,6 +37,9 @@ bool SelectorPais::confirmarJ2() {
 }
 
 void SelectorPais::dibuja() const {
+
+
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -48,12 +51,33 @@ void SelectorPais::dibuja() const {
 
     glDisable(GL_LIGHTING);
 
+
+    // FONDO
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("fondos/menu_wii.png").id);
+    glColor3f(1, 1, 1);
+    glBegin(GL_POLYGON);
+    glTexCoord2d(0, 1); glVertex2f(-10, -10);
+    glTexCoord2d(1, 1); glVertex2f(10, -10);
+    glTexCoord2d(1, 0); glVertex2f(10, 10);
+    glTexCoord2d(0, 0); glVertex2f(-10, 10);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+
     ETSIDI::setFont("fuentes/Bitwise.ttf", 30);
 
-    // --- TITULOS ---
-    ETSIDI::setTextColor(1, 1, 0);
+    // TITULOS
+    ETSIDI::setTextColor(1.0f, 0.45f, 0.0f);
     ETSIDI::printxy("Jugador 2", 4, 8);
     ETSIDI::printxy("Jugador 1", -8, 8);
+
+    //PREPARADOOOS!!
+    ETSIDI::setFont("fuentes/Bitwise.ttf", 16);
+    ETSIDI::printxy(!confirmadoJ2 ? "ESPACIO para seleccionar" : "Listo!", -9, -6);
+    ETSIDI::printxy(!confirmadoJ1 ? "ENTER para seleccionar" : "Listo!", 3, -6);
+
+    ETSIDI::setFont("fuentes/Bitwise.ttf", 30);
 
     //  LISTA JUGADOR 1 
     for (int i = 0; i < nombres.size(); i++) {
@@ -62,7 +86,7 @@ void SelectorPais::dibuja() const {
         else if (i == indiceJ1 && confirmadoJ1)
             ETSIDI::setTextColor(0, 0.5f, 0);
         else
-            ETSIDI::setTextColor(1, 1, 1);
+            ETSIDI::setTextColor(0, 0, 1);
 
         ETSIDI::printxy(nombres[i].c_str(), 4, 5 - i * 2);
     }
@@ -74,7 +98,7 @@ void SelectorPais::dibuja() const {
         else if (i == indiceJ2 && confirmadoJ2)
             ETSIDI::setTextColor(0, 0.5f, 0);
         else
-            ETSIDI::setTextColor(1, 1, 1);
+            ETSIDI::setTextColor(0, 0, 1);
 
         ETSIDI::printxy(nombres[i].c_str(), -8, 5 - i * 2);
     }

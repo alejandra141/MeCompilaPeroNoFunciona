@@ -19,7 +19,13 @@ private:
     std::string paisJ1;
     std::string paisJ2;
 
+
 public:
+
+    //para que no salte directamente y se ponga el sombreado bien 
+    float tiempoEspera = 0.0f;
+    bool listos = false;
+
     SelectorPais() = default;
 
     void moverJ1(int dir);   // -1 arriba, +1 abajo

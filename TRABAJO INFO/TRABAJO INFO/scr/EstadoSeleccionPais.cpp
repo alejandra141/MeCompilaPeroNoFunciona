@@ -13,6 +13,40 @@ void EstadoSeleccionPais::dibujar() {
     selector.dibuja();
 }
 
+
+void EstadoSeleccionPais::mueve(double dt) {
+
+    if (selector.listos) {
+        selector.tiempoEspera += (float)dt;
+        if (selector.tiempoEspera > 1.0f) {
+            selector.listos = false;
+
+            Jugador* j1 = flujo->getJugador1();
+            Jugador* j2 = flujo->getJugador2();
+
+            j1->setPais(selector.getPaisJ1());
+            j2->setPais(selector.getPaisJ2());
+
+            j1->inicializarPiezas();
+            j2->inicializarPiezas();
+
+            tablero.inicializarJ1(*j1);
+            tablero.inicializarJ2(*j2);
+
+            flujo->cambiarEstado(
+                new EstadoTablero(
+                    flujo,
+                    selector.getPaisJ1(),
+                    selector.getPaisJ2()
+                )
+            );
+
+        }
+    }
+}
+
+
+
 void EstadoSeleccionPais::teclaEspecial(int key) {
 
     switch (key) {
@@ -28,30 +62,8 @@ void EstadoSeleccionPais::teclaEspecial(int key) {
 
     if (selector.seleccionCompleta()) {
 
-        // 1. Obtener jugadores reales
-        Jugador* j1 = flujo->getJugador1();
-        Jugador* j2 = flujo->getJugador2();
-
-        // 2. Asignar países
-        j1->setPais(selector.getPaisJ1());
-        j2->setPais(selector.getPaisJ2());
-
-        // 3. Crear piezas una sola vez
-        j1->inicializarPiezas();
-        j2->inicializarPiezas();
-
-        // 4. Colocar piezas en el tablero
-        tablero.inicializarJ1(*j2);   // izquierda
-        tablero.inicializarJ2(*j1);   // derecha
-
-        // 5. Cambiar al tablero
-        flujo->cambiarEstado(
-            new EstadoTablero(
-                flujo,
-                selector.getPaisJ1(),
-                selector.getPaisJ2()
-            )
-        );
+        selector.listos = true;
+        selector.tiempoEspera = 0.0f;
     }
 }
 
@@ -80,24 +92,7 @@ void EstadoSeleccionPais::tecla(unsigned char key) {
 
     if (selector.seleccionCompleta()) {
 
-        Jugador* j1 = flujo->getJugador1();
-        Jugador* j2 = flujo->getJugador2();
-
-        j1->setPais(selector.getPaisJ1());
-        j2->setPais(selector.getPaisJ2());
-
-        j1->inicializarPiezas();
-        j2->inicializarPiezas();
-
-        tablero.inicializarJ1(*j1);
-        tablero.inicializarJ2(*j2);
-
-        flujo->cambiarEstado(
-            new EstadoTablero(
-                flujo,
-                selector.getPaisJ1(),
-                selector.getPaisJ2()
-            )
-        );
+        selector.listos = true;
+        selector.tiempoEspera = 0.0f;
     }
 }
