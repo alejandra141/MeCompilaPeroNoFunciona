@@ -51,22 +51,6 @@ void EstadoTablero::dibujar() {
     // tamaño del recuadro
     float radio = 0.9f;
 
-    // color del cursor: ROJO si ya elegiste pieza y buscas destino
-    // BLANCO o MORADO si buscas pieza, depende del bando
-    /*
-    if (modoDestino) {
-        glColor4ub(255, 0, 0, 100); // Rojo
-    }
-    else {
-        if (gestionTurnos.getTurnoActual() == BUENOS) {
-            glColor4ub(255, 255, 255, 120); // Blanco
-        }
-        else {
-            glColor4ub(147, 112, 219, 120); // Morado
-        }
-    }
-    */
-
     //NUEVO IF
 
     if (modoDestino) {
@@ -354,7 +338,7 @@ void EstadoTablero::tecla(unsigned char key) {
       // Primero localizamos al Fisio y que no esté muerto, porque si no no se puede lanzar hechizos
 
     Fisio* fisioActivo = nullptr;
-    Jugador* jugadorActual = (gestionTurnos.getTurnoActual() == 1) ? j1 : j2;
+    Jugador* jugadorActual = (gestionTurnos.getTurnoActual() == BUENOS) ? j1 : j2;
     for (Personaje* p : jugadorActual->getPiezas()) {
         if (p->getTipo() == "fisio" && p->estaVivo()) {
             fisioActivo = dynamic_cast<Fisio*>(p);
@@ -379,12 +363,13 @@ void EstadoTablero::tecla(unsigned char key) {
         if (key >= '1' && key <= '7') {
             hechizoPendiente = key - '0';
 
-            // ShiftTime no necesita objetivo, se lanza ya
+
+            //ESTE ES EL SHIFT TIME QUE NO NECESITA OBJETIVOS EN EL TABLERO
             if (hechizoPendiente == 3) {
                 bool exito = fisioActivo->lanzarShiftTime(tablero);
                 if (exito) {
-                    gestionTurnos.cambiarTurno();
-                    std::cout << "[SHIFT TIME] Ciclo invertido!" << std::endl;
+                    gestionTurnos.cambiarTurno(); // ← ya estaba, está bien
+                    std::cout << "[SHIFT TIME] ¡Ciclo invertido!" << std::endl;
                 }
                 modoHechizo = false;
                 hechizoPendiente = 0;
@@ -399,26 +384,141 @@ void EstadoTablero::tecla(unsigned char key) {
     // se pulsa espacio para seleccionar pieza o confirmar destino
    // se pulsa espacio para seleccionar pieza o confirmar destino
     if (key == ' ') {
-
         int f = cursorFila;
         int c = cursorCol;
 
-        std::cout << "Cursor en fila=" << f << " col=" << c << std::endl;
-        std::cout << "Hay pieza: " << tablero.hayPiezaEn(f, c) << std::endl;
+        // HECHIZOS: tienen su propio flujo, no dependen de modoDestino
+        if (modoHechizo && hechizoPendiente > 0 && fisioActivo != nullptr) {
+            Personaje* objetivo = tablero.getPersonajeEn(f, c);
 
+            bool necesitaObjetivo = (hechizoPendiente == 2 || hechizoPendiente == 5 ||
+                hechizoPendiente == 7);
+            if (necesitaObjetivo && objetivo == nullptr) {
+                std::cout << "[HECHIZO] No hay pieza en esa casilla." << std::endl;
+                glutPostRedisplay();
+                return;
+            }
+
+            bool exito = false;
+            switch (hechizoPendiente) {
+
+            case 1: // Teleport
+                if (primerObjetivo == nullptr) {
+                    if (objetivo && objetivo->getNumJugador() == fisioActivo->getNumJugador()) {
+                        primerObjetivo = objetivo;
+                        std::cout << "[TELEPORT] Ahora elige casilla vacía." << std::endl;
+                    }
+                    else {
+                        std::cout << "[TELEPORT] Elige una pieza aliada." << std::endl;
+                    }
+                }
+                else {
+                    if (tablero.hayPiezaEn(f, c)) {
+                        std::cout << "[TELEPORT] La casilla debe estar vacía." << std::endl;
+                    }
+                    else {
+                        exito = fisioActivo->lanzarTeleport(primerObjetivo, f, c, tablero);
+                        if (exito) std::cout << "[TELEPORT] ¡Teletransportado!" << std::endl;
+                        primerObjetivo = nullptr;
+                        modoHechizo = false; hechizoPendiente = 0;
+                    }
+                }
+                break;
+
+            case 2: // Heal
+                exito = fisioActivo->lanzarHeal(objetivo);
+                if (exito) std::cout << "[HEAL] ¡Curado!" << std::endl;
+                else       std::cout << "[HEAL] Fallido." << std::endl;
+                modoHechizo = false; hechizoPendiente = 0;
+                break;
+
+            case 4: // Exchange
+                if (primerObjetivo == nullptr) {
+                    if (objetivo != nullptr) {
+                        primerObjetivo = objetivo;
+                        std::cout << "[EXCHANGE] Elige segunda pieza." << std::endl;
+                    }
+                    else {
+                        std::cout << "[EXCHANGE] No hay pieza ahí." << std::endl;
+                    }
+                }
+                else {
+                    if (objetivo == nullptr) {
+                        std::cout << "[EXCHANGE] Segunda casilla vacía." << std::endl;
+                    }
+                    else {
+                        exito = fisioActivo->lanzarExchange(primerObjetivo, objetivo, tablero);
+                        if (exito) std::cout << "[EXCHANGE] ¡Intercambiadas!" << std::endl;
+                        primerObjetivo = nullptr;
+                        modoHechizo = false; hechizoPendiente = 0;
+                    }
+                }
+                break;
+
+            case 5: // Summon
+                exito = fisioActivo->lanzarSummon(objetivo, tablero);
+                if (exito) {
+                    Jugador* rival = (gestionTurnos.getTurnoActual() == BUENOS) ? j2 : j1;
+                    rival->eliminarPieza(objetivo);
+                    std::cout << "[SUMMON] ¡Enemigo eliminado!" << std::endl;
+                }
+                else {
+                    std::cout << "[SUMMON] Fallido." << std::endl;
+                }
+                modoHechizo = false; hechizoPendiente = 0;
+                break;
+
+            case 6: // Revive
+            {
+                Jugador* jugActual = (gestionTurnos.getTurnoActual() == BUENOS) ? j1 : j2;
+                Personaje* muerta = nullptr;
+                for (Personaje* p : jugActual->getPiezas())
+                    if (!p->estaVivo()) { muerta = p; break; }
+
+                if (muerta == nullptr) {
+                    std::cout << "[REVIVE] No hay piezas muertas." << std::endl;
+                }
+                else {
+                    exito = fisioActivo->lanzarRevive(muerta, tablero);
+                    if (exito) std::cout << "[REVIVE] ¡Resucitada!" << std::endl;
+                    else       std::cout << "[REVIVE] Fallido (sin hueco)." << std::endl;
+                }
+                modoHechizo = false; hechizoPendiente = 0;
+                break;
+            }
+
+            case 7: // Imprison
+                exito = fisioActivo->lanzarImprison(objetivo, gestionTurnos.getNumeroCiclo());
+                if (exito) std::cout << "[IMPRISON] ¡Encarcelado!" << std::endl;
+                else       std::cout << "[IMPRISON] Fallido." << std::endl;
+                modoHechizo = false; hechizoPendiente = 0;
+                break;
+            }
+
+            if (exito) {
+                gestionTurnos.cambiarTurno();
+                int cicloActual = gestionTurnos.getNumeroCiclo();
+                for (Personaje* p : j1->getPiezas())
+                    if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
+                        p->libertar();
+                for (Personaje* p : j2->getPiezas())
+                    if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
+                        p->libertar();
+            }
+
+            piezaSeleccionada = nullptr;
+            modoDestino = false;
+            glutPostRedisplay();
+            return;  // salimos, no procesamos movimiento normal
+        }
+
+        // MOVIMIENTO NORMAL — solo si no estamos en modo hechizo
         if (!modoDestino) {
-            // seleccionar una pieza en la posición actual del cursor
             if (tablero.hayPiezaEn(f, c)) {
                 Personaje* piezaAux = tablero.getPersonajeEn(f, c);
-
-                // comprobamos si la pieza pertenece al jugador del turno actual
-                bool esTurnoCorrecto = false;
-                if (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1)
-                    esTurnoCorrecto = true; // Turno del J1
-                else if (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2)
-                    esTurnoCorrecto = true; // Turno del J2
-
-                // solo si es su turno, le dejamos "agarrar" la pieza
+                bool esTurnoCorrecto =
+                    (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1) ||
+                    (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2);
                 if (esTurnoCorrecto) {
                     piezaSeleccionada = piezaAux;
                     modoDestino = true;
@@ -426,16 +526,12 @@ void EstadoTablero::tecla(unsigned char key) {
             }
         }
         else {
-            // ya teníamos una pieza, ahora confirmamos el destino
             if (piezaSeleccionada != nullptr) {
-
-                // permitir cambiar de pieza propia si hay otra debajo del cursor
                 if (tablero.hayPiezaEn(f, c)) {
                     Personaje* piezaBajo = tablero.getPersonajeEn(f, c);
                     bool esPiezaPropia =
                         (gestionTurnos.getTurnoActual() == BUENOS && piezaBajo->getNumJugador() == 1) ||
                         (gestionTurnos.getTurnoActual() == MALOS && piezaBajo->getNumJugador() == 2);
-
                     if (esPiezaPropia && piezaBajo != piezaSeleccionada) {
                         piezaSeleccionada = piezaBajo;
                         glutPostRedisplay();
@@ -443,121 +539,23 @@ void EstadoTablero::tecla(unsigned char key) {
                     }
                 }
 
-                // HECHIZOS DEL FISIO
-                if (modoHechizo && hechizoPendiente > 0 && fisioActivo != nullptr) {
-                    Personaje* objetivo = tablero.getPersonajeEn(f, c);
-
-                    bool exito = false;
-                    switch (hechizoPendiente) {
-                    case 1: // Teleport
-                        if (primerObjetivo == nullptr) {
-                            if (objetivo && objetivo->getNumJugador() == fisioActivo->getNumJugador()) {
-                                primerObjetivo = objetivo;
-                                std::cout << "[TELEPORT] Ahora elige la casilla destino (vacía)." << std::endl;
-                            }
-                        }
-                        else {
-                            exito = fisioActivo->lanzarTeleport(primerObjetivo, f, c, tablero);
-                            if (exito) std::cout << "[TELEPORT] Lanzado!" << std::endl;
-                            primerObjetivo = nullptr;
-                            modoHechizo = false; hechizoPendiente = 0;
-                        }
-                        break;
-
-                    case 2: // Heal
-                        exito = fisioActivo->lanzarHeal(objetivo);
-                        if (exito) std::cout << "[HEAL] Curado!" << std::endl;
-                        modoHechizo = false; hechizoPendiente = 0;
-                        break;
-
-                    case 3: // Shift Time
-                        exito = fisioActivo->lanzarShiftTime(tablero);
-                        if (exito) std::cout << "[SHIFT TIME] Ciclo invertido!" << std::endl;
-                        modoHechizo = false; hechizoPendiente = 0;
-                        break;
-
-                    case 4: // Exchange
-                        if (primerObjetivo == nullptr) {
-                            if (objetivo != nullptr) {
-                                primerObjetivo = objetivo;
-                                std::cout << "[EXCHANGE] Elige la segunda pieza." << std::endl;
-                            }
-                        }
-                        else {
-                            exito = fisioActivo->lanzarExchange(primerObjetivo, objetivo, tablero);
-                            if (exito) std::cout << "[EXCHANGE] Intercambiadas!" << std::endl;
-                            primerObjetivo = nullptr;
-                            modoHechizo = false; hechizoPendiente = 0;
-                        }
-                        break;
-
-                    case 5: // Summon
-                        exito = fisioActivo->lanzarSummon(objetivo, tablero);
-                        if (exito) {
-                            Jugador* rival = (gestionTurnos.getTurnoActual() == BUENOS) ? j2 : j1;
-                            rival->eliminarPieza(objetivo);
-                            std::cout << "[SUMMON] Elemental invocado, enemigo eliminado!" << std::endl;
-                        }
-                        modoHechizo = false; hechizoPendiente = 0;
-                        break;
-
-                    case 6: // Revive
-                        exito = fisioActivo->lanzarRevive(objetivo, tablero);
-                        if (exito) std::cout << "[REVIVE] Pieza resucitada!" << std::endl;
-                        modoHechizo = false; hechizoPendiente = 0;
-                        break;
-
-                    case 7: // Imprison
-                        exito = fisioActivo->lanzarImprison(objetivo, gestionTurnos.getNumeroCiclo());
-                        if (exito) std::cout << "[IMPRISON] Enemigo encarcelado!" << std::endl;
-                        modoHechizo = false; hechizoPendiente = 0;
-                        break;
-                    }
-
-                    if (!exito && hechizoPendiente != 1 && hechizoPendiente != 4) {
-                        std::cout << "[HECHIZO] Fallido (ya usado o objetivo inválido)." << std::endl;
-                    }
-
-                    if (exito) {
-                        gestionTurnos.cambiarTurno();
-                        int cicloActual = gestionTurnos.getNumeroCiclo();
-                        for (Personaje* p : j1->getPiezas())
-                            if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
-                                p->libertar();
-                        for (Personaje* p : j2->getPiezas())
-                            if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
-                                p->libertar();
-                    }
-
-                    piezaSeleccionada = nullptr;
-                    modoDestino = false;
-                    glutPostRedisplay();
-                    return;
-                }
-
-                // MOVIMIENTO NORMAL
                 if (piezaSeleccionada->esMovimientoValido(f, c, &tablero)) {
-
                     if (tablero.hayPiezaEn(f, c)) {
                         comprobarColision(piezaSeleccionada, f, c);
                     }
                     else {
                         tablero.eliminarPersonaje(piezaSeleccionada);
                         tablero.colocar(piezaSeleccionada, f, c);
-
                         gestionTurnos.cambiarTurno();
-
                         int cicloActual = gestionTurnos.getNumeroCiclo();
                         auto LiberarSiToca = [&](Jugador* j) {
-                            for (Personaje* p : j->getPiezas()) {
+                            for (Personaje* p : j->getPiezas())
                                 if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
                                     p->libertar();
-                            }
                             };
                         LiberarSiToca(j1);
                         LiberarSiToca(j2);
                     }
-
                     piezaSeleccionada = nullptr;
                     modoDestino = false;
                 }
