@@ -55,7 +55,7 @@ void SelectorPais::dibuja() const {
     ETSIDI::printxy("Jugador 2", 4, 8);
     ETSIDI::printxy("Jugador 1", -8, 8);
 
-    // --- LISTA JUGADOR 1 ---
+    //  LISTA JUGADOR 1 
     for (int i = 0; i < nombres.size(); i++) {
         if (i == indiceJ1 && !confirmadoJ1)
             ETSIDI::setTextColor(0, 1, 0);
@@ -67,7 +67,7 @@ void SelectorPais::dibuja() const {
         ETSIDI::printxy(nombres[i].c_str(), 4, 5 - i * 2);
     }
 
-    // --- LISTA JUGADOR 2 ---
+    //  LISTA JUGADOR 2 
     for (int i = 0; i < nombres.size(); i++) {
         if (i == indiceJ2 && !confirmadoJ2)
             ETSIDI::setTextColor(0, 1, 0);

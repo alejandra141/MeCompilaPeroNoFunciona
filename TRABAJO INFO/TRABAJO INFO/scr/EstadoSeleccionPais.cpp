@@ -36,9 +36,9 @@ void EstadoSeleccionPais::teclaEspecial(int key) {
     }
 }
 
-//  WASD → JUGADOR 2 (izquierda)
-//  ENTER → confirma J1
-//  ESPACIO → confirma J2
+//  WASD : JUGADOR 2 (izquierda)
+//  ENTER : confirma J1
+//  ESPACIO : confirma J2
 
 void EstadoSeleccionPais::tecla(unsigned char key) {
 
