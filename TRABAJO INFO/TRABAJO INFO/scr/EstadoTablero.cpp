@@ -100,25 +100,56 @@ void EstadoTablero::dibujar() {
 
     piezaHover = tablero.getPersonajeEn(cursorFila, cursorCol);
     if (piezaHover != nullptr) {
+
+        
+        //vamos a poner aquí los mínimos por que no los quiero copiar 30 veces
+
+        float yMin = 10.8f;
+        float yMax = 12.0f;
+        float xMin = -7.5f;
+        float xMax = 7.5f;
+
         glDisable(GL_LIGHTING);
         glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
+        glEnable(GL_BLEND);                           
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glColor4f(0.0f, 0.0f, 0.0f, 0.75f);
+        
+        //para el color del recuadro
+        if (piezaHover->getNumJugador() == 1)
+            glColor4f(0.0f, 0.0f, 0.08f, 0.85f);  // azulón J1
+        else
+            glColor4f(0.08f, 0.0f, 0.0f, 0.85f);
+
+
+        //ahora tiene que dejarse de solapar con el tablero el recuadro de arriba
         glBegin(GL_QUADS);
-        glVertex2f(-9.0f, 9.0f);
-        glVertex2f(9.0f, 9.0f);
-        glVertex2f(9.0f, 10.2f);
-        glVertex2f(-9.0f, 10.2f);
+        glVertex2f(xMin, yMin);
+        glVertex2f(xMax, yMin);
+        glVertex2f(xMax, yMax);
+        glVertex2f(xMin, yMax);
         glEnd();
-        if (piezaHover->getNumJugador() == 1) glColor4f(0.2f, 0.6f, 1.0f, 1.0f);
-        else                                   glColor4f(1.0f, 0.3f, 0.3f, 1.0f);
+
+
+        //para que los dos bandos salgan con colores diferentes
+        if (piezaHover->getNumJugador() == 1)
+            ETSIDI::setTextColor(0.2f, 0.6f, 1.0f);
+
+        else
+            ETSIDI::setTextColor(1.0f, 0.3f, 0.3f);
+
+        if (piezaHover->getNumJugador() == 1)
+            glColor4f(0.2f, 0.5f, 1.0f, 1.0f);   // borde azul J1
+        else
+            glColor4f(1.0f, 0.3f, 0.3f, 1.0f);   // borde rojo J2
+
+        //aquí dibujamos el cuadrado antes que las letras para que no se superponga nada
         glLineWidth(1.5f);
         glBegin(GL_LINE_LOOP);
-        glVertex2f(-9.0f, 9.0f);
-        glVertex2f(9.0f, 9.0f);
-        glVertex2f(9.0f, 10.2f);
-        glVertex2f(-9.0f, 10.2f);
+        glVertex2f(-9.0f, yMin);
+        glVertex2f(9.0f, yMin);
+        glVertex2f(9.0f, yMax);
+        glVertex2f(-9.0f, yMax);
+
         glEnd();
         glDisable(GL_BLEND);
 
@@ -126,10 +157,11 @@ void EstadoTablero::dibujar() {
             "HP: " + std::to_string(piezaHover->getVida()) + "   " +
             "ATK: " + std::to_string(piezaHover->getAtaque()) + "   " +
             "DEF: " + std::to_string(piezaHover->getDefensa());
-        glColor3f(1.0f, 1.0f, 0.0f);
-        glRasterPos3f(-8.5f, 9.4f, 0.5f);
-        for (char c : stats)
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 10);//la letra pequeña para que quepa
+
+        ETSIDI::printxy(stats.c_str(), -6.8f, 11.2f);
+
 
         glEnable(GL_LIGHTING);
         glEnable(GL_DEPTH_TEST);
@@ -162,11 +194,11 @@ void EstadoTablero::dibujar() {
         if (fisio == nullptr) continue;
 
         bool esJ1 = (bando == 1);
-        float xMin = esJ1 ? -15.0f : 9.8f;
-        float xMax = esJ1 ? -9.8f : 15.0f;
-        float xTexto = esJ1 ? -14.5f : 10.3f;
+        float xMin = esJ1 ? 9.8f : -15.0f;
+        float xMax = esJ1 ? 15.0f : -9.8f;
+        float xTexto = esJ1 ? 10.3f : -14.5f;
         float xCentro = (xMin + xMax) / 2.0f;
-
+        float xEstado = xTexto + 3.0f;
 
         //les he puesto los nombres en inglés que son los que salen en el moodle
 
@@ -206,53 +238,80 @@ void EstadoTablero::dibujar() {
         glDisable(GL_BLEND);
 
         // Título
-        if (esJ1) glColor3f(0.3f, 0.6f, 1.0f);
-        else      glColor3f(1.0f, 0.4f, 0.4f);
-        glRasterPos3f(xTexto, 8.5f, 0.5f);
+
+        if (esJ1) ETSIDI::setTextColor(0.3f, 0.6f, 1.0f);//colorines
+        else      ETSIDI::setTextColor(1.0f, 0.4f, 0.4f);
+
         std::string titulo = esJ1 ? "J1-FISIO" : "J2-FISIO";
-        for (char c : titulo)
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
+        ETSIDI::printxy(titulo.c_str(), xTexto, 8.5f);//impresión
+
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 10);
 
         // Los 7 hechizos
+
         float yBase = 7.3f;
         float paso = 2.0f;
+        float offsetEstado = 1.1f;//vamos a poner un offset por que se me está superponiendo el texto 
+
         for (int i = 0; i < 7; i++) {
             float y = yBase - i * paso;
+
             bool seleccionado = esTurnoEste && modoHechizo && (hechizoPendiente == i + 1);
 
             // Nombre
-            if (seleccionado) glColor3f(1.0f, 1.0f, 0.0f);
-            else if (usados[i])    glColor3f(0.4f, 0.4f, 0.4f);
-            else                   glColor3f(0.9f, 0.9f, 0.9f);
-            glRasterPos3f(xTexto, y, 0.5f);
-            for (char c : nombres7[i])
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+            if (seleccionado) ETSIDI::setTextColor(1.0f, 1.0f, 0.0f);
+            else if (usados[i]) ETSIDI::setTextColor(0.4f, 0.4f, 0.4f);
+            else ETSIDI::setTextColor(0.9f, 0.9f, 0.9f);
 
-            // [OK] / [--]
-            if (usados[i]) glColor3f(0.4f, 0.4f, 0.4f);
-            else           glColor3f(0.1f, 0.9f, 0.1f);
-            glRasterPos3f(xTexto, y - 0.7f, 0.5f);
+            ETSIDI::printxy(nombres7[i].c_str(), xTexto, y);
+
+
+            // ponemos ok entre corchetes así como en un videojuego
+            if (usados[i]) ETSIDI::setTextColor(0.4f, 0.4f, 0.4f);
+            else ETSIDI::setTextColor(0.1f, 0.9f, 0.1f);
+
             std::string estado = usados[i] ? "[--]" : "[OK]";
-            for (char c : estado)
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+
+            //ETSIDI::printxy(estado.c_str(), xTexto, y - 0.7f);
+
+            //ETSIDI::printxy(estado.c_str(), xTexto, y - offsetEstado);//aquí el offse
+
+            ETSIDI::printxy(estado.c_str(), xEstado, y);
+
+
         }
+
+        //quiero poner los turnos por aquí
+
+        std::string turnoTxt;
+
+        if (esTurnoEste) {
+             turnoTxt = "¡Es tu turno!";
+             ETSIDI::setTextColor(0.7f, 0.0f, 1.0f);
+             ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
+        }
+        else {
+            turnoTxt = "Turno rival";
+            ETSIDI::setTextColor(0.5f, 0.5f, 0.5f);
+            ETSIDI::setFont("fuentes/Bitwise.ttf", 10);
+        }
+
+		ETSIDI::printxy(turnoTxt.c_str(), xTexto, -7.5f);
 
         // Instrucción abajo
         if (esTurnoEste && modoHechizo && hechizoPendiente > 0) {
-            glColor3f(1.0f, 1.0f, 0.0f);
-            glRasterPos3f(xTexto, -8.5f, 0.5f);
+
             std::string inst = "Apunta+SPC";
-            for (char c : inst)
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+            ETSIDI::setTextColor(1.0f, 1.0f, 0.0f);
+            ETSIDI::printxy(inst.c_str(), xTexto, -8.5f);
         }
         else if (esTurnoEste) {
-            glColor3f(0.5f, 0.5f, 0.5f);
-            glRasterPos3f(xTexto, -8.5f, 0.5f);
-            std::string inst = "[H]=hechizo";
-            for (char c : inst)
-                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
-        }
 
+            std::string inst = "[H]=hechizo";
+            ETSIDI::setTextColor(0.5f, 0.5f, 0.5f);
+            ETSIDI::printxy(inst.c_str(), xTexto, -8.5f);
+        }
 
         //ESTO NO SE BORRAAAAA
         glEnable(GL_LIGHTING);
@@ -342,18 +401,9 @@ void EstadoTablero::tecla(unsigned char key) {
         int cLogica = cursorFila;
 
 
-        //TEMPORAL 
-
-
         if (key == ' ') {
             int fLogica = cursorFila;
             int cLogica = cursorCol;
-
-            // DEBUG - añade esto temporalmente
-            std::cout << "Cursor en fila=" << fLogica << " col=" << cLogica << std::endl;
-            std::cout << "Hay pieza: " << tablero.hayPiezaEn(fLogica, cLogica) << std::endl;
-
-
 
 
             if (!modoDestino) {
