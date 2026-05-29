@@ -11,9 +11,11 @@ Personaje::Personaje(std::string nombre, std::string tipo, std::string pais,
 }
 
 void Personaje::cargarTextura() {
+    std::string carpeta = (numJugador == 1 ? "buenos" : "malos");
+
     std::string ruta = "Personajes/" + pais +
-        "/jugador" + std::to_string(numJugador) +
-        "/" + tipo + ".png";
+        "/" + carpeta + "/" + tipo + ".png";
+
     sprite.setTextura(ETSIDI::getTexture(ruta.c_str()).id);
 }
 

@@ -2,9 +2,6 @@
 
 Jugador::Jugador(int id) : id(id) {}
 
-Jugador::~Jugador() {
-    piezas.clear();
-}
 
 void Jugador::setPais(const std::string& p) { pais = p; }
 std::string Jugador::getPais() const { return pais; }
@@ -15,6 +12,9 @@ void Jugador::agregarPieza(Personaje* p) { piezas.push_back(p); }
 void Jugador::eliminarPieza(Personaje* p) {
     piezas.erase(std::remove(piezas.begin(), piezas.end(), p), piezas.end());
    
+}
+Jugador::~Jugador() {
+    // si no necesitas liberar nada, déjalo vacío
 }
 
 std::vector<Personaje*>& Jugador::getPiezas() { return piezas; }

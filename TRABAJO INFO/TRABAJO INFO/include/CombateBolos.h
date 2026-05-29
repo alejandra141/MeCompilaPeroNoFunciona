@@ -79,6 +79,8 @@ public:
 	//métodos para obtener el ganador y saber si el juego ha temrinado 
 	bool haTerminado() const override { return estado == FIN; }
 	int getGanador() const override { return ganador; }
+	bool j1DerriboEnEsteLanzamiento = false;
+	bool j2DerriboEnEsteLanzamiento = false;
 
 
 	CombateBolos(Personaje* j1, Personaje* j2); //constructor para recibir los personajes que van a combatir

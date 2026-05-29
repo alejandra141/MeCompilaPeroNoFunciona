@@ -8,7 +8,7 @@
 using namespace std::chrono;
 
 
-Tablero tablero;
+
 FlujoJuego flujo;
 
 // CALLBACKS

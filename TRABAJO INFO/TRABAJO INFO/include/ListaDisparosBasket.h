@@ -17,4 +17,8 @@ public:
     bool reboteConTablero(float yLinea, float cx, float anchoCanasta);
     bool hayCanasta(float cx, float cy, float anchoZona, float altoZona);
     void reboteEntrePelotas();
+
+    int contarActivas() const;
+
+    
 };

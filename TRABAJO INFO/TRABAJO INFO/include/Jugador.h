@@ -21,6 +21,8 @@ private:
 
 
 public:
+
+  
     Jugador(int id);
     ~Jugador();
 

@@ -51,6 +51,14 @@ void CombateBaloncesto::mueve(double dt)
     if (cargandoJ2) { potenciaJ2 += VELOCIDAD_CARGA * dt; if (potenciaJ2 > POTENCIA_MAX) potenciaJ2 = POTENCIA_MAX; }
 
 
+    // registrar disparos activos ANTES
+    int activasAntesJ1 = disparosJ1.contarActivas();
+    int activasAntesJ2 = disparosJ2.contarActivas();
+
+    // registrar puntos antes
+    int puntosAntesJ1 = puntosJ1;
+    int puntosAntesJ2 = puntosJ2;
+
     disparosJ1.actualizar((float)dt);
     disparosJ2.actualizar((float)dt);
 
@@ -62,13 +70,27 @@ void CombateBaloncesto::mueve(double dt)
     disparosJ1.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
     disparosJ2.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
 
+
     if (disparosJ1.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ1++; std::cout << "CANASTA J1: " << puntosJ1 << std::endl; }
     if (disparosJ2.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ2++; std::cout << "CANASTA J2: " << puntosJ2 << std::endl; }
 
-    disparosJ1.limpiarInactivos();
-    disparosJ2.limpiarInactivos();
 
     comprobarColisiones();
+
+    disparosJ1.limpiarInactivos();
+    disparosJ2.limpiarInactivos();
+	//activas despues de limpiar para comprobar que se están limpiando bien las pelotas que ya no están activas, para que no sigan colisionando después de entrar
+    int activasDespuesJ1 = disparosJ1.contarActivas();
+    int activasDespuesJ2 = disparosJ2.contarActivas();
+
+    // fallo de J1
+    if (activasDespuesJ1 < activasAntesJ1 && puntosJ1 == puntosAntesJ1)
+        if (j1 != nullptr) j1->recibirDanio(5);
+
+    // fallo de J2
+    if (activasDespuesJ2 < activasAntesJ2 && puntosJ2 == puntosAntesJ2)
+        if (j2 != nullptr) j2->recibirDanio(5);
+
 }
 
 
@@ -236,8 +258,14 @@ void CombateBaloncesto::dibujar() {
 
         //Marcadores
         ETSIDI::setTextColor(1, 1, 0);
-        ETSIDI::printxy(("J1: " + std::to_string(puntosJ1)).c_str(), -15, 9.0);
+        ETSIDI::printxy(("J1: " + std::to_string(puntosJ1)).c_str(), -15, 9.0);//puntos
         ETSIDI::printxy(("J2: " + std::to_string(puntosJ2)).c_str(), 10.0, 9.0);
+
+        ETSIDI::setTextColor(1, 0, 0); // vida
+        ETSIDI::printxy(("Vida J1: " + std::to_string(j1->getVida())).c_str(), -15, 7.0);
+        ETSIDI::printxy(("Vida J2: " + std::to_string(j2->getVida())).c_str(), 5.0, 7.0);
+
+
 
         if (estado == FIN) {
             ETSIDI::setTextColor(1, 0, 0);

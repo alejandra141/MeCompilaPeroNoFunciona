@@ -245,10 +245,11 @@ void CombateBoxeo::dibujar() {
 
 
     // RENDERIZADO DE LOS SPRITES PNG REALES EN EL RING 
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);  // ← FALTABA
-    glDisable(GL_LIGHTING);   // ← FALTABA
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
 
     float mitadW = 3.0f;
     float altoH = 8.0f;
@@ -274,10 +275,10 @@ void CombateBoxeo::dibujar() {
         glTexCoord2d(0, 0); glVertex3f(posXj2 - mitadW, posYj2 + altoH, 0.0f);
         glEnd();
     }
-
+    glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
-    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
     /*// -------------------------------------------------------------------------
     // RECTÁNGULOS TEMPORALES DE PRUEBA (Jugadores)
     // -------------------------------------------------------------------------

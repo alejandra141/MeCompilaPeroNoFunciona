@@ -3,7 +3,9 @@
 #include "EstadoTablero.h"
 
 
-FlujoJuego::FlujoJuego() {
+FlujoJuego::FlujoJuego()
+    : jugador1(1), jugador2(2)   
+{
     estadoActual = new EstadoSeleccionPais(this);
 }
 FlujoJuego::~FlujoJuego() {

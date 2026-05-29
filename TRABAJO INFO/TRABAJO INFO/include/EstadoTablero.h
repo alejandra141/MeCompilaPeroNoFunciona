@@ -11,7 +11,8 @@ class FlujoJuego;
 class EstadoTablero : public EstadoJuego {
 private:
     FlujoJuego* flujo;
-    Jugador j1, j2;
+    Jugador* j1;
+    Jugador* j2;
     std::string paisJ1, paisJ2; // esto es para las colisiones
 
 

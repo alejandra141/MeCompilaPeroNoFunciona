@@ -22,6 +22,11 @@ CombateBolos::CombateBolos(Personaje* j1, Personaje* j2)
     lanzandoJ1(false), lanzandoJ2(false),
     tiempoFinJuego(0), estado(JUGANDO), ganador(0)
 {
+    //se que esto no esta muy bien pero es que habia mucho lag y es para cargar las texturas antes y que se quite el lag
+    ETSIDI::getTexture("elementos/bola bolos.png");
+    ETSIDI::getTexture("elementos/bolo.png");
+    ETSIDI::getTexture("fondos/Bolera_2.png");
+
     // especialistas
     if (jugador1 != nullptr) {
         std::string t1 = jugador1->getTipo();
@@ -37,44 +42,70 @@ CombateBolos::CombateBolos(Personaje* j1, Personaje* j2)
 
 void CombateBolos::comprobarColisiones() {
 
-    // estas son las colisiones de los bolos del J1, que son los bolos 0-5
+    //  JUGADOR 1 para comprobar colisiones y restar visa si falla
     if (bolaJ1.activa) {
+
         for (int i = 0; i < 6; i++) {
             if (!bolos[i].isDerribado()) {
+
                 float dx = bolaJ1.posicion.x - bolos[i].getPosicion().x;
                 float dy = bolaJ1.posicion.y - bolos[i].getPosicion().y;
+
                 if (sqrt(dx * dx + dy * dy) < 1.5f) {
+
                     bolos[i].derribar();
                     bolosDerribadosJ1++;
                     tiempoEfectoJ1 = 1.5f;
+
+                    j1DerriboEnEsteLanzamiento = true;
                 }
             }
         }
-        if (bolaJ1.posicion.y > 8.0f)
+
+        // cuando la bola sale
+        if (bolaJ1.posicion.y > 8.0f) {
+
+            if (!j1DerriboEnEsteLanzamiento && jugador1 != nullptr)
+                jugador1->recibirDanio(5);
+
+            j1DerriboEnEsteLanzamiento = false;
             bolaJ1.resetear();
+        }
     }
 
-    // estas son las colisiones de los bolos del J2, que son los bolos 6-11
+
+    // JUGADOR 2 
     if (bolaJ2.activa) {
+
         for (int i = 6; i < 12; i++) {
             if (!bolos[i].isDerribado()) {
+
                 float dx = bolaJ2.posicion.x - bolos[i].getPosicion().x;
                 float dy = bolaJ2.posicion.y - bolos[i].getPosicion().y;
+
                 if (sqrt(dx * dx + dy * dy) < 1.5f) {
+
                     bolos[i].derribar();
                     bolosDerribadosJ2++;
                     tiempoEfectoJ2 = 1.5f;
+
+                    j2DerriboEnEsteLanzamiento = true;
                 }
             }
         }
-        if (bolaJ2.posicion.y > 8.0f)
+
+        if (bolaJ2.posicion.y > 8.0f) {
+
+            if (!j2DerriboEnEsteLanzamiento && jugador2 != nullptr)
+                jugador2->recibirDanio(5);
+
+            j2DerriboEnEsteLanzamiento = false;
             bolaJ2.resetear();
+        }
     }
 
-    // Bajar temporizadores
-    // (esto se hace en mueve con el dt)
 
-
+    // para finalizar el  juego
     if (bolosDerribadosJ1 >= 6 && estado == JUGANDO) {
         estado = FIN;
         ganador = 1;
@@ -85,7 +116,6 @@ void CombateBolos::comprobarColisiones() {
         ganador = 2;
     }
 }
-
 
 void CombateBolos::mueve(double dt) {
 
@@ -207,9 +237,10 @@ void CombateBolos::dibujar() {
     bolaJ2.dibuja();
 
 
-    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
 
     float anchoPlayer = 2.0f;
@@ -235,10 +266,10 @@ void CombateBolos::dibujar() {
         glEnd();
     }
 
+    glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
-    glEnable(GL_LIGHTING);
-
+    glEnable(GL_DEPTH_TEST);
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glShadeModel(GL_SMOOTH);
@@ -250,6 +281,9 @@ void CombateBolos::dibujar() {
 
     glDisable(GL_DEPTH_TEST);
     glColor3f(0.3f, 0.3f, 0.3f);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
 
     // Fondo gris J1
     glColor3f(0.3f, 0.3f, 0.3f);
@@ -403,7 +437,9 @@ void CombateBolos::dibujar() {
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 
-
+    ETSIDI::setTextColor(1, 0, 0); // vida
+    ETSIDI::printxy(("Vida J1: " + std::to_string(jugador1->getVida())).c_str(), -15, 7.0);
+    ETSIDI::printxy(("Vida J2: " + std::to_string(jugador2->getVida())).c_str(), 5.0, 7.0);
 
     // vamos a poner 
 

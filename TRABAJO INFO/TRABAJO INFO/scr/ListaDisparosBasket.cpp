@@ -79,3 +79,12 @@ void ListaDisparos::reboteEntrePelotas() {
         }
     }
 }
+
+
+int ListaDisparos::contarActivas() const {
+    int count = 0;
+    for (const auto& d : disparos)
+        if (d.estaActivo())   // usar el método, no un miembro que no existe
+            count++;
+    return count;
+}
