@@ -14,5 +14,6 @@ public:
     }
     void dibujar();
     void mueve(double dt) {}
+    void tecla(unsigned char key) {}
 };
 
