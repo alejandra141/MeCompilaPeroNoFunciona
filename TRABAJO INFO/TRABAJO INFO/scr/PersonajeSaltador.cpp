@@ -5,6 +5,8 @@
 
 bool PersonajeSaltador::esMovimientoValido(int destFila, int destColumna, Tablero* tablero) {
 
+	if (estaEncarcelada()) return false;//por si el fisio lo ha encerrado       
+
     // distancia máxima en cualquier eje (permite diagonales)
     int distFila = std::abs(destFila - getFila());
     int distCol = std::abs(destColumna - getColumna());

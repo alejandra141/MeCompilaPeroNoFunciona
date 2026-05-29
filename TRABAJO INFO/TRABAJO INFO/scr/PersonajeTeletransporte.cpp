@@ -6,6 +6,8 @@
 
 bool PersonajeTeletransporte::esMovimientoValido(int destFila, int destColumna, Tablero* tablero) {
 
+    if (estaEncarcelada()) return false;//por si el fisio lo ha encerrado
+
     // sin restricción de distancia ni obstáculos
 
     // única restricción: no puede caer sobre un aliado

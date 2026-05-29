@@ -29,6 +29,9 @@ protected:
 
     int vidaMax; // para que el personaje se pueda curar solo hasta su vida máxima, no más
 
+
+    int cicloEncarcelamiento = -1;//esto es lo del encarcelamiento del fisio
+
 public:
     Personaje(std::string nombre, std::string tipo, std::string pais,
         int vida, int ataque, int defensa, int numJugador);
@@ -90,4 +93,9 @@ public:
 
     //función para revivir a la peña
     void revivir() { vivo = true; vida = vidaMax / 2; }
+
+    //cosas para el encarcelamiento del fisio 
+    int getCicloEncarcelamiento() const { return cicloEncarcelamiento; }
+    void encarcelar(int cicloActual) { encarcelada = true; cicloEncarcelamiento = cicloActual; }
+
 };

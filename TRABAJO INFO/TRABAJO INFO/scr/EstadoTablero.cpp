@@ -300,11 +300,21 @@ void EstadoTablero::tecla(unsigned char key) {
         return; // no procesar más teclas
     }
 
-    // Si estamos en modo hechizo, 1 al 7 selecciona el hechizo
     if (modoHechizo && fisioActivo != nullptr) {
         if (key >= '1' && key <= '7') {
             hechizoPendiente = key - '0';
-            std::cout << "[HECHIZO] Hechizo " << hechizoPendiente << " seleccionado. Apunta con cursor y pulsa ESPACIO." << std::endl;
+
+            // ShiftTime no necesita objetivo, se lanza ya
+            if (hechizoPendiente == 3) {
+                bool exito = fisioActivo->lanzarShiftTime(tablero);
+                if (exito) {
+                    gestionTurnos.cambiarTurno();
+                    std::cout << "[SHIFT TIME] Ciclo invertido!" << std::endl;
+                }
+                modoHechizo = false;
+                hechizoPendiente = 0;
+            }
+
             glutPostRedisplay();
             return;
         }
@@ -416,7 +426,7 @@ void EstadoTablero::tecla(unsigned char key) {
                             break;
 
                         case 7: // Imprison
-                            exito = fisioActivo->lanzarImprison(objetivo);
+                            exito = fisioActivo->lanzarImprison(objetivo, gestionTurnos.getNumeroCiclo());
                             if (exito) std::cout << "[IMPRISON] Enemigo encarcelado!" << std::endl;
                             modoHechizo = false; hechizoPendiente = 0;
                             break;
@@ -424,6 +434,18 @@ void EstadoTablero::tecla(unsigned char key) {
 
                         if (!exito && hechizoPendiente != 1 && hechizoPendiente != 4) {
                             std::cout << "[HECHIZO] Fallido (ya usado o objetivo inválido)." << std::endl;
+                        }
+
+                        if (exito) {
+                            gestionTurnos.cambiarTurno();
+                            // Liberamos piezas encarceladas si llevan 2 ciclos
+                            int cicloActual = gestionTurnos.getNumeroCiclo();
+                            for (Personaje* p : j1.getPiezas())
+                                if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
+                                    p->libertar();
+                            for (Personaje* p : j2.getPiezas())
+                                if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
+                                    p->libertar();
                         }
 
                         piezaSeleccionada = nullptr;
@@ -446,6 +468,16 @@ void EstadoTablero::tecla(unsigned char key) {
 
                             // cambio de turno
                             gestionTurnos.cambiarTurno();
+
+                            // Liberamos piezas encarceladas si llevan 2 ciclos
+                            int cicloActual = gestionTurnos.getNumeroCiclo();
+                            auto liberarSiToca = [&](Jugador& j) {
+                                for (Personaje* p : j.getPiezas())
+                                    if (p->estaEncarcelada() && cicloActual >= p->getCicloEncarcelamiento() + 2)
+                                        p->libertar();
+                                };
+                            liberarSiToca(j1);
+                            liberarSiToca(j2);
                         }
 
                         // reseteamos el cursor

@@ -29,6 +29,6 @@ public:
     bool lanzarExchange(Personaje* p1, Personaje* p2, Tablero& t);
     bool lanzarSummon(Personaje* enemigo, Tablero& t);
     bool lanzarRevive(Personaje* aliado, Tablero& t);
-    bool lanzarImprison(Personaje* enemigo);
+    bool lanzarImprison(Personaje* enemigo, int cicloActual);
 
 };

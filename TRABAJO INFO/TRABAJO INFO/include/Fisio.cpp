@@ -130,12 +130,12 @@ bool Fisio::lanzarRevive(Personaje* aliado, Tablero& t) {
 
 // ENCERRAMOS AL ENEMIGO QUE NO SALGA JAJAJ
 
-bool Fisio::lanzarImprison(Personaje* enemigo) {
+bool Fisio::lanzarImprison(Personaje* enemigo, int cicloActual) {
     if (usadoImprison) return false;
     if (enemigo == nullptr) return false;
     if (enemigo->getNumJugador() == getNumJugador()) return false;
 
-    enemigo->encarcelar();
+    enemigo->encarcelar(cicloActual);
     usadoImprison = true;
     return true;
 }

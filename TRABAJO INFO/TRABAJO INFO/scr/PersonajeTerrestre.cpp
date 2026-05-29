@@ -6,6 +6,8 @@
 
 bool PersonajeTerrestre::esMovimientoValido(int destFila, int destColumna, Tablero* tablero) {
 
+    if (estaEncarcelada()) return false;//por si el fisio lo ha encerrado
+
     // no permite diagonales
     if (destFila != getFila() && destColumna != getColumna()) return false;
 

@@ -6,4 +6,6 @@ void Turnos::cambiarTurno()
 		turnoActual = MALOS;
 	else
 		turnoActual = BUENOS;
-};
+	numeroCiclo++;
+}
+
