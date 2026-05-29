@@ -140,6 +140,7 @@
     <ClCompile Include="include\Jugador.cpp" />
     <ClCompile Include="scr\Basketboller.cpp" />
     <ClCompile Include="scr\BolaBolos.cpp" />
+    <ClCompile Include="scr\Bolerito.cpp" />
     <ClCompile Include="scr\Bolo.cpp" />
     <ClCompile Include="scr\Bolos_Cranker.cpp" />
     <ClCompile Include="scr\Bolos_Stronker.cpp" />
@@ -176,6 +177,7 @@
   <ItemGroup>
     <ClInclude Include="include\Basketboller.h" />
     <ClInclude Include="include\BolaBolos.h" />
+    <ClInclude Include="include\Bolerito.h" />
     <ClInclude Include="include\Bolo.h" />
     <ClInclude Include="include\Bolos_Cranker.h" />
     <ClInclude Include="include\Bolos_Stronker.h" />
