@@ -224,15 +224,15 @@ bool Tablero::rivalConUnaPiezaEncarcelada(Jugador& rival) {
 }
 
 // Ver quien ganó
-Jugador* Tablero::verificarGanador(Tablero& t, Jugador& j1, Jugador& j2) {
+Jugador* Tablero::verificarGanador(Jugador& j1, Jugador& j2) {
     // Revisamos j1
-    if (t.controlaCincoPuntos(j1) ||
+    if (controlaCincoPuntos(j1) ||
         j2.sinPiezas() ||
         rivalConUnaPiezaEncarcelada(j2))
         return &j1;
 
     // Revisamos j2
-    if (t.controlaCincoPuntos(j2) ||
+    if (controlaCincoPuntos(j2) ||
         j1.sinPiezas() ||
         rivalConUnaPiezaEncarcelada(j1))
         return &j2;

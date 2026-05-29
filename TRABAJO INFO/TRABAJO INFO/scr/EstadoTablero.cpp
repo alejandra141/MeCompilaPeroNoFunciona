@@ -27,7 +27,7 @@ void EstadoTablero::mueve(double dt) {
         return;
     }
 
-    Jugador* ganador = tablero.verificarGanador(tablero, *j1, *j2);
+    Jugador* ganador = tablero.verificarGanador(*j1, *j2);
 
     if (ganador != nullptr) {
         flujo->cambiarEstado(

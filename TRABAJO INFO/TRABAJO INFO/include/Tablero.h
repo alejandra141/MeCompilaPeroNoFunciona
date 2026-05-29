@@ -63,7 +63,7 @@ public:
 
     bool controlaCincoPuntos(Jugador& j)const;
     bool rivalConUnaPiezaEncarcelada(Jugador& rival);
-    Jugador* verificarGanador(Tablero& t, Jugador& j1, Jugador& j2); 
+    Jugador* verificarGanador(Jugador& j1, Jugador& j2); 
 
 
 	//métodos para invertir el color del tablero (para el hechizo del fisio)
