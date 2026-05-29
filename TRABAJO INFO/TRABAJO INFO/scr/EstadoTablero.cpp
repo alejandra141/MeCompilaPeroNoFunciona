@@ -6,6 +6,8 @@
 #include "FlujoJuego.h"
 #include "EstadoCombate.h"
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 extern Tablero tablero;
 
@@ -30,6 +32,7 @@ void EstadoTablero::mueve(double dt) {
     Jugador* ganador = tablero.verificarGanador(*j1, *j2);
 
     if (ganador != nullptr) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         flujo->cambiarEstado(
             new EstadoFinJuego(flujo, ganador->getId())
         );
