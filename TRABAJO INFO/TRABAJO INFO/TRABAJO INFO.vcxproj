@@ -142,7 +142,7 @@
     <ClCompile Include="scr\BolaBolos.cpp" />
     <ClCompile Include="scr\Bolo.cpp" />
     <ClCompile Include="scr\Bolos_Cranker.cpp" />
-    <ClCompile Include="scr\Bolos_Stroker.cpp" />
+    <ClCompile Include="scr\Bolos_Stronker.cpp" />
     <ClCompile Include="scr\Boxeador.cpp" />
     <ClCompile Include="scr\Boxeador_Kickboxing.cpp" />
     <ClCompile Include="scr\Boxeador_Normal.cpp" />
@@ -178,7 +178,7 @@
     <ClInclude Include="include\BolaBolos.h" />
     <ClInclude Include="include\Bolo.h" />
     <ClInclude Include="include\Bolos_Cranker.h" />
-    <ClInclude Include="include\Bolos_Stroker.h" />
+    <ClInclude Include="include\Bolos_Stronker.h" />
     <ClInclude Include="include\Boxeador.h" />
     <ClInclude Include="include\Boxeador_Kickboxing.h" />
     <ClInclude Include="include\Boxeador_Normal.h" />

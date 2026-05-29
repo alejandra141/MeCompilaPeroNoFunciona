@@ -21,9 +21,6 @@
     <ClCompile Include="scr\Bolos_Cranker.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="scr\Bolos_Stroker.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="scr\Boxeador_Kickboxing.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -129,12 +126,12 @@
     <ClCompile Include="scr\Pais.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="scr\Bolos_Stronker.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Bolos_Cranker.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Bolos_Stroker.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\Boxeador_Kickboxing.h">
@@ -246,6 +243,9 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\Pais.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bolos_Stronker.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

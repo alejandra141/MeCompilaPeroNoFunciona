@@ -1,3 +1,8 @@
+
+
+
+//CombateBolos.cpp
+
 #include "CombateBolos.h"
 #include "GL/freeglut.h"
 #include "ETSIDI.h"
@@ -5,16 +10,32 @@
 #include "bolo.h"
 #include <string>
 
-CombateBolos::CombateBolos() : bolosDerribadosJ1(0), bolosDerribadosJ2(0), //esto es para hacer pruebas
-j1esEspecialista(false), j2esEspecialista(true), anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1), potenciaJ1(0), potenciaJ2(0),
-cargandoJ1(false), cargandoJ2(false), lanzandoJ1(false), lanzandoJ2(false), tiempoFinJuego(0) {
+
+CombateBolos::CombateBolos(Personaje* j1, Personaje* j2)
+    : jugador1(j1), jugador2(j2),
+    bolosDerribadosJ1(0), bolosDerribadosJ2(0),
+    anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1),
+    potenciaJ1(0), potenciaJ2(0),
+    cargandoJ1(false), cargandoJ2(false),
+    lanzandoJ1(false), lanzandoJ2(false),
+    tiempoFinJuego(0), estado(JUGANDO), ganador(0)
+{
+    // si son especialistas en bolos tienen ventaja en la estela de apuntado
+    if (jugador1 != nullptr) {
+        std::string t1 = jugador1->getTipo();
+        j1esEspecialista = (t1 == "bolo_cranker" || t1 == "bolo_stroker");
+    }
+    if (jugador2 != nullptr) {
+        std::string t2 = jugador2->getTipo();
+        j2esEspecialista = (t2 == "bolo_cranker" || t2 == "bolo_stroker");
+    }
+
     crearBolos();
 }
 
-
 void CombateBolos::comprobarColisiones() {
 
-	// estas son las colisiones de los bolos del J1, que son los bolos 0-5
+    // estas son las colisiones de los bolos del J1, que son los bolos 0-5
     if (bolaJ1.activa) {
         for (int i = 0; i < 6; i++) {
             if (!bolos[i].isDerribado()) {
@@ -31,7 +52,7 @@ void CombateBolos::comprobarColisiones() {
             bolaJ1.resetear();
     }
 
-	// estas son las colisiones de los bolos del J2, que son los bolos 6-11
+    // estas son las colisiones de los bolos del J2, que son los bolos 6-11
     if (bolaJ2.activa) {
         for (int i = 6; i < 12; i++) {
             if (!bolos[i].isDerribado()) {
@@ -66,7 +87,7 @@ void CombateBolos::comprobarColisiones() {
 
 void CombateBolos::mueve(double dt) {
 
- 
+
     if (dt > 0.016) dt = 0.016;
 
     // vale esto es para el apuntador, que se mueve de un lado al otro
@@ -106,7 +127,7 @@ void CombateBolos::mueve(double dt) {
     if (tiempoEfectoJ1 > 0) tiempoEfectoJ1 -= (float)dt;
     if (tiempoEfectoJ2 > 0) tiempoEfectoJ2 -= (float)dt;
 
-   
+
 
 
 }
@@ -114,10 +135,10 @@ void CombateBolos::mueve(double dt) {
 
 void CombateBolos::tecla(unsigned char key) {
 
-     //tenemos que poner que la potencia se cargue solo si la bola no está activa
-     if (key == 'w' && !bolaJ1.activa) cargandoJ1 = true;
-     if (key == 'i' && !bolaJ2.activa) cargandoJ2 = true;
-    
+    //tenemos que poner que la potencia se cargue solo si la bola no está activa
+    if (key == 'w' && !bolaJ1.activa) cargandoJ1 = true;
+    if (key == 'i' && !bolaJ2.activa) cargandoJ2 = true;
+
 }
 
 //he creado esta clase para que se pueda cargar la potencia bien cuando sueltas la tecla
@@ -152,7 +173,7 @@ void CombateBolos::teclaSuelta(unsigned char key) {
 
 
 void CombateBolos::dibujar() {
-    
+
     glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 
@@ -171,9 +192,8 @@ void CombateBolos::dibujar() {
     //POR AQUÍ PINTAMOS UNOS BOLOS
     glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("elementos/bolo.png").id);
 
-    glEnable(GL_BLEND);                                
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
-    glColor4f(1, 1, 1, 1);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     for (auto& b : bolos) {
@@ -184,9 +204,44 @@ void CombateBolos::dibujar() {
     bolaJ1.dibuja();
     bolaJ2.dibuja();
 
+
+    // RENDERIZADO DE LOS SPRITES PNG REALES EN LA BOLERA
+
+    float baseY_Personajes = -7.5f;
+
+    // DIBUJA SPRITE JUGADOR 1 (izquierda)
+
+    if (jugador1 != nullptr) {
+        glPushMatrix();
+        // (X = -5.0) izquierda
+        glTranslatef(-5.0f, baseY_Personajes, 0.0f);
+        glScalef(0.7f, 0.7f, 1.0f);
+
+        jugador1->getSprite().setPosicion(0.0f, 0.0f);
+
+        // llamamos a su método que ya sabe activar el Blend, la textura y recortar el fondo
+        jugador1->dibuja();
+        glPopMatrix();
+    }
+
+    // DIBUJA SPRITE JUGADOR 2 (derecha)
+
+    if (jugador2 != nullptr) {
+        glPushMatrix();
+        // (X = 5.0) derecha
+        glTranslatef(5.0f, baseY_Personajes, 0.0f);
+        glScalef(0.7f, 0.7f, 1.0f);
+
+        jugador2->getSprite().setPosicion(0.0f, 0.0f);
+
+        jugador2->dibuja();
+        glPopMatrix();
+    }
+
+
     glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
-    glDisable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
     glBindTexture(GL_TEXTURE_2D, 0);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
@@ -195,7 +250,7 @@ void CombateBolos::dibujar() {
 
     //AQUI VAMOS A PINTAR LAS BARRITAS DE POTENCIA, QUE SE VAYAN LLENANDO SEGÚN LA POTENCIA QUE SE VAYA CARGANDO
 
-    glDisable(GL_DEPTH_TEST);  // ← añade esto
+    glDisable(GL_DEPTH_TEST);
     glColor3f(0.3f, 0.3f, 0.3f);
 
     // Fondo gris J1
@@ -249,10 +304,10 @@ void CombateBolos::dibujar() {
     glEnable(GL_DEPTH_TEST);   // ← reactiva al final
 
 
- // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
+    // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
 
 
-    // ESTO ES EL PUNTERO DE J1
+       // ESTO ES EL PUNTERO DE J1
     float cx1 = -5.0f;
     float baseY = -9.0f;
     float longitud = j1esEspecialista ? 6.0f : 4.0f;
@@ -370,7 +425,7 @@ void CombateBolos::dibujar() {
         ETSIDI::setTextColor(1, 0, 0);
         ETSIDI::printxy("Pulsa C para volver", -7, 3);
     }
-    
+
 }
 
 void CombateBolos::crearBolos() {
@@ -399,3 +454,9 @@ void CombateBolos::crearBolos() {
     bolos.push_back(Bolo(cx2, cy + sepY * 2));
 
 }
+
+
+
+
+
+

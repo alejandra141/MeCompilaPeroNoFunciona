@@ -1,3 +1,5 @@
+//Basketboller.h
+
 #pragma once
 #include <string>
 
@@ -6,6 +8,8 @@ protected:
     std::string nombre;
     int         velocidad;
     float       posX, posY, posZ;
+
+    unsigned int texID = 0;
 
 public:
     Basketboller(const std::string& nombre, int velocidad, float posX, float posY, float posZ);
@@ -16,4 +20,8 @@ public:
     float       getPosX()      const { return posX; }
     float       getPosY()      const { return posY; }
     float       getPosZ()      const { return posZ; }
+
+    void setTextureID(unsigned int id) { texID = id; }
+    unsigned int getTextureID() const { return texID; }
 };
+

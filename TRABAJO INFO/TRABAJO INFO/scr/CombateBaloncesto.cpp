@@ -1,3 +1,7 @@
+
+
+//CombateBaloncesto.cpp
+
 #include "CombateBaloncesto.h"
 #include <iostream>
 #include "GL/freeglut.h"
@@ -14,9 +18,9 @@ CombateBaloncesto::CombateBaloncesto(Basketboller* j1, Basketboller* j2)
     puntosJ1(0), puntosJ2(0),
     potenciaJ1(0.0f), potenciaJ2(0.0f),
     cargandoJ1(false), cargandoJ2(false),
-    anguloJ1(0.0f), anguloJ2(0.0f),         // <- añadir
-    teclaIzqJ1(false), teclaDerJ1(false),   // <- añadir
-    teclaIzqJ2(false), teclaDerJ2(false)    // <- añadir
+    anguloJ1(0.0f), anguloJ2(0.0f),
+    teclaIzqJ1(false), teclaDerJ1(false),
+    teclaIzqJ2(false), teclaDerJ2(false)
 {
 }
 
@@ -49,7 +53,7 @@ void CombateBaloncesto::mueve(double dt)
     disparosJ1.actualizar((float)dt);
     disparosJ2.actualizar((float)dt);
 
- 
+
     float aroX = canasta.getPosX();
     float aroY = canasta.getPosY();
 
@@ -71,11 +75,11 @@ void CombateBaloncesto::mueve(double dt)
 
 
 void CombateBaloncesto::dibujar() {
-    glDisable(GL_LIGHTING);      
-    glEnable(GL_TEXTURE_2D);    
+    glDisable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("fondos/Fondo_baloncesto.png").id);
-    glColor3f(1, 1, 1);          
+    glColor3f(1, 1, 1);
 
     glBegin(GL_POLYGON);
 
@@ -94,16 +98,57 @@ void CombateBaloncesto::dibujar() {
     //dibujar canasta
     canasta.dibuja();
 
+
+    // RENDERIZADO DE LOS SPRITES PNG REALES EN LA CANCHA
+
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_LIGHTING);
+
+    float anchoPlayer = 2.5f; //ancho
+    float altoPlayer = 5.0f; //alto
+
+    // DIBUJA SPRITE JUGADOR 1 (Izquierda)
+    if (j1 != nullptr && j1->getTextureID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, j1->getTextureID());
+        glBegin(GL_POLYGON);
+
+        glTexCoord2d(0, 1); glVertex3f(j1->getPosX() - anchoPlayer, j1->getPosY(), 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(j1->getPosX() + anchoPlayer, j1->getPosY(), 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(j1->getPosX() + anchoPlayer, j1->getPosY() + altoPlayer, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(j1->getPosX() - anchoPlayer, j1->getPosY() + altoPlayer, 0.0f);
+        glEnd();
+    }
+
+    // DIBUJA SPRITE JUGADOR 2 (Derecha) 
+    if (j2 != nullptr && j2->getTextureID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, j2->getTextureID());
+        glBegin(GL_POLYGON);
+
+        glTexCoord2d(1, 1); glVertex3f(j2->getPosX() - anchoPlayer, j2->getPosY(), 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(j2->getPosX() + anchoPlayer, j2->getPosY(), 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(j2->getPosX() + anchoPlayer, j2->getPosY() + altoPlayer, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(j2->getPosX() - anchoPlayer, j2->getPosY() + altoPlayer, 0.0f);
+        glEnd();
+    }
+
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+
+
+
     //zona de canasta en rojo
     float aroX = canasta.getPosX();
     float aroY = canasta.getPosY();
-    float mitadZona = 3.0f / 2.0f;   
-    float altoZona = 1.5f;          
+    float mitadZona = 3.0f / 2.0f;
+    float altoZona = 1.5f;
 
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_LINE_LOOP);   
+    glBegin(GL_LINE_LOOP);
     glVertex3f(aroX - mitadZona, aroY - altoZona, -1.0f);
     glVertex3f(aroX + mitadZona, aroY - altoZona, -1.0f);
     glVertex3f(aroX + mitadZona, aroY, -1.0f);
@@ -182,7 +227,7 @@ void CombateBaloncesto::dibujar() {
         dibujarLineaApuntado(j1->getPosX(), j1->getPosY(), j1->getPosZ(), anguloJ1);
     if (estelaJ2)
         dibujarLineaApuntado(j2->getPosX(), j2->getPosY(), j2->getPosZ(), anguloJ2);
-    
+
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
@@ -298,7 +343,7 @@ void CombateBaloncesto::comprobarColisiones() {
     }
     if (puntosJ1 >= 5 || puntosJ2 >= 5)
         estado = FIN;
-    
+
     if (puntosJ1 >= 5) {
         ganador = 1;
         estado = FIN;
@@ -337,3 +382,7 @@ void CombateBaloncesto::dibujarLineaApuntado(float x, float y, float z, float an
     glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
 }
+
+
+
+

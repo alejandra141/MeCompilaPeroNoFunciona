@@ -1,3 +1,6 @@
+
+//CombateBaloncesto.h
+
 #pragma once
 #include "Combates.h"
 #include "Canasta.h"
@@ -50,6 +53,7 @@ public:
     void teclaSuelta(unsigned char key)    override;
     void teclaEspecial(int key)            override;
     void teclaEspecialSuelta(int key)      override;
-	bool haTerminado() const { return estado == FIN; }  //para que el EstadoCombate sepa cuándo volver al tablero cuando se llega a 5 puntos (Alejandra intentar hacer igual*)
+    bool haTerminado() const { return estado == FIN; }  //para que el EstadoCombate sepa cuándo volver al tablero cuando se llega a 5 puntos (Alejandra intentar hacer igual*)
     int getGanador() const { return ganador; }  //PARA ANUNCIAR GANADOR COMBATE
 };
+

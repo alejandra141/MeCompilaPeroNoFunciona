@@ -1,4 +1,3 @@
-
 //Boxeador.h
 
 #pragma once
@@ -18,6 +17,8 @@ protected:
     float baseYa;           // Altura original (suelo)
     float tiempoBalanceo = 0; // Contador para el rebote
     int numJugador;         // Para diferenciar entre jugador 1 y 2 (si es necesario)
+
+    unsigned int texID = 0;
 
 public:
     // Constructor parametrizado para asumir el rol de J1 o J2 directamente
@@ -46,9 +47,11 @@ public:
     // Getters necesarios para calcular colisiones externas
     float getX() const { return posX; }
     float getY() const { return posY; }
-    //float getAncho() const { return ancho; }
-    //float getAlto() const { return alto; }
+
+    void setTextureID(unsigned int id) { texID = id; }
+    unsigned int getTextureID() const { return texID; }
 
 };
+
 
 

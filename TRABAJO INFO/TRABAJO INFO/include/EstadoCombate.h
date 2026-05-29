@@ -1,6 +1,10 @@
+
+//EstadoCombate.h
+
 #pragma once
 #include "EstadoJuego.h"
 #include "Combates.h"
+#include "Personaje.h"
 #include <string>             
 
 class FlujoJuego;
@@ -9,12 +13,14 @@ class EstadoCombate : public EstadoJuego {
 private:
     FlujoJuego* flujo;
     Combates* combate;
-    std::string paisJ1, paisJ2;  
+    std::string paisJ1, paisJ2;
 
 public:
     EstadoCombate(FlujoJuego* f, int tipo,
         const std::string& paisJ1,
-        const std::string& paisJ2);  
+        const std::string& paisJ2,
+        Personaje* p1 = nullptr,
+        Personaje* p2 = nullptr);
     ~EstadoCombate();
     void mueve(double dt) override;
     void dibujar() override;
@@ -23,3 +29,4 @@ public:
     void teclaEspecial(int key)        override;
     void teclaEspecialSuelta(int key)  override;
 };
+

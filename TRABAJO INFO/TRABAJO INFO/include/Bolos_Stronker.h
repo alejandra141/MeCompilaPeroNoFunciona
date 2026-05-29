@@ -1,3 +1,5 @@
+//Bolos_Stronker.h
+
 #pragma once
 #include "PersonajeSaltador.h"
 
@@ -9,3 +11,4 @@ public:
     std::vector<std::pair<int, int>> movimientosPosibles() override;
     void cargarTextura() override;
 };
+

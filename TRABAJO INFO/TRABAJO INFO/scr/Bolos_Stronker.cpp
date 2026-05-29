@@ -1,4 +1,8 @@
-#include "Bolos_Stroker.h"
+
+
+//Bolos_Stronker.cpp
+
+#include "Bolos_Stronker.h"
 #include "ETSIDI.h"
 
 BoloStronker::BoloStronker(std::string pais, int numJugador)
@@ -18,3 +22,6 @@ void BoloStronker::cargarTextura() {
 std::vector<std::pair<int, int>> BoloStronker::movimientosPosibles() {
     return {};
 }
+
+
+

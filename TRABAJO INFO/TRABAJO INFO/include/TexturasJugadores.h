@@ -1,4 +1,6 @@
 
+//TexturasJugadores.h
+
 #pragma once
 #include <GL/freeglut.h>
 
@@ -16,4 +18,7 @@ public:
     void setPosicion(float x, float y);
     void setOffset(float ox, float oy);
     void dibuja() const;
+    unsigned int getTexID() const { return texID; }
 };
+
+

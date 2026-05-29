@@ -1,3 +1,7 @@
+
+
+//EstadoTablero.cpp
+
 #include "EstadoTablero.h"
 #include "FlujoJuego.h"
 #include "EstadoCombate.h"
@@ -277,7 +281,7 @@ void EstadoTablero::tecla(unsigned char key) {
 
     //BUENO POR AQUÍ LOS HECHIZOS DEL FISIO CON LA TECLA H
 
-    // Primero localizamos al Fisio y que no esté muerto, porque si no no se puede lanzar hechizos
+      // Primero localizamos al Fisio y que no esté muerto, porque si no no se puede lanzar hechizos
 
     Fisio* fisioActivo = nullptr;
     Jugador& jugadorActual = (gestionTurnos.getTurnoActual() == BUENOS) ? j1 : j2;
@@ -300,6 +304,7 @@ void EstadoTablero::tecla(unsigned char key) {
         return; // no procesar más teclas
     }
 
+    // Si estamos en modo hechizo, 1 al 7 selecciona el hechizo
     if (modoHechizo && fisioActivo != nullptr) {
         if (key >= '1' && key <= '7') {
             hechizoPendiente = key - '0';
@@ -326,51 +331,62 @@ void EstadoTablero::tecla(unsigned char key) {
 
         // Como en las inicializaciones se usa colocar(pieza, columna, fila),
         // cruzamos las variables aquí para que la matriz lógica lo entienda bien
-
-        int fLogica = cursorFila;
-        int cLogica = cursorCol;
-
+        int fLogica = cursorCol;
+        int cLogica = cursorFila;
 
 
+        //TEMPORAL 
 
-        if (!modoDestino) {
-            //  seleccionar una pieza en la posición actual del cursor
-            if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
-                Personaje* piezaAux = tablero.getPersonajeEn(fLogica, cLogica);
 
-                // comprobamos si la pieza pertenece al jugador del turno actual
-                bool esTurnoCorrecto = false;
-                if (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1) {
-                    esTurnoCorrecto = true; // Turno del J1
-                }
-                else if (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2) {
-                    esTurnoCorrecto = true; // Turno del J2
-                }
+        if (key == ' ') {
+            int fLogica = cursorFila;
+            int cLogica = cursorCol;
 
-                // solo si es su turno, le dejamos "agarrar" la pieza
-                if (esTurnoCorrecto) {
-                    piezaSeleccionada = piezaAux;
-                    modoDestino = true;
+            // DEBUG - añade esto temporalmente
+            std::cout << "Cursor en fila=" << fLogica << " col=" << cLogica << std::endl;
+            std::cout << "Hay pieza: " << tablero.hayPiezaEn(fLogica, cLogica) << std::endl;
 
-                }
-            }
-        }
-        else {
-            // ya teníamos una pieza, ahora confirmamos el destino
-            if (piezaSeleccionada != nullptr) {
 
-                if (tablero.hayPiezaEn(fLogica, cLogica)) {
-                    Personaje* piezaBajo = tablero.getPersonajeEn(fLogica, cLogica);
-                    bool esPiezaPropia = (gestionTurnos.getTurnoActual() == BUENOS && piezaBajo->getNumJugador() == 1)
-                        || (gestionTurnos.getTurnoActual() == MALOS && piezaBajo->getNumJugador() == 2);
 
-                    if (esPiezaPropia && piezaBajo != piezaSeleccionada) {
-                        piezaSeleccionada = piezaBajo;
-                        // modoDestino sigue en true, el cursor ya está en la nueva pieza
-                        glutPostRedisplay();
-                        return;
+
+            if (!modoDestino) {
+                //  seleccionar una pieza en la posición actual del cursor
+                if (tablero.hayPiezaEn(cursorFila, cursorCol)) {
+                    Personaje* piezaAux = tablero.getPersonajeEn(fLogica, cLogica);
+
+                    // comprobamos si la pieza pertenece al jugador del turno actual
+                    bool esTurnoCorrecto = false;
+                    if (gestionTurnos.getTurnoActual() == BUENOS && piezaAux->getNumJugador() == 1) {
+                        esTurnoCorrecto = true; // Turno del J1
+                    }
+                    else if (gestionTurnos.getTurnoActual() == MALOS && piezaAux->getNumJugador() == 2) {
+                        esTurnoCorrecto = true; // Turno del J2
+                    }
+
+                    // solo si es su turno, le dejamos "agarrar" la pieza
+                    if (esTurnoCorrecto) {
+                        piezaSeleccionada = piezaAux;
+                        modoDestino = true;
+
                     }
                 }
+            }
+            else {
+                // ya teníamos una pieza, ahora confirmamos el destino
+                if (piezaSeleccionada != nullptr) {
+
+                    if (tablero.hayPiezaEn(fLogica, cLogica)) {
+                        Personaje* piezaBajo = tablero.getPersonajeEn(fLogica, cLogica);
+                        bool esPiezaPropia = (gestionTurnos.getTurnoActual() == BUENOS && piezaBajo->getNumJugador() == 1)
+                            || (gestionTurnos.getTurnoActual() == MALOS && piezaBajo->getNumJugador() == 2);
+
+                        if (esPiezaPropia && piezaBajo != piezaSeleccionada) {
+                            piezaSeleccionada = piezaBajo;
+                            // modoDestino sigue en true, el cursor ya está en la nueva pieza
+                            glutPostRedisplay();
+                            return;
+                        }
+                    }
 
                     // PARA LOS HECHIZOS DEL FISIO MADRE MÍA ESTO ES UNA LOCURA PERO FUNCIONARÁ, LO PROMETO
                     if (modoHechizo && hechizoPendiente > 0 && fisioActivo != nullptr) {
@@ -501,35 +517,41 @@ void EstadoTablero::tecla(unsigned char key) {
             glutPostRedisplay();
 
         }
-
-
-
-        if (key == '1') flujo->cambiarEstado(new EstadoCombate(flujo, 1, j1.getPais(), j2.getPais()));
-        if (key == '2') flujo->cambiarEstado(new EstadoCombate(flujo, 2, j1.getPais(), j2.getPais()));
-        if (key == '3') flujo->cambiarEstado(new EstadoCombate(flujo, 3, j1.getPais(), j2.getPais()));
     }
 
-    void EstadoTablero::comprobarColision(Personaje * atacante, int filaDestino, int colDestino) {
-        int bandoEnemigo = tablero.getBandoPiezaEn(filaDestino, colDestino);
 
-        // si no hay enemigo, no pasa nada
-        if (bandoEnemigo == 0 || bandoEnemigo == atacante->getNumJugador()) return;
 
-        // si hay enemigo elegimos combate según el tipo de atacante
-        int tipoCombate = 1; // por defecto baloncesto 
+    if (key == '1') flujo->cambiarEstado(new EstadoCombate(flujo, 1, j1.getPais(), j2.getPais()));
+    if (key == '2') flujo->cambiarEstado(new EstadoCombate(flujo, 2, j1.getPais(), j2.getPais()));
+    if (key == '3') flujo->cambiarEstado(new EstadoCombate(flujo, 3, j1.getPais(), j2.getPais()));
+}
 
-        // a ver aquí he puesto que según sea tal personaje haga su combate
+void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int colDestino) {
+    int bandoEnemigo = tablero.getBandoPiezaEn(filaDestino, colDestino);
 
-        std::string tipo = atacante->getTipo();
-        if (tipo == "boxeador_normal" || tipo == "boxeador_kickboxing")
-            tipoCombate = 3; // CombateBoxeo
-        else if (tipo == "bolo_cranker" || tipo == "bolo_stroker")
-            tipoCombate = 2; // CombateBolos
-        else
-            tipoCombate = 1; // CombateBaloncesto
+    // si no hay enemigo, no pasa nada
+    if (bandoEnemigo == 0 || bandoEnemigo == atacante->getNumJugador()) return;
 
-        flujo->cambiarEstado(new EstadoCombate(flujo, tipoCombate, paisJ1, paisJ2));
-    }
+    // extraemos el puntero del personaje defensor que esta sufriendo la emboscada
+    Personaje* defensor = tablero.getPersonajeEn(filaDestino, colDestino);
 
+    // si hay enemigo elegimos combate según el tipo de atacante
+    int tipoCombate = 1; // por defecto baloncesto 
+
+    // a ver aquí he puesto que según sea tal personaje haga su combate
+
+    std::string tipo = atacante->getTipo();
+    if (tipo == "boxeador_normal" || tipo == "boxeador_kickboxing" ||
+        tipo == "BoxeadorNormal" || tipo == "BoxeadorKickboxing")
+        tipoCombate = 3; // CombateBoxeo
+    else if (tipo == "bolo_cranker" || tipo == "bolo_stronker" ||
+        tipo == "BoloCranker" || tipo == "BoloStronker")
+        tipoCombate = 2; // CombateBolos
+    else
+        tipoCombate = 1; // CombateBaloncesto
+
+    //ahora tb pasamos atacante y defensor al nuevo estado de combate
+    flujo->cambiarEstado(new EstadoCombate(flujo, tipoCombate, paisJ1, paisJ2, atacante, defensor));
+}
 
 

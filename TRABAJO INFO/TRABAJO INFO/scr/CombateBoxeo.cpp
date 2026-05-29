@@ -1,7 +1,11 @@
 
+
+
 //CombateBoxeo.cpp
 
 #include "CombateBoxeo.h"
+#include "EstadoTablero.h"
+#include "FlujoJuego.h"
 #include "GL/freeglut.h"
 #include "ETSIDI.h"
 #include <iostream>
@@ -253,16 +257,45 @@ void CombateBoxeo::dibujar() {
 
     glEnd();
 
+
+    // RENDERIZADO DE LOS SPRITES PNG REALES EN EL RING 
+
+    //QUEDA PONERLOS BONITOS!!!!!
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    float mitadW = 3.0f; //  ancho
+    float altoH = 8.0f;  // altura 
+
+    // DIBUJA SPRITE JUGADOR 1 (Atacante)
+    if (jugador1 != nullptr && jugador1->getTextureID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, jugador1->getTextureID()); // enlazamos su png real
+        glBegin(GL_POLYGON);
+
+        glTexCoord2d(0, 1); glVertex3f(jugador1->getX() - mitadW, jugador1->getY(), 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(jugador1->getX() + mitadW, jugador1->getY(), 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(jugador1->getX() + mitadW, jugador1->getY() + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(jugador1->getX() - mitadW, jugador1->getY() + altoH, 0.0f);
+        glEnd();
+    }
+
+    // DIBUJA SPRITE JUGADOR 2 (Defensor)
+    if (jugador2 != nullptr && jugador2->getTextureID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, jugador2->getTextureID()); // enlazamos su png real
+        glBegin(GL_POLYGON);
+
+        glTexCoord2d(0, 1); glVertex3f(jugador2->getX() - mitadW, jugador2->getY(), 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(jugador2->getX() + mitadW, jugador2->getY(), 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(jugador2->getX() + mitadW, jugador2->getY() + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(jugador2->getX() - mitadW, jugador2->getY() + altoH, 0.0f);
+        glEnd();
+    }
+
     glDisable(GL_TEXTURE_2D);
-
-    // dibujamos a los boxeadores por polimorfismo
-    // al combate no le importa si son Normal o Kickboxing, ambos tienen la función .dibuja()
-   // jugador1->dibuja();
-   // jugador2->dibuja();
-
+    glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
 
-    // -------------------------------------------------------------------------
+    /*// -------------------------------------------------------------------------
     // RECTÁNGULOS TEMPORALES DE PRUEBA (Jugadores)
     // -------------------------------------------------------------------------
     //posicionamiento
@@ -297,7 +330,7 @@ void CombateBoxeo::dibujar() {
         glEnd();
     }
 
-    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);*/
 
 
     // fuentes para que se vea la vida ue le queda a cada jugador
@@ -338,3 +371,6 @@ void CombateBoxeo::dibujar() {
     }
 
 }
+
+
+

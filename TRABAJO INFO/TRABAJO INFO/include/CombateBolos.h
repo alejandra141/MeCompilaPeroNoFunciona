@@ -1,5 +1,7 @@
-#pragma once
 
+//CombateBolos.h
+
+#pragma once
 #include "Combates.h"
 #include "Bolo.h"
 #include <vector>
@@ -35,7 +37,7 @@ private:
 	bool lanzandoJ2;
 
 	//vamos a poner ya las bolas por aquí
-	
+
 	BolaBolos bolaJ1;
 	BolaBolos bolaJ2;
 
@@ -54,7 +56,7 @@ private:
 	Personaje* jugador2;
 
 	//para saber el ganador del combate 
-	
+
 	int ganador;  // 1 o 2
 
 	enum Estado { JUGANDO, FIN };
@@ -63,14 +65,14 @@ private:
 
 public:
 
-	CombateBolos();	
+	CombateBolos();
 
-    void mueve(double dt) override;
-    void dibujar() override;
-    void tecla(unsigned char key) override;
+	void mueve(double dt) override;
+	void dibujar() override;
+	void tecla(unsigned char key) override;
 	void crearBolos();
 	void teclaSuelta(unsigned char key) override;
-	
+
 	//métodos para obtener el ganador y saber si el juego ha temrinado 
 	bool haTerminado() const override { return estado == FIN; }
 	int getGanador() const override { return ganador; }
@@ -79,4 +81,3 @@ public:
 	CombateBolos(Personaje* j1, Personaje* j2); //constructor para recibir los personajes que van a combatir
 
 };
-
