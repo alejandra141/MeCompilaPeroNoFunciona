@@ -62,6 +62,9 @@ private:
 	enum Estado { JUGANDO, FIN };
 	Estado estado = JUGANDO;
 
+	float posXj1, posYj1;//para encapsular la posicion de combate con la real de los personajes, para que no se líen con las posiciones del tablero y esas
+	float posXj2, posYj2;// cosas, y para que el combate sea más fluida y no se note el cambio de posiciones entre tablero y combate, que es lo que me ha pasado a mí al principio jajaja
+
 
 public:
 

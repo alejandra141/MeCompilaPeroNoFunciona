@@ -19,10 +19,8 @@ EstadoCombate::EstadoCombate(FlujoJuego* f, int tipo,
 {
     switch (tipo) {
     case 1: {
-        // Pasamos los personajes reales directamente
-        // Solo hay que decirles su posición en el combate
-        if (p1 != nullptr) p1->setPosicion(Linea{ -8.0f, -3.0f, 0.0f });
-        if (p2 != nullptr) p2->setPosicion(Linea{ 8.0f, -3.0f, 0.0f });
+        
+        
         combate = new CombateBaloncesto(p1, p2);
         break;
     }

@@ -14,13 +14,15 @@
 CombateBolos::CombateBolos(Personaje* j1, Personaje* j2)
     : jugador1(j1), jugador2(j2),
     bolosDerribadosJ1(0), bolosDerribadosJ2(0),
+    posXj1(-5.0f), posYj1(-9.0f),
+    posXj2(5.0f), posYj2(-9.0f),
     anguloJ1(0), dirJ1(1), anguloJ2(0), dirJ2(1),
     potenciaJ1(0), potenciaJ2(0),
     cargandoJ1(false), cargandoJ2(false),
     lanzandoJ1(false), lanzandoJ2(false),
     tiempoFinJuego(0), estado(JUGANDO), ganador(0)
 {
-    // si son especialistas en bolos tienen ventaja en la estela de apuntado
+    // especialistas
     if (jugador1 != nullptr) {
         std::string t1 = jugador1->getTipo();
         j1esEspecialista = (t1 == "bolo_cranker" || t1 == "bolo_stroker");
@@ -150,7 +152,7 @@ void CombateBolos::teclaSuelta(unsigned char key) {
         if (potenciaJ1 > 0) {  //hay que poner esto para solo lanzar si hay potencia en la barra
             float velX = sin(anguloJ1) * potenciaJ1 * 1.5f;
             float velY = potenciaJ1 * 3.0f;
-            bolaJ1.lanzar(-5.0f, -9.0f, velX, velY);
+            bolaJ1.lanzar(posXj1, posYj1, velX, velY);
             ETSIDI::play("sonidos/Bowling/Sample_0009.wav");
         }
         potenciaJ1 = 0; // reseteamos la potencia para que no se quede cargada después de lanzar
@@ -164,7 +166,7 @@ void CombateBolos::teclaSuelta(unsigned char key) {
         if (potenciaJ2 > 0) {  //hay que poner esto para solo lanzar si hay potencia en la barra
             float velX = sin(anguloJ2) * potenciaJ2 * 1.5f;
             float velY = potenciaJ2 * 3.0f;
-            bolaJ2.lanzar(5.0f, -9.0f, velX, velY);
+            bolaJ2.lanzar(posXj2, posYj2, velX, velY);
             ETSIDI::play("sonidos/Bowling/Sample_0009.wav");
         }
         potenciaJ2 = 0;
@@ -205,43 +207,39 @@ void CombateBolos::dibujar() {
     bolaJ2.dibuja();
 
 
-    // RENDERIZADO DE LOS SPRITES PNG REALES EN LA BOLERA
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_LIGHTING);
 
-    float baseY_Personajes = -7.5f;
+    float anchoPlayer = 2.0f;
+    float altoPlayer = 5.0f;
 
-    // DIBUJA SPRITE JUGADOR 1 (izquierda)
-
-    if (jugador1 != nullptr) {
-        glPushMatrix();
-        // (X = -5.0) izquierda
-        glTranslatef(-5.0f, baseY_Personajes, 0.0f);
-        glScalef(0.7f, 0.7f, 1.0f);
-
-        jugador1->getSprite().setPosicion(0.0f, 0.0f);
-
-        // llamamos a su método que ya sabe activar el Blend, la textura y recortar el fondo
-        jugador1->dibuja();
-        glPopMatrix();
+    if (jugador1 != nullptr && jugador1->getSprite().getTexID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, jugador1->getSprite().getTexID());
+        glBegin(GL_POLYGON);
+        glTexCoord2d(0, 1); glVertex3f(posXj1 - anchoPlayer, posYj1, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj1 + anchoPlayer, posYj1, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj1 + anchoPlayer, posYj1 + altoPlayer, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj1 - anchoPlayer, posYj1 + altoPlayer, 0.0f);
+        glEnd();
     }
 
-    // DIBUJA SPRITE JUGADOR 2 (derecha)
-
-    if (jugador2 != nullptr) {
-        glPushMatrix();
-        // (X = 5.0) derecha
-        glTranslatef(5.0f, baseY_Personajes, 0.0f);
-        glScalef(0.7f, 0.7f, 1.0f);
-
-        jugador2->getSprite().setPosicion(0.0f, 0.0f);
-
-        jugador2->dibuja();
-        glPopMatrix();
+    if (jugador2 != nullptr && jugador2->getSprite().getTexID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, jugador2->getSprite().getTexID());
+        glBegin(GL_POLYGON);
+        glTexCoord2d(1, 1); glVertex3f(posXj2 - anchoPlayer, posYj2, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj2 + anchoPlayer, posYj2, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj2 + anchoPlayer, posYj2 + altoPlayer, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, posYj2 + altoPlayer, 0.0f);
+        glEnd();
     }
 
-
-    glDisable(GL_BLEND);
     glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
+
+
     glBindTexture(GL_TEXTURE_2D, 0);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_BLEND);
@@ -308,8 +306,8 @@ void CombateBolos::dibujar() {
 
 
        // ESTO ES EL PUNTERO DE J1
-    float cx1 = -5.0f;
-    float baseY = -9.0f;
+    float cx1 = posXj1;
+    float baseY = posYj1; 
     float longitud = j1esEspecialista ? 6.0f : 4.0f;
     float puntaX1 = cx1 + sin(anguloJ1) * longitud;
     float puntaY1 = baseY + longitud;
@@ -332,7 +330,7 @@ void CombateBolos::dibujar() {
     glEnd();
 
     // A VER ESTO ES EL PUNTERO DE J2
-    float cx2 = 5.0f;
+    float cx2 = posXj2;
     float longitud2 = j2esEspecialista ? 6.0f : 4.0f;
     float puntaX2 = cx2 + sin(anguloJ2) * longitud2;
     float puntaY2 = baseY + longitud2;
