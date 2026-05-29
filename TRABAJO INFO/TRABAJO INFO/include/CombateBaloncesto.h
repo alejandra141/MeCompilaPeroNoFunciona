@@ -5,13 +5,14 @@
 #include "Combates.h"
 #include "Canasta.h"
 #include "Basketboller.h"
+#include "Personaje.h"
 #include "ListaDisparosBasket.h"
 
 class CombateBaloncesto : public Combates {
 private:
     Canasta        canasta;
-    Basketboller* j1;
-    Basketboller* j2;
+    Personaje* j1;
+    Personaje* j2;
     ListaDisparos  disparosJ1;
     ListaDisparos  disparosJ2;
     bool           estelaJ1;
@@ -28,6 +29,8 @@ private:
     bool           teclaDerJ1;
     bool           teclaIzqJ2;
     bool           teclaDerJ2;
+    float posXj1, posYj1;
+    float posXj2, posYj2;
 
     int ganador = 0; //0 = nadie, 1 = J1, 2 = J2 ESTO ES APRA ANUNCIAR EL GANADOR
     enum Estado { JUGANDO, FIN };
@@ -44,7 +47,7 @@ private:
     void dibujarLineaApuntado(float x, float y, float z, float angulo) const;
 
 public:
-    CombateBaloncesto(Basketboller* j1, Basketboller* j2);
+    CombateBaloncesto(Personaje* j1, Personaje* j2);
     ~CombateBaloncesto();
 
     void mueve(double dt)                  override;

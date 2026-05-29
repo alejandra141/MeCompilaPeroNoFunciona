@@ -22,8 +22,15 @@ EstadoTablero::EstadoTablero(FlujoJuego* f,
     tablero.inicializarJ2(j2);
 }
 
-void EstadoTablero::mueve(double dt) {}
-
+void EstadoTablero::mueve(double dt) {
+    // Si hay un combate pendiente, ahora sí cambiamos de estado de forma segura
+    if (estadoPendiente != nullptr) {
+        EstadoJuego* siguiente = estadoPendiente;
+        estadoPendiente = nullptr;
+        flujo->cambiarEstado(siguiente);
+        return;
+    }
+}
 void EstadoTablero::dibujar() {
     tablero.dibuja();
 
@@ -526,32 +533,30 @@ void EstadoTablero::tecla(unsigned char key) {
     if (key == '3') flujo->cambiarEstado(new EstadoCombate(flujo, 3, j1.getPais(), j2.getPais()));
 }
 
+
+
 void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int colDestino) {
-    int bandoEnemigo = tablero.getBandoPiezaEn(filaDestino, colDestino);
-
-    // si no hay enemigo, no pasa nada
-    if (bandoEnemigo == 0 || bandoEnemigo == atacante->getNumJugador()) return;
-
-    // extraemos el puntero del personaje defensor que esta sufriendo la emboscada
     Personaje* defensor = tablero.getPersonajeEn(filaDestino, colDestino);
 
-    // si hay enemigo elegimos combate según el tipo de atacante
-    int tipoCombate = 1; // por defecto baloncesto 
-
-    // a ver aquí he puesto que según sea tal personaje haga su combate
+    if (defensor == nullptr) return;
+    if (atacante == nullptr) return;
+    if (defensor->getNumJugador() == atacante->getNumJugador()) return;
 
     std::string tipo = atacante->getTipo();
+    int tipoCombate = 1;
+
     if (tipo == "boxeador_normal" || tipo == "boxeador_kickboxing" ||
         tipo == "BoxeadorNormal" || tipo == "BoxeadorKickboxing")
-        tipoCombate = 3; // CombateBoxeo
+        tipoCombate = 3;
     else if (tipo == "bolo_cranker" || tipo == "bolo_stronker" ||
         tipo == "BoloCranker" || tipo == "BoloStronker")
-        tipoCombate = 2; // CombateBolos
+        tipoCombate = 2;
     else
-        tipoCombate = 1; // CombateBaloncesto
+        tipoCombate = 1;
 
-    //ahora tb pasamos atacante y defensor al nuevo estado de combate
-    flujo->cambiarEstado(new EstadoCombate(flujo, tipoCombate, paisJ1, paisJ2, atacante, defensor));
+    // Guardamos el estado pendiente en vez de cambiar ya
+    estadoPendiente = new EstadoCombate(
+        flujo, tipoCombate, paisJ1, paisJ2, atacante, defensor
+    );
 }
-
 

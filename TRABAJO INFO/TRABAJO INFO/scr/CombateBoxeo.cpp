@@ -14,23 +14,16 @@
 #include <cmath> // Para std::abs
 
 // El constructor recibe los boxeadores ya decididos (Normal o Kickboxing)
-CombateBoxeo::CombateBoxeo(Boxeador* p1, Boxeador* p2, bool contraIA) {
+CombateBoxeo::CombateBoxeo(Personaje* p1, Personaje* p2, bool contraIA) {
     jugador1 = p1;
     jugador2 = p2;
-    //esIA = contraIA;
-    esIA = false; // Forzado a falso para ignorar la IA por ahora
-
+    esIA = false;
     terminado = false;
     cooldownIA = 0.0f;
 
-    // Inicializamos a los boxeadores pasándoles su número de jugador -- luego se cambiara, es para las pruebass
-    if (jugador1 != nullptr) jugador1->inicializar(1);
-    if (jugador2 != nullptr) jugador2->inicializar(2);
-
-    /*// Inicializamos el azar solo si hay IA
-    if (esIA) {
-        std::srand(static_cast<unsigned int>(std::time(0)));
-    }*/
+    // Posiciones del ring — solo internas, NO tocamos setPosicion
+    posXj1 = -6.0f; posYj1 = -8.0f;
+    posXj2 = 6.0f; posYj2 = -8.0f;
 }
 
 
@@ -72,16 +65,10 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
     // ---------------------------------------------
     // Movimiento
     if (teclaPresionada == 'a' || teclaPresionada == 'A') {
-        //imponemos limite izquierdo del ring para que no se salga de la pantalla
-        if (jugador1->getX() > limiteIzquierdo) { // Izquierda
-            jugador1->darPaso(-1);
-        }
+        if (posXj1 > limiteIzquierdo) posXj1 -= 1.0f;
     }
     else if (teclaPresionada == 'd' || teclaPresionada == 'D') {
-        //imponemos limite derecho del ring para que no se salga de la pantalla
-        if (jugador1->getX() < limiteDerecho) { // Derecha
-            jugador1->darPaso(1);
-        }
+        if (posXj1 < limiteDerecho) posXj1 += 1.0f;
     }
     // Ataques y Defensa
     else if (teclaPresionada == 'q' || teclaPresionada == 'Q') {
@@ -93,13 +80,13 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
         // da igual si esta a la derecha o izq, por eso usamos el valor absoluto
         // < 5.0f es el rango de alcance
         // Si la distancia es menor a 5.0f, el golpe conecta; si no, da al aire.
-        if (std::abs(jugador1->getX() - jugador2->getX()) < 5.0f) {
+        if (std::abs(posXj1 - posXj2) < 5.0f) {
             procesarGolpe(jugador1, jugador2);
         }
     }
     else if (teclaPresionada == 'e' || teclaPresionada == 'E') {
         jugador1->realizarPatada();
-        if (std::abs(jugador1->getX() - jugador2->getX()) < 5.0f) {
+        if (std::abs(posXj1 - posXj2) < 5.0f) {
             procesarGolpe(jugador1, jugador2);
         }
     }
@@ -117,28 +104,27 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
     // ---------------------------------------------
     // Movimiento
     if (teclaPresionada == 'j' || teclaPresionada == 'J') {
-        if (jugador2->getX() > limiteIzquierdo) {// Izquierda
-            jugador2->darPaso(-1);
-        }
+        if (posXj2 > limiteIzquierdo) posXj2 -= 1.0f;
     }
     else if (teclaPresionada == 'l' || teclaPresionada == 'L') {
-        if (jugador2->getX() < limiteDerecho) { // Derecha
-            jugador2->darPaso(1);
-        }
+        if (posXj2 < limiteDerecho) posXj2 += 1.0f;
     }
+
+
+
     // Ataques y Defensa
     else if (teclaPresionada == 'u' || teclaPresionada == 'U') {
         jugador2->realizarPunetazo();
 
         ETSIDI::play("sonidos/boxeo/puño_flojo.wav");
 
-        if (std::abs(jugador1->getX() - jugador2->getX()) < 5.0f) {
+        if (std::abs(posXj1 - posXj2) < 5.0f) {
             procesarGolpe(jugador2, jugador1);
         }
     }
     else if (teclaPresionada == 'i' || teclaPresionada == 'I') {
         jugador2->realizarPatada();
-        if (std::abs(jugador1->getX() - jugador2->getX()) < 5.0f) {
+        if (std::abs(posXj1 - posXj2) < 5.0f) {
             procesarGolpe(jugador2, jugador1);
         }
     }
@@ -151,7 +137,7 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
 }
 
 
-void CombateBoxeo::procesarGolpe(Boxeador* atacante, Boxeador* victima) {
+void CombateBoxeo::procesarGolpe(Personaje* atacante, Personaje* victima) {
     // Obtenemos la fuerza del que pega
     int danio = atacante->getFuerza();
 
@@ -259,42 +245,39 @@ void CombateBoxeo::dibujar() {
 
 
     // RENDERIZADO DE LOS SPRITES PNG REALES EN EL RING 
-
-    //QUEDA PONERLOS BONITOS!!!!!
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);  // ← FALTABA
+    glDisable(GL_LIGHTING);   // ← FALTABA
 
-    float mitadW = 3.0f; //  ancho
-    float altoH = 8.0f;  // altura 
+    float mitadW = 3.0f;
+    float altoH = 8.0f;
 
-    // DIBUJA SPRITE JUGADOR 1 (Atacante)
-    if (jugador1 != nullptr && jugador1->getTextureID() != 0) {
-        glBindTexture(GL_TEXTURE_2D, jugador1->getTextureID()); // enlazamos su png real
+    // DIBUJA SPRITE JUGADOR 1
+    if (jugador1 != nullptr && jugador1->getSprite().getTexID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, jugador1->getSprite().getTexID());
         glBegin(GL_POLYGON);
-
-        glTexCoord2d(0, 1); glVertex3f(jugador1->getX() - mitadW, jugador1->getY(), 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(jugador1->getX() + mitadW, jugador1->getY(), 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(jugador1->getX() + mitadW, jugador1->getY() + altoH, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(jugador1->getX() - mitadW, jugador1->getY() + altoH, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj1 - mitadW, posYj1, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj1 + mitadW, posYj1, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj1 + mitadW, posYj1 + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj1 - mitadW, posYj1 + altoH, 0.0f);
         glEnd();
     }
 
-    // DIBUJA SPRITE JUGADOR 2 (Defensor)
-    if (jugador2 != nullptr && jugador2->getTextureID() != 0) {
-        glBindTexture(GL_TEXTURE_2D, jugador2->getTextureID()); // enlazamos su png real
+    // DIBUJA SPRITE JUGADOR 2
+    if (jugador2 != nullptr && jugador2->getSprite().getTexID() != 0) {
+        glBindTexture(GL_TEXTURE_2D, jugador2->getSprite().getTexID());
         glBegin(GL_POLYGON);
-
-        glTexCoord2d(0, 1); glVertex3f(jugador2->getX() - mitadW, jugador2->getY(), 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(jugador2->getX() + mitadW, jugador2->getY(), 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(jugador2->getX() + mitadW, jugador2->getY() + altoH, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(jugador2->getX() - mitadW, jugador2->getY() + altoH, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj2 - mitadW, posYj2, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj2 + mitadW, posYj2, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj2 + mitadW, posYj2 + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj2 - mitadW, posYj2 + altoH, 0.0f);
         glEnd();
     }
 
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
-
     /*// -------------------------------------------------------------------------
     // RECTÁNGULOS TEMPORALES DE PRUEBA (Jugadores)
     // -------------------------------------------------------------------------

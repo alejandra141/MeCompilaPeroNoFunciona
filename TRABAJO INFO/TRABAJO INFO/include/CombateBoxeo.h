@@ -3,14 +3,15 @@
 #pragma once
 #include "Combates.h"
 #include "Boxeador.h"
+#include "Personaje.h"
 #include "Boxeador_Normal.h"
 #include "Boxeador_Kickboxing.h"
 
 class CombateBoxeo : public Combates {
 private:
     // pueden ser cualquier tipo de boxeador
-    Boxeador* jugador1;
-    Boxeador* jugador2;
+    Personaje* jugador1;
+    Personaje* jugador2;
     bool terminado;
 
     bool esIA;         // true = Juega la máquina, false = Juega Jugador 2
@@ -18,16 +19,20 @@ private:
 
     //void actualizarIA(); por ahora lo vamos a hacer sin IA
     // el "árbitro" procesa el daño
-    void procesarGolpe(Boxeador* atacante, Boxeador* victima);
+    void procesarGolpe(Personaje* atacante, Personaje* victima);
+ 
 
 	enum Estado { JUGANDO, FIN }; //SOY LORENA ESTO ES PARA FINALIZAR EL COMBATE Y ANUNCIAR EL GANADOR  
     Estado estado = JUGANDO;
     int ganador = 0;
 
+    float posXj1, posYj1;
+    float posXj2, posYj2;
+
 public:
     // El constructor recibe a los dos luchadores ya creados
     // El constructor que usará ALEJANDRA para elegir el tipo de boxeador
-    CombateBoxeo(Boxeador* p1, Boxeador* p2, bool contraIA);
+    CombateBoxeo(Personaje* p1, Personaje* p2, bool contraIA = false);
 
     // Funciones principales del combate
     void iniciarPelea();    // Aquí sonará la campana de inicio

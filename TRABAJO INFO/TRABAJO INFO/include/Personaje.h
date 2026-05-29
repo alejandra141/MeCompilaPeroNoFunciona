@@ -57,6 +57,10 @@ public:
     int getDefensa() const { return defensa; }
     int getVidaMax() const { return vidaMax; }
 
+    float getPosX() const { return posicion.x; }
+    float getPosY() const { return posicion.y; }
+    float getPosZ() const { return posicion.z; }
+
     std::string getTipo()   const;
    
     std::string getNombre() const;
@@ -97,5 +101,12 @@ public:
     //cosas para el encarcelamiento del fisio 
     int getCicloEncarcelamiento() const { return cicloEncarcelamiento; }
     void encarcelar(int cicloActual) { encarcelada = true; cicloEncarcelamiento = cicloActual; }
+
+
+    //esto es un metodo de boxeo 
+    virtual void darPaso(int direccion) {
+        posicion.x += direccion * 1.0f;
+        sprite.setPosicion(posicion.x, posicion.y);
+    }
 
 };

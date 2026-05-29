@@ -3,7 +3,7 @@
 Jugador::Jugador(int id) : id(id) {}
 
 Jugador::~Jugador() {
-    for (auto p : piezas) delete p;
+    piezas.clear();
 }
 
 void Jugador::setPais(const std::string& p) { pais = p; }
@@ -14,7 +14,7 @@ void Jugador::agregarPieza(Personaje* p) { piezas.push_back(p); }
 
 void Jugador::eliminarPieza(Personaje* p) {
     piezas.erase(std::remove(piezas.begin(), piezas.end(), p), piezas.end());
-    delete p;
+   
 }
 
 std::vector<Personaje*>& Jugador::getPiezas() { return piezas; }

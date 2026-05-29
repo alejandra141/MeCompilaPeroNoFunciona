@@ -32,6 +32,7 @@ private:
     bool modoHechizo = false;   // estamos eligiendo objetivo de un hechizo
     int  hechizoPendiente = 0;       // del 1 al 7 según el hechizo del Fisio
     Personaje* primerObjetivo = nullptr; // para Intercambio que se necesitan dos piezas
+    EstadoJuego* estadoPendiente = nullptr; 
 
 
 public:
