@@ -1,7 +1,7 @@
 
 
 //EstadoTablero.cpp
-
+#include "EstadoFinJuego.h"
 #include "EstadoTablero.h"
 #include "FlujoJuego.h"
 #include "EstadoCombate.h"
@@ -29,6 +29,13 @@ void EstadoTablero::mueve(double dt) {
         estadoPendiente = nullptr;
         flujo->cambiarEstado(siguiente);
         return;
+    }
+
+    Jugador* ganador = tablero.verificarGanador(tablero, j1, j2);
+    if (ganador != nullptr) {
+        flujo->cambiarEstado(
+            new EstadoFinJuego(flujo, ganador->getId())
+        );
     }
 }
 void EstadoTablero::dibujar() {
