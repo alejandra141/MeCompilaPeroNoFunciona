@@ -568,11 +568,6 @@ void EstadoTablero::tecla(unsigned char key) {
     }
 
 
-
-
-    if (key == '1') flujo->cambiarEstado(new EstadoCombate(flujo, 1, j1->getPais(), j2->getPais()));
-    if (key == '2') flujo->cambiarEstado(new EstadoCombate(flujo, 2, j1->getPais(), j2->getPais()));
-    if (key == '3') flujo->cambiarEstado(new EstadoCombate(flujo, 3, j1->getPais(), j2->getPais()));
 }
 
 
