@@ -1,7 +1,3 @@
-
-
-//CombateBaloncesto.cpp
-
 #include "CombateBaloncesto.h"
 #include <iostream>
 #include "GL/freeglut.h"
@@ -31,10 +27,6 @@ CombateBaloncesto::CombateBaloncesto(Personaje* j1, Personaje* j2)
 CombateBaloncesto::~CombateBaloncesto() {
    
 }
-
-
-
-
 
 void CombateBaloncesto::mueve(double dt)
 {

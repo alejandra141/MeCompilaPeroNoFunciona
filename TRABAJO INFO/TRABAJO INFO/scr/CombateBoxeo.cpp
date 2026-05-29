@@ -1,8 +1,3 @@
-
-
-
-//CombateBoxeo.cpp
-
 #include "CombateBoxeo.h"
 #include "EstadoTablero.h"
 #include "FlujoJuego.h"
@@ -90,12 +85,11 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
             procesarGolpe(jugador1, jugador2);
         }
     }
-    else if (teclaPresionada == 's' || teclaPresionada == 'S') {
-        // Activa el estado de esquivo del boxeador. 
-        // Mientras esté activo, el próximo golpe recibido no le restará vida.
-        // Cambia 'estaEsquivando' a true para que la función recibirDanio() ignore el próximo golpe.
-        jugador1->esquivar();
 
+    else if (teclaPresionada == 's' || teclaPresionada == 'S') {
+        jugador1->esquivar();
+        // Kickboxing esquiva 0.8s, Normal solo 0.3s
+        tiempoEsquivaJ1 = (jugador1->getTipo() == "boxeador_kickboxing") ? 0.8f : 0.3f;//AÑADIENDO VENTAJAS
         ETSIDI::play("sonidos/boxeo/esquivo.wav");
     }
 
@@ -109,7 +103,6 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
     else if (teclaPresionada == 'l' || teclaPresionada == 'L') {
         if (posXj2 < limiteDerecho) posXj2 += 1.0f;
     }
-
 
 
     // Ataques y Defensa
@@ -128,8 +121,10 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
             procesarGolpe(jugador2, jugador1);
         }
     }
+
     else if (teclaPresionada == 'k' || teclaPresionada == 'K') {
         jugador2->esquivar();
+        tiempoEsquivaJ2 = (jugador2->getTipo() == "boxeador_kickboxing") ? 0.8f : 0.3f;//AÑADIENDO VENTAJAS
         ETSIDI::play("sonidos/boxeo/esquivo.wav");
     }
 
@@ -183,44 +178,22 @@ void CombateBoxeo::mueve(double dt) {
     jugador1->actualizarBalanceo();
     jugador2->actualizarBalanceo();
 
-    /*// Solo llamamos a la IA si el modo está activo
-    if (esIA) {
-        actualizarIA();
-    }*/
+    //SOY ALEJANDRA ESTOY AÑADIENDO ESTO PARA QUE TENGAN MÁS VENTAJA LOS DE KICKBOXING
 
+    if (tiempoEsquivaJ1 > 0) {
+        tiempoEsquivaJ1 -= (float)dt;
+        if (tiempoEsquivaJ1 <= 0) jugador1->realizarPunetazo(); // resetea esquiva
+    }
+    if (tiempoEsquivaJ2 > 0) {
+        tiempoEsquivaJ2 -= (float)dt;
+        if (tiempoEsquivaJ2 <= 0) jugador2->realizarPunetazo(); // resetea esquiva
+    }
 }
-
-
-/*void CombateBoxeo::actualizarIA() {
-    if (cooldownIA > 0) {
-        cooldownIA -= 0.016f;
-        return;
-    }
-
-    int decision = std::rand() % 100;
-
-    if (decision < 5) {
-        jugador2->realizarPunetazo();
-        procesarGolpe(jugador2, jugador1);
-        cooldownIA = 1.0f;
-    }
-    else if (decision < 7) {
-        jugador2->realizarPatada();
-        procesarGolpe(jugador2, jugador1);
-        cooldownIA = 1.5f;
-    }
-    else if (decision < 10) {
-        jugador2->esquivar();
-        cooldownIA = 0.5f;
-    }
-}*/
-
 
 
 bool CombateBoxeo::estaTerminado() {
     return (!jugador1->estaVivo() || !jugador2->estaVivo());
 }
-
 
 
 void CombateBoxeo::dibujar() {

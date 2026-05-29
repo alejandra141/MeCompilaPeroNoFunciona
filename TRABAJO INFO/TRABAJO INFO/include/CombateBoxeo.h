@@ -1,5 +1,3 @@
-//CombateBoxeo.h
-
 #pragma once
 #include "Combates.h"
 #include "Boxeador.h"
@@ -29,6 +27,10 @@ private:
     float posXj1, posYj1;
     float posXj2, posYj2;
 
+    //le he añadido más ventajes
+    float tiempoEsquivaJ1 = 0.0f;
+    float tiempoEsquivaJ2 = 0.0f;
+
 public:
     // El constructor recibe a los dos luchadores ya creados
     // El constructor que usará ALEJANDRA para elegir el tipo de boxeador
@@ -52,12 +54,4 @@ public:
 	bool haTerminado() const override { return estado == FIN; } // PARA EL FIN DEL COMBATE Y VOLVER A TABLERO
     int getGanador() const override { return ganador; }
 };
-
-
-
-
-
-
-
-
 

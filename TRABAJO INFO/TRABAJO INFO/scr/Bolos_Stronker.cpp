@@ -1,7 +1,3 @@
-
-
-//Bolos_Stronker.cpp
-
 #include "Bolos_Stronker.h"
 #include "ETSIDI.h"
 

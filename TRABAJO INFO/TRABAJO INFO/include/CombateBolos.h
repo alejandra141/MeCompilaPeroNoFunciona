@@ -1,6 +1,3 @@
-
-//CombateBolos.h
-
 #pragma once
 #include "Combates.h"
 #include "Bolo.h"

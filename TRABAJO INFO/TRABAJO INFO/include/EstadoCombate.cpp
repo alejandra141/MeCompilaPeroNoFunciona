@@ -1,7 +1,3 @@
-
-
-//EstadoCombate.cpp
-
 #include "EstadoCombate.h"
 #include "FlujoJuego.h"
 #include "EstadoTablero.h"

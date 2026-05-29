@@ -46,7 +46,10 @@ public:
 	void teclaEspecial(int key) override;
 
     //esto es para la detección de colisiones en el tablero entre personajes, para iniciar el combate
-
     void comprobarColision(Personaje* atacante, int filaDestino, int colDestino);
+
+
+    //esto es para identificar el tipo de combate que vamos a iniciar
+    int getTipoCombatePorPersonaje(Personaje* p);
 };
 

@@ -1,6 +1,3 @@
-
-//CombateBaloncesto.h
-
 #pragma once
 #include "Combates.h"
 #include "Canasta.h"

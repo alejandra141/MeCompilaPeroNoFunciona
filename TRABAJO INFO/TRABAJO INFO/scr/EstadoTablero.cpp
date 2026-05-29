@@ -572,7 +572,6 @@ void EstadoTablero::tecla(unsigned char key) {
 }
 
 
-
 void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int colDestino) {
     Personaje* defensor = tablero.getPersonajeEn(filaDestino, colDestino);
 
@@ -580,23 +579,53 @@ void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int 
     if (atacante == nullptr) return;
     if (defensor->getNumJugador() == atacante->getNumJugador()) return;
 
-    std::string tipo = atacante->getTipo();
-    int tipoCombate = 1;
+    // Decidir tipo de combate según color de casilla
+    int colorCasilla = tablero.getCelda(filaDestino, colDestino);
 
-    if (tipo == "boxeador_normal" || tipo == "boxeador_kickboxing" ||
-        tipo == "BoxeadorNormal" || tipo == "BoxeadorKickboxing")
-        tipoCombate = 3;
-    else if (tipo == "bolo_cranker" || tipo == "bolo_stronker" ||
-        tipo == "BoloCranker" || tipo == "BoloStronker")
-        tipoCombate = 2;
-    else
-        tipoCombate = 1;
+    // Si el ciclo está invertido, invertimos también la lectura del color
+    if (tablero.getCicloInvertido()) {
+        if (colorCasilla == 0) colorCasilla = 1;
+        else if (colorCasilla == 1) colorCasilla = 0;
+    }
 
-    // Guardamos el estado pendiente en vez de cambiar ya
+    int tipoCombate = 1; // por defecto baloncesto
+
+    if (colorCasilla == 0) {
+        // Casilla NEGRA → deporte del bando Oscuridad (J2)
+        // Buscamos qué tipo es el personaje de J2 en este combate
+        Personaje* piezaOscuridad = (atacante->getNumJugador() == 2) ? atacante : defensor;
+        tipoCombate = getTipoCombatePorPersonaje(piezaOscuridad);
+    }
+    else if (colorCasilla == 1) {
+        // Casilla BLANCA → deporte del bando Luz (J1)
+        Personaje* piezaLuz = (atacante->getNumJugador() == 1) ? atacante : defensor;
+        tipoCombate = getTipoCombatePorPersonaje(piezaLuz);
+    }
+    else {
+        // Casilla MORADA o PODER → aleatorio entre los tres deportes
+        tipoCombate = (rand() % 3) + 1;
+    }
+
     estadoPendiente = new EstadoCombate(
-        flujo, tipoCombate, paisJ1, paisJ2, atacante, defensor, filaDestino, colDestino
-
-
+        flujo, tipoCombate, paisJ1, paisJ2,
+        atacante, defensor, filaDestino, colDestino
     );
 }
 
+
+
+int EstadoTablero::getTipoCombatePorPersonaje(Personaje* p) {
+    std::string tipo = p->getTipo();
+
+    if (tipo == "bolo_cranker" || tipo == "bolo_stronker")
+        return 2; // bolos
+
+    if (tipo == "boxeador_normal" || tipo == "boxeador_kickboxing")
+        return 3; // boxeo
+
+    if (tipo == "jugador_baloncesto")
+        return 1; // baloncesto
+
+    // fisio u otro → aleatorio
+    return (rand() % 3) + 1;
+}

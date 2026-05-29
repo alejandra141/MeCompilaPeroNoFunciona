@@ -25,11 +25,11 @@ CombateBolos::CombateBolos(Personaje* j1, Personaje* j2)
     // especialistas
     if (jugador1 != nullptr) {
         std::string t1 = jugador1->getTipo();
-        j1esEspecialista = (t1 == "bolo_cranker" || t1 == "bolo_stroker");
+        j1esEspecialista = (t1 == "bolo_cranker" || t1 == "bolo_stronker");
     }
     if (jugador2 != nullptr) {
         std::string t2 = jugador2->getTipo();
-        j2esEspecialista = (t2 == "bolo_cranker" || t2 == "bolo_stroker");
+        j2esEspecialista = (t2 == "bolo_cranker" || t2 == "bolo_stronker");
     }
 
     crearBolos();
@@ -144,12 +144,6 @@ void CombateBolos::mueve(double dt) {
     bolaJ1.mueve((float)dt);
     bolaJ2.mueve((float)dt);
 
-    // si salen de pantalla reseteamos
-   // if (bolaJ1.activa && bolaJ1.posicion.y > 10.0f)
-   //     bolaJ1.resetear();
-    //if (bolaJ2.activa && bolaJ2.posicion.y > 10.0f)
-    //    bolaJ2.resetear();
-
     comprobarColisiones();
     if (tiempoEfectoJ1 > 0) tiempoEfectoJ1 -= (float)dt;
     if (tiempoEfectoJ2 > 0) tiempoEfectoJ2 -= (float)dt;
@@ -175,7 +169,10 @@ void CombateBolos::teclaSuelta(unsigned char key) {
         cargandoJ1 = false;
 
         if (potenciaJ1 > 0) {  //hay que poner esto para solo lanzar si hay potencia en la barra
-            float velX = sin(anguloJ1) * potenciaJ1 * 1.5f;
+            
+            float factorCurvaJ1 = j1esEspecialista ? 2.5f : 1.5f;// le vamos a poner bola curva jajajjaja
+            float velX = sin(anguloJ1) * potenciaJ1 * factorCurvaJ1;
+
             float velY = potenciaJ1 * 3.0f;
             bolaJ1.lanzar(posXj1, posYj1, velX, velY);
             ETSIDI::play("sonidos/Bowling/Sample_0009.wav");
@@ -189,7 +186,10 @@ void CombateBolos::teclaSuelta(unsigned char key) {
         cargandoJ2 = false;
 
         if (potenciaJ2 > 0) {  //hay que poner esto para solo lanzar si hay potencia en la barra
-            float velX = sin(anguloJ2) * potenciaJ2 * 1.5f;
+
+            float factorCurvaJ2 = j2esEspecialista ? 2.5f : 1.5f;// le vamos a poner bola curva jajajaj
+            float velX = sin(anguloJ2) * potenciaJ2 * factorCurvaJ2;
+
             float velY = potenciaJ2 * 3.0f;
             bolaJ2.lanzar(posXj2, posYj2, velX, velY);
             ETSIDI::play("sonidos/Bowling/Sample_0009.wav");
