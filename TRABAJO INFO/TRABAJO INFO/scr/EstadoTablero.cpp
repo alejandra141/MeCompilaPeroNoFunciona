@@ -10,12 +10,12 @@
 extern Tablero tablero;
 
 EstadoTablero::EstadoTablero(FlujoJuego* f,
-    const std::string& paisJ1,
-    const std::string& paisJ2)
-    : flujo(f), j1(1), j2(2)
+    const std::string& pJ1,
+    const std::string& pJ2)
+    : flujo(f), j1(1), j2(2), paisJ1(pJ1), paisJ2(pJ2)  
 {
-    j1.setPais(paisJ1);
-    j2.setPais(paisJ2);
+    j1.setPais(pJ1);
+    j2.setPais(pJ2);
     j1.inicializarPiezas();
     j2.inicializarPiezas();
     tablero.inicializarJ1(j1);

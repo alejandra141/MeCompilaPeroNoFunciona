@@ -62,7 +62,6 @@ void CombateBaloncesto::mueve(double dt)
     disparosJ1.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
     disparosJ2.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
 
-    // Canasta en la parte inferior del aro
     if (disparosJ1.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ1++; std::cout << "CANASTA J1: " << puntosJ1 << std::endl; }
     if (disparosJ2.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ2++; std::cout << "CANASTA J2: " << puntosJ2 << std::endl; }
 
@@ -268,9 +267,6 @@ void CombateBaloncesto::tecla(unsigned char key) {
     case 'a': case 'A': teclaIzqJ1 = true;  break;
     case 'd': case 'D': teclaDerJ1 = true;  break;
 
-        if (estado == FIN && (key == 'c' || key == 'C')) {
-            // aquí llamas a tu máquina de estados
-        }
     }
 }
 
