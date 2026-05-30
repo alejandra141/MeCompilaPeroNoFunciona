@@ -205,17 +205,18 @@ void CombateBaloncesto::dibujar() {
     glDisable(GL_LIGHTING);
 
 
-    float anchoPlayer = 2.5f; //ancho
-    float altoPlayer = 5.0f; //alto
+    float anchoPlayer = 4.5f;
+    float altoPlayer = 11.0f;
 
     // DIBUJA SPRITE JUGADOR 1 (Izquierda)
     if (j1 != nullptr && j1->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, j1->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(0, 1); glVertex3f(posXj1 - anchoPlayer, posYj1, 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(posXj1 + anchoPlayer, posYj1, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj1 + anchoPlayer, posYj1 + altoPlayer, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj1 - anchoPlayer, posYj1 + altoPlayer, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj1 - anchoPlayer, -10.0f, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj1 + anchoPlayer, -10.0f, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj1 + anchoPlayer, -10.0f + altoPlayer, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj1 - anchoPlayer, -10.0f + altoPlayer, 0.0f);
+
         glEnd();
     }
 
@@ -223,12 +224,13 @@ void CombateBaloncesto::dibujar() {
     if (j2 != nullptr && j2->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, j2->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(1, 1); glVertex3f(posXj2 - anchoPlayer, posYj2, 0.0f);
-        glTexCoord2d(0, 1); glVertex3f(posXj2 + anchoPlayer, posYj2, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj2 + anchoPlayer, posYj2 + altoPlayer, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, posYj2 + altoPlayer, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj2 - anchoPlayer, -10.0f, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj2 + anchoPlayer, -10.0f, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj2 + anchoPlayer, -10.0f + altoPlayer, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, -10.0f + altoPlayer, 0.0f);
         glEnd();
     }
+
     glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);

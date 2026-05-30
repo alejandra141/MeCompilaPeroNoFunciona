@@ -18,8 +18,9 @@ CombateBoxeo::CombateBoxeo(Personaje* p1, Personaje* p2, bool contraIA) {
     cooldownIA = 0.0f;
 
     // Posiciones del ring — solo internas, NO tocamos setPosicion
+
     posXj1 = -6.0f; posYj1 = -8.0f;
-    posXj2 = 6.0f; posYj2 = -8.0f;
+    posXj2 = 6.0f;  posYj2 = -8.0f;
 }
 
 
@@ -307,17 +308,18 @@ void CombateBoxeo::dibujar() {
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
 
-    float mitadW = 3.0f;
-    float altoH = 8.0f;
+    // Por esto:
+    float mitadW = 10.0f;
+    float altoH = 21.0f;
 
     // DIBUJA SPRITE JUGADOR 1
     if (jugador1 != nullptr && jugador1->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador1->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(0, 1); glVertex3f(posXj1 - mitadW, posYj1, 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(posXj1 + mitadW, posYj1, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj1 + mitadW, posYj1 + altoH, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj1 - mitadW, posYj1 + altoH, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj1 - mitadW, -19.0f, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj1 + mitadW, -19.0f, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj1 + mitadW, -19.0f + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj1 - mitadW, -19.0f + altoH, 0.0f);
         glEnd();
     }
 
@@ -325,12 +327,13 @@ void CombateBoxeo::dibujar() {
     if (jugador2 != nullptr && jugador2->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador2->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(0, 1); glVertex3f(posXj2 - mitadW, posYj2, 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(posXj2 + mitadW, posYj2, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj2 + mitadW, posYj2 + altoH, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj2 - mitadW, posYj2 + altoH, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj2 - mitadW, -19.0f, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj2 + mitadW, -19.0f, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj2 + mitadW, -19.0f + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj2 - mitadW, -19.0f + altoH, 0.0f);
         glEnd();
     }
+
 
     glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);

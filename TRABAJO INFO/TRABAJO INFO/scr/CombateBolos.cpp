@@ -264,17 +264,17 @@ void CombateBolos::dibujar() {
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
 
-    float anchoPlayer = 2.0f;
-    float altoPlayer = 5.0f;
+    float anchoPlayer = 3.5f;
+    float altoPlayer = 9.0f;
 
     //DIBUJAR JUGADOR 1
     if (jugador1 != nullptr && jugador1->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador1->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(0, 1); glVertex3f(posXj1 - anchoPlayer, posYj1, 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(posXj1 + anchoPlayer, posYj1, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj1 + anchoPlayer, posYj1 + altoPlayer, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj1 - anchoPlayer, posYj1 + altoPlayer, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj1 - anchoPlayer, -14.0f, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj1 + anchoPlayer, -14.0f, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj1 + anchoPlayer, -14.0f + altoPlayer, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj1 - anchoPlayer, -14.0f + altoPlayer, 0.0f);
         glEnd();
     }
 
@@ -282,10 +282,10 @@ void CombateBolos::dibujar() {
     if (jugador2 != nullptr && jugador2->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador2->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(1, 1); glVertex3f(posXj2 - anchoPlayer, posYj2, 0.0f);
-        glTexCoord2d(0, 1); glVertex3f(posXj2 + anchoPlayer, posYj2, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj2 + anchoPlayer, posYj2 + altoPlayer, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, posYj2 + altoPlayer, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj2 - anchoPlayer, -14.0f, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj2 + anchoPlayer, -14.0f, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj2 + anchoPlayer, -14.0f + altoPlayer, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, -14.0f + altoPlayer, 0.0f);
         glEnd();
     }
 
