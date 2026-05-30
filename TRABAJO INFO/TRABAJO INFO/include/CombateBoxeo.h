@@ -20,8 +20,8 @@ private:
     void procesarGolpe(Personaje* atacante, Personaje* victima);
  
 
-	enum Estado { JUGANDO, FIN }; //SOY LORENA ESTO ES PARA FINALIZAR EL COMBATE Y ANUNCIAR EL GANADOR  
-    Estado estado = JUGANDO;
+    enum Estado { INSTRUCCIONES, JUGANDO, FIN }; 
+    Estado estado = INSTRUCCIONES;
     int ganador = 0;
 
     float posXj1, posYj1;
@@ -54,4 +54,3 @@ public:
 	bool haTerminado() const override { return estado == FIN; } // PARA EL FIN DEL COMBATE Y VOLVER A TABLERO
     int getGanador() const override { return ganador; }
 };
-

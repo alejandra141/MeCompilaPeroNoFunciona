@@ -56,8 +56,8 @@ private:
 
 	int ganador;  // 1 o 2
 
-	enum Estado { JUGANDO, FIN };
-	Estado estado = JUGANDO;
+	enum Estado { INSTRUCCIONES, JUGANDO, FIN };
+	Estado estado = INSTRUCCIONES;
 
 	float posXj1, posYj1;//para encapsular la posicion de combate con la real de los personajes, para que no se líen con las posiciones del tablero y esas
 	float posXj2, posYj2;// cosas, y para que el combate sea más fluida y no se note el cambio de posiciones entre tablero y combate, que es lo que me ha pasado a mí al principio jajaja
@@ -82,4 +82,7 @@ public:
 
 	CombateBolos(Personaje* j1, Personaje* j2); //constructor para recibir los personajes que van a combatir
 
+	void iniciarCombate();    // Aquí sonará la campana de inicio
+
 };
+

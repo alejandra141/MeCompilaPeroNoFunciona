@@ -25,11 +25,21 @@ CombateBaloncesto::CombateBaloncesto(Personaje* j1, Personaje* j2)
 //DESTRUCTOR
 
 CombateBaloncesto::~CombateBaloncesto() {
-   
+
 }
+
+
+void CombateBaloncesto::iniciarCombate() {
+
+    ETSIDI::play("sonidos/baloncesto/entrada_combate.wav");
+}
+
 
 void CombateBaloncesto::mueve(double dt)
 {
+    // si estamos leyendo las instrucciones, congelamos el movimiento 
+    if (estado == INSTRUCCIONES) return;
+
     float t = 0.2f;
     canasta.mueve(dt);
 
@@ -43,11 +53,8 @@ void CombateBaloncesto::mueve(double dt)
     if (cargandoJ2) { potenciaJ2 += VELOCIDAD_CARGA * dt; if (potenciaJ2 > POTENCIA_MAX) potenciaJ2 = POTENCIA_MAX; }
 
 
-    // registrar disparos activos ANTES
     int activasAntesJ1 = disparosJ1.contarActivas();
     int activasAntesJ2 = disparosJ2.contarActivas();
-
-    // registrar puntos antes
     int puntosAntesJ1 = puntosJ1;
     int puntosAntesJ2 = puntosJ2;
 
@@ -62,27 +69,36 @@ void CombateBaloncesto::mueve(double dt)
     disparosJ1.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
     disparosJ2.reboteConTablero(aroY + 1.0f, aroX, canasta.getAncho());
 
+    // Canasta en la parte inferior del aro
+    // si se encesta suena NiceShot
+    if (disparosJ1.hayCanasta(aroX, aroY, 3.0f, 1.5f)) {
+        puntosJ1++;
+        std::cout << "CANASTA J1: " << puntosJ1 << std::endl;
+        ETSIDI::play("sonidos/baloncesto/NiceShot.wav");
+    }
+    if (disparosJ2.hayCanasta(aroX, aroY, 3.0f, 1.5f)) {
+        puntosJ2++;
+        std::cout << "CANASTA J2: " << puntosJ2 << std::endl;
+        ETSIDI::play("sonidos/baloncesto/NiceShot.wav");
+    }
 
-    if (disparosJ1.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ1++; std::cout << "CANASTA J1: " << puntosJ1 << std::endl; }
-    if (disparosJ2.hayCanasta(aroX, aroY, 3.0f, 1.5f)) { puntosJ2++; std::cout << "CANASTA J2: " << puntosJ2 << std::endl; }
-
-
-    comprobarColisiones();
-
-    disparosJ1.limpiarInactivos();
-    disparosJ2.limpiarInactivos();
-	//activas despues de limpiar para comprobar que se están limpiando bien las pelotas que ya no están activas, para que no sigan colisionando después de entrar
     int activasDespuesJ1 = disparosJ1.contarActivas();
     int activasDespuesJ2 = disparosJ2.contarActivas();
 
     // fallo de J1
-    if (activasDespuesJ1 < activasAntesJ1 && puntosJ1 == puntosAntesJ1)
+    if (activasDespuesJ1 < activasAntesJ1 && puntosJ1 == puntosAntesJ1) {
         if (j1 != nullptr) j1->recibirDanio(5);
+    }
 
     // fallo de J2
-    if (activasDespuesJ2 < activasAntesJ2 && puntosJ2 == puntosAntesJ2)
+    if (activasDespuesJ2 < activasAntesJ2 && puntosJ2 == puntosAntesJ2) {
         if (j2 != nullptr) j2->recibirDanio(5);
+    }
 
+    disparosJ1.limpiarInactivos();
+    disparosJ2.limpiarInactivos();
+
+    comprobarColisiones();
 }
 
 
@@ -92,7 +108,7 @@ void CombateBaloncesto::dibujar() {
 
     std::cout << "TexID J1: " << j1->getSprite().getTexID() << std::endl;
     std::cout << "TexID J2: " << j2->getSprite().getTexID() << std::endl;
-    
+
     glDisable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 
@@ -109,8 +125,71 @@ void CombateBaloncesto::dibujar() {
 
     glEnd();
 
-
     glDisable(GL_TEXTURE_2D);
+
+
+    // INSTRUCCIONES
+
+    if (estado == INSTRUCCIONES) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // RECUADRO NEGRO TRANSLÚCIDO EN EL MEDIO
+        glColor4ub(0, 0, 0, 220); // Negro opaco
+        glBegin(GL_QUADS);
+        glVertex2f(-12.0f, -6.0f);
+        glVertex2f(12.0f, -6.0f);
+        glVertex2f(12.0f, 7.0f);
+        glVertex2f(-12.0f, 7.0f);
+        glEnd();
+
+        // BORDE BLANCO DEL RECUADRO
+        glLineWidth(3.0f);
+        glColor3ub(255, 255, 255);
+        glBegin(GL_LINE_LOOP);
+        glVertex2f(-12.0f, -6.0f);
+        glVertex2f(12.0f, -6.0f);
+        glVertex2f(12.0f, 7.0f);
+        glVertex2f(-12.0f, 7.0f);
+        glEnd();
+        glDisable(GL_BLEND);
+
+        // TEXTOS CON LAS INSTRUCCIONES
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 22);
+        ETSIDI::setTextColor(1, 1, 0); // amarillo 
+        ETSIDI::printxy("COMBATE BALONCESTO CONTROLES", -11.5f, 5.2f);
+
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
+
+        // CONTROLES JUGADOR 1 
+        ETSIDI::setTextColor(0.2f, 0.6f, 1.0f); //azul
+        ETSIDI::printxy("JUGADOR 1 (IZQUIERDA)", -11.5f, 3.2f);
+        ETSIDI::setTextColor(1, 1, 1);
+        ETSIDI::printxy("- Modificar Angulo: ", -11.5f, 2.0f);
+        ETSIDI::printxy(" A/D", -8.5f, 1.0f);
+        ETSIDI::printxy("- Mantener Potencia: ESPACIO", -11.5f, 0.0f);
+        ETSIDI::printxy("- Tirar a canasta: soltar tecla", -11.5f, -1.0f);
+
+        // CONTROLES JUGADOR 2 
+        ETSIDI::setTextColor(1.0f, 0.4f, 0.7f); //rosa
+        ETSIDI::printxy("JUGADOR 2 (DERECHA)", 1.0f, 3.2f);
+        ETSIDI::setTextColor(1, 1, 1);
+        ETSIDI::printxy("- Modificar Angulo: FLECHA IZQ", 1.0f, 2.0f);
+        ETSIDI::printxy("FLECHA IZQ/FLECHA DERCH", 2.5f, 1.0f);
+        ETSIDI::printxy("- Mantener Potencia: ENTER", 1.0f, 0.0f);
+        ETSIDI::printxy("- Tirar a canasta: soltar tecla", 1.0f, -1.0f);
+
+        // SALIDA
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 16);
+        ETSIDI::setTextColor(1, 0, 0); // rojo 
+        ETSIDI::printxy("PULSA ENTER/ESPACIO PARA EMPEZAR LA PELEA", -11.0f, -4.0f);
+
+        glEnable(GL_LIGHTING);
+        return; // salimos de la función para que NO dibuje los personajes ni las vidas todavía
+    }
+
+
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
 
     //dibujar canasta
@@ -119,11 +198,12 @@ void CombateBaloncesto::dibujar() {
 
     // RENDERIZADO DE LOS SPRITES PNG REALES EN LA CANCHA
 
-
-    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
+
 
     float anchoPlayer = 2.5f; //ancho
     float altoPlayer = 5.0f; //alto
@@ -139,7 +219,7 @@ void CombateBaloncesto::dibujar() {
         glEnd();
     }
 
-        // DIBUJA SPRITE JUGADOR 2 (Derecha) 
+    // DIBUJA SPRITE JUGADOR 2 (Derecha) 
     if (j2 != nullptr && j2->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, j2->getSprite().getTexID());
         glBegin(GL_POLYGON);
@@ -149,138 +229,151 @@ void CombateBaloncesto::dibujar() {
         glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, posYj2 + altoPlayer, 0.0f);
         glEnd();
     }
+    glEnable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
 
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-
-
-        //zona de canasta en rojo
-        float aroX = canasta.getPosX();
-        float aroY = canasta.getPosY();
-        float mitadZona = 3.0f / 2.0f;
-        float altoZona = 1.5f;
-
-        glDisable(GL_LIGHTING);
-        glDisable(GL_TEXTURE_2D);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glBegin(GL_LINE_LOOP);
-        glVertex3f(aroX - mitadZona, aroY - altoZona, -1.0f);
-        glVertex3f(aroX + mitadZona, aroY - altoZona, -1.0f);
-        glVertex3f(aroX + mitadZona, aroY, -1.0f);
-        glVertex3f(aroX - mitadZona, aroY, -1.0f);
-        glEnd();
-        glEnable(GL_LIGHTING);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 
-        // disparos
-        disparosJ1.dibujar(estelaJ1);
-        disparosJ2.dibujar(estelaJ2);
+    //zona de canasta en rojo
+    float aroX = canasta.getPosX();
+    float aroY = canasta.getPosY();
+    float mitadZona = 3.0f / 2.0f;
+    float altoZona = 1.5f;
 
-        // barra de potencia J1 (izquierda, abajo)
-        if (cargandoJ1) {
-            float porcentaje = potenciaJ1 / POTENCIA_MAX;
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glBegin(GL_LINE_LOOP);
+    glVertex3f(aroX - mitadZona, aroY - altoZona, -1.0f);
+    glVertex3f(aroX + mitadZona, aroY - altoZona, -1.0f);
+    glVertex3f(aroX + mitadZona, aroY, -1.0f);
+    glVertex3f(aroX - mitadZona, aroY, -1.0f);
+    glEnd();
+    glEnable(GL_LIGHTING);
 
-            glDisable(GL_LIGHTING);
-            glDisable(GL_TEXTURE_2D);
-            glDisable(GL_DEPTH_TEST);
 
-            // fondo gris
-            glColor3f(0.3f, 0.3f, 0.3f);
-            glBegin(GL_QUADS);
-            glVertex3f(-15.0f, -8.5f, -1.0f);
-            glVertex3f(1.0f, -8.5f, -1.0f);
-            glVertex3f(1.0f, -7.5f, -1.0f);
-            glVertex3f(-15.0f, -7.5f, -1.0f);
-            glEnd();
 
-            // relleno
-            glColor3f(porcentaje, 1.0f - porcentaje, 0.0f);
-            glBegin(GL_QUADS);
-            glVertex3f(-15.0f, -8.5f, -0.9f); //verde
-            glVertex3f(-15.0f + 16.0f * porcentaje, -8.5f, -0.9f);
-            glVertex3f(-15.0f + 16.0f * porcentaje, -7.5f, -0.9f);
-            glVertex3f(-15.0f, -7.5f, -0.9f);//rojo
-            glEnd();
+    // disparos
+    disparosJ1.dibujar(estelaJ1);
+    disparosJ2.dibujar(estelaJ2);
 
-            glEnable(GL_DEPTH_TEST);
-            glEnable(GL_LIGHTING);
-        }
-
-        // barra de potencia J2 (derecha, abajo)
-        if (cargandoJ2) {
-            float porcentaje = potenciaJ2 / POTENCIA_MAX;
-
-            glDisable(GL_LIGHTING);
-            glDisable(GL_TEXTURE_2D);
-            glDisable(GL_DEPTH_TEST);
-
-            // fondo gris
-            glColor3f(0.3f, 0.3f, 0.3f);
-            glBegin(GL_QUADS);
-            glVertex3f(2.0f, -8.5f, -1.0f);
-            glVertex3f(18.0f, -8.5f, -1.0f);
-            glVertex3f(18.0f, -7.5f, -1.0f);
-            glVertex3f(2.0f, -7.5f, -1.0f);
-            glEnd();
-
-            // relleno
-            glColor3f(porcentaje, 1.0f - porcentaje, 0.0f);
-            glBegin(GL_QUADS);
-            glVertex3f(2.0f, -8.5f, -0.9f);//verde
-            glVertex3f(2.0f + 16.0f * porcentaje, -8.5f, -0.9f);
-            glVertex3f(2.0f + 16.0f * porcentaje, -7.5f, -0.9f);
-            glVertex3f(2.0f, -7.5f, -0.9f); //rojo
-            glEnd();
-
-            glEnable(GL_DEPTH_TEST);
-            glEnable(GL_LIGHTING);
-        }
-
-        // línea de apuntado solo para jugadores con estela
-        if (estelaJ1)
-            dibujarLineaApuntado(posXj1, posYj1, 0.0f, anguloJ1);
-        if (estelaJ2)
-            dibujarLineaApuntado(posXj2, posYj2, 0.0f, anguloJ2);
+    // barra de potencia J1 (izquierda, abajo)
+    if (cargandoJ1) {
+        float porcentaje = potenciaJ1 / POTENCIA_MAX;
 
         glDisable(GL_LIGHTING);
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_DEPTH_TEST);
 
-        //Marcadores
-        ETSIDI::setTextColor(1, 1, 0);
-        ETSIDI::printxy(("J1: " + std::to_string(puntosJ1)).c_str(), -15, 9.0);//puntos
-        ETSIDI::printxy(("J2: " + std::to_string(puntosJ2)).c_str(), 10.0, 9.0);
+        // fondo gris
+        glColor3f(0.3f, 0.3f, 0.3f);
+        glBegin(GL_QUADS);
+        glVertex3f(-15.0f, -8.5f, -1.0f);
+        glVertex3f(1.0f, -8.5f, -1.0f);
+        glVertex3f(1.0f, -7.5f, -1.0f);
+        glVertex3f(-15.0f, -7.5f, -1.0f);
+        glEnd();
 
-        ETSIDI::setTextColor(1, 0, 0); // vida
-        ETSIDI::printxy(("Vida J1: " + std::to_string(j1->getVida())).c_str(), -15, 7.0);
-        ETSIDI::printxy(("Vida J2: " + std::to_string(j2->getVida())).c_str(), 5.0, 7.0);
+        // relleno
+        glColor3f(porcentaje, 1.0f - porcentaje, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex3f(-15.0f, -8.5f, -0.9f); //verde
+        glVertex3f(-15.0f + 16.0f * porcentaje, -8.5f, -0.9f);
+        glVertex3f(-15.0f + 16.0f * porcentaje, -7.5f, -0.9f);
+        glVertex3f(-15.0f, -7.5f, -0.9f);//rojo
+        glEnd();
 
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
+    }
 
+    // barra de potencia J2 (derecha, abajo)
+    if (cargandoJ2) {
+        float porcentaje = potenciaJ2 / POTENCIA_MAX;
+
+        glDisable(GL_LIGHTING);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+
+        // fondo gris
+        glColor3f(0.3f, 0.3f, 0.3f);
+        glBegin(GL_QUADS);
+        glVertex3f(2.0f, -8.5f, -1.0f);
+        glVertex3f(18.0f, -8.5f, -1.0f);
+        glVertex3f(18.0f, -7.5f, -1.0f);
+        glVertex3f(2.0f, -7.5f, -1.0f);
+        glEnd();
+
+        // relleno
+        glColor3f(porcentaje, 1.0f - porcentaje, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex3f(2.0f, -8.5f, -0.9f);//verde
+        glVertex3f(2.0f + 16.0f * porcentaje, -8.5f, -0.9f);
+        glVertex3f(2.0f + 16.0f * porcentaje, -7.5f, -0.9f);
+        glVertex3f(2.0f, -7.5f, -0.9f); //rojo
+        glEnd();
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
+    }
+
+    // línea de apuntado solo para jugadores con estela
+    if (estelaJ1)
+        dibujarLineaApuntado(posXj1, posYj1, 0.0f, anguloJ1);
+    if (estelaJ2)
+        dibujarLineaApuntado(posXj2, posYj2, 0.0f, anguloJ2);
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+
+    //Marcadores
+    ETSIDI::setTextColor(1, 1, 0);
+    ETSIDI::printxy(("J1: " + std::to_string(puntosJ1)).c_str(), -15, 9.0);
+    ETSIDI::printxy(("J2: " + std::to_string(puntosJ2)).c_str(), 10.0, 9.0);
+
+    if (estado == FIN) {
+        ETSIDI::setTextColor(1, 0, 0);
+        ETSIDI::printxy("FIN DE PARTIDA", -5, 5);
+        ETSIDI::printxy("Pulsa C para volver", -5, 3);
 
         if (estado == FIN) {
-            ETSIDI::setTextColor(1, 0, 0);
-            ETSIDI::printxy("FIN DE PARTIDA", -5, 5);
-            ETSIDI::printxy("Pulsa C para volver", -5, 3);
+            ETSIDI::setTextColor(1, 1, 0);
 
-            if (estado == FIN) {
-                ETSIDI::setTextColor(1, 1, 0);
-
-                if (ganador == 1)
-                    ETSIDI::printxy("GANADOR: JUGADOR 1", -5, 1);
-                else if (ganador == 2)
-                    ETSIDI::printxy("GANADOR: JUGADOR 2", -5, 1);
-            }
+            if (ganador == 1)
+                ETSIDI::printxy("GANADOR: JUGADOR 1", -5, 1);
+            else if (ganador == 2)
+                ETSIDI::printxy("GANADOR: JUGADOR 2", -5, 1);
         }
-
-        glEnable(GL_LIGHTING);
-
     }
+
+    //marcadores de vida
+    ETSIDI::setTextColor(1, 0, 0); // vida
+    ETSIDI::printxy(("Vida J1: " + std::to_string(j1->getVida())).c_str(), -15, 7.0);
+    ETSIDI::printxy(("Vida J2: " + std::to_string(j2->getVida())).c_str(), 5.0, 7.0);
+
+    glEnable(GL_LIGHTING);
+
+}
 
 
 
 void CombateBaloncesto::tecla(unsigned char key) {
+    if (estado == INSTRUCCIONES) {
+        if (key == ' ' || key == 13) { // al pulsar Espacio o Enter, arranca la pelea
+            iniciarCombate(); // suena la campana de inicio
+            estado = JUGANDO;
+        }
+        return; // bloqueamos ataques mientras se leen las instrucciones
+    }
+
     switch (key) {
     case ' ':           if (!cargandoJ1) { cargandoJ1 = true; potenciaJ1 = 0.0f; } break;
     case 13:            if (!cargandoJ2) { cargandoJ2 = true; potenciaJ2 = 0.0f; } break;
@@ -351,6 +444,7 @@ void CombateBaloncesto::comprobarColisiones() {
     float aroZ = canasta.getPosZ();
     float radio = canasta.getRadio();
 
+
     if (disparosJ1.hayCanasta(aroX, aroY, aroZ, radio)) {
         puntosJ1++;
         std::cout << "CANASTA J1 -> " << puntosJ1 << std::endl;
@@ -362,17 +456,20 @@ void CombateBaloncesto::comprobarColisiones() {
         ETSIDI::play("sonidos/baloncesto/canasta_fallida.wav");   // ← SONIDO DE CANASTA
 
     }
-    if (puntosJ1 >= 5 || puntosJ2 >= 5)
+
+
+    if ((puntosJ1 >= 5 || puntosJ2 >= 5) && estado == JUGANDO) {
         estado = FIN;
 
-    if (puntosJ1 >= 5) {
-        ganador = 1;
-        estado = FIN;
-    }
+        if (puntosJ1 >= 5) {
+            ganador = 1;
+        }
+        else if (puntosJ2 >= 5) {
+            ganador = 2;
+        }
 
-    if (puntosJ2 >= 5) {
-        ganador = 2;
-        estado = FIN;
+        // cuando uno de los dos gane sonara el publico aplaudiendo
+        ETSIDI::play("sonidos/baloncesto/CrowdCheer.wav");
     }
 
 
@@ -403,7 +500,5 @@ void CombateBaloncesto::dibujarLineaApuntado(float x, float y, float z, float an
     glDisable(GL_BLEND);
     glEnable(GL_LIGHTING);
 }
-
-
 
 

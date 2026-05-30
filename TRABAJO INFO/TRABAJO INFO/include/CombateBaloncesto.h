@@ -30,8 +30,9 @@ private:
     float posXj2, posYj2;
 
     int ganador = 0; //0 = nadie, 1 = J1, 2 = J2 ESTO ES APRA ANUNCIAR EL GANADOR
-    enum Estado { JUGANDO, FIN };
-    Estado estado = JUGANDO;
+
+    enum Estado { INSTRUCCIONES, JUGANDO, FIN };
+    Estado estado = INSTRUCCIONES;
 
     static constexpr float POTENCIA_MAX = 15.0f;
     static constexpr float VELOCIDAD_CARGA = 8.0f;
@@ -55,5 +56,8 @@ public:
     void teclaEspecialSuelta(int key)      override;
     bool haTerminado() const override { return estado == FIN; }  //para que el EstadoCombate sepa cuándo volver al tablero cuando se llega a 5 puntos (Alejandra intentar hacer igual*)
     int getGanador() const override { return ganador; }  //PARA ANUNCIAR GANADOR COMBATE
+
+    void iniciarCombate();    // Aquí sonará la campana de inicio
 };
 
+    
