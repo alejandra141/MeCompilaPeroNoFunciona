@@ -36,15 +36,6 @@ void CombateBoxeo::finalizarPelea() {
 
 // Vinculamos la lectura de teclado de FreeGLUT con la lógica de ataques
 void CombateBoxeo::tecla(unsigned char key) {
-
-    if (estado == INSTRUCCIONES) {
-        if (key == ' ' || key == 13) { // al pulsar Espacio o Enter, arranca la pelea
-            iniciarPelea(); // suena la campana de inicio
-            estado = JUGANDO;
-        }
-        return; // bloqueamos ataques mientras se leen las instrucciones
-    }
-
     detectarEntrada(key);
 }
 
@@ -172,11 +163,6 @@ void CombateBoxeo::procesarGolpe(Personaje* atacante, Personaje* victima) {
 
             if (jugador1->estaVivo()) ganador = 1;  //DETERMINAR QUE JUGADOR ES EL GANADOR
             else ganador = 2;
-
-
-            // cuando uno de los dos gane sonara el publico aplaudiendo
-            ETSIDI::play("sonidos/genericos/CrowdCheer.wav");
-
         }
     }
 }
@@ -184,11 +170,6 @@ void CombateBoxeo::procesarGolpe(Personaje* atacante, Personaje* victima) {
 
 
 void CombateBoxeo::mueve(double dt) {
-
-    // si estamos leyendo las instrucciones, congelamos el movimiento del ring
-    if (estado == INSTRUCCIONES) return;
-
-
     // Si el combate no ha terminado, ambos boxeadores botan
     if (estado == FIN) return;
 
@@ -220,7 +201,7 @@ void CombateBoxeo::dibujar() {
     glDisable(GL_LIGHTING);      // que la luz no afecte al fondo
     glEnable(GL_TEXTURE_2D);     // activar texturas
 
-	//POR AQUI PINTAMOS UN RING DE FONDO
+    //POR AQUI PINTAMOS UNA BOLERITA DE FONDO
     glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture("fondos/fondo boxeo.png").id);
 
     glColor3f(1, 1, 1);
@@ -234,75 +215,12 @@ void CombateBoxeo::dibujar() {
     glTexCoord2d(0, 0); glVertex3f(-20, 15, -5);
 
     glEnd();
-    glDisable(GL_TEXTURE_2D);
 
-    // INSTRUCCIONES
-
-    if (estado == INSTRUCCIONES) {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        // RECUADRO NEGRO TRANSLÚCIDO EN EL MEDIO
-        glColor4ub(0, 0, 0, 220); // Negro opaco
-        glBegin(GL_QUADS);
-        glVertex2f(-12.0f, -6.0f);
-        glVertex2f(12.0f, -6.0f);
-        glVertex2f(12.0f, 7.0f);
-        glVertex2f(-12.0f, 7.0f);
-        glEnd();
-
-        // BORDE BLANCO DEL RECUADRO
-        glLineWidth(3.0f);
-        glColor3ub(255, 255, 255);
-        glBegin(GL_LINE_LOOP);
-        glVertex2f(-12.0f, -6.0f);
-        glVertex2f(12.0f, -6.0f);
-        glVertex2f(12.0f, 7.0f);
-        glVertex2f(-12.0f, 7.0f);
-        glEnd();
-        glDisable(GL_BLEND);
-
-        // TEXTOS CON LAS INSTRUCCIONES
-        ETSIDI::setFont("fuentes/Bitwise.ttf", 24);
-        ETSIDI::setTextColor(1, 1, 0); // amarillo 
-        ETSIDI::printxy("COMBATE BOXEO CONTROLES", -9.5f, 5.2f);
-
-        ETSIDI::setFont("fuentes/Bitwise.ttf", 14);
-
-        // CONTROLES JUGADOR 1 
-        ETSIDI::setTextColor(0.2f, 0.6f, 1.0f); //azul
-        ETSIDI::printxy("JUGADOR 1 (IZQUIERDA)", -11.0f, 3.2f);
-        ETSIDI::setTextColor(1, 1, 1);
-        ETSIDI::printxy("- Moverse IZQ: A", -11.0f, 2.0f);
-        ETSIDI::printxy("- Moverse DERCH: D", -11.0f, 1.0f);
-        ETSIDI::printxy("- Punetazo: Q", -11.0f, 0.0f);
-        ETSIDI::printxy("- Patada: E", -11.0f, -1.0f);
-        ETSIDI::printxy("- Esquivar: S", -11.0f, -2.0f);
-
-        // CONTROLES JUGADOR 2 
-        ETSIDI::setTextColor(1.0f, 0.4f, 0.7f); //rosa
-        ETSIDI::printxy("JUGADOR 2 (DERECHA)", 1.5f, 3.2f);
-        ETSIDI::setTextColor(1, 1, 1);
-        ETSIDI::printxy("- Moverse IZQ: J", 1.5f, 2.0f);
-        ETSIDI::printxy("- Moverse DERCH: L", 1.5f, 1.0f);
-        ETSIDI::printxy("- Punetazo: U", 1.5f, 0.0f);
-        ETSIDI::printxy("- Patada: O", 1.5f, -1.0f);
-        ETSIDI::printxy("- Esquivar: K", 1.5f, -2.0f);
-
-        // SALIDA
-        ETSIDI::setFont("fuentes/Bitwise.ttf", 16);
-        ETSIDI::setTextColor(1, 0, 0); // Rojo 
-        ETSIDI::printxy("PULSA ENTER/ESPACIO PARA EMPEZAR LA PELEA", -10.5f, -4.0f);
-
-        glEnable(GL_LIGHTING);
-        return; // salimos de la función para que NO dibuje los personajes ni las vidas todavía
-    }
 
     // RENDERIZADO DE LOS SPRITES PNG REALES EN EL RING 
-
-	glDisable(GL_DEPTH_TEST); 
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
 
@@ -330,22 +248,49 @@ void CombateBoxeo::dibujar() {
         glTexCoord2d(0, 0); glVertex3f(posXj2 - mitadW, posYj2 + altoH, 0.0f);
         glEnd();
     }
-  
-	glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
+    /*// -------------------------------------------------------------------------
+    // RECTÁNGULOS TEMPORALES DE PRUEBA (Jugadores)
+    // -------------------------------------------------------------------------
+    //posicionamiento
+    float w = 6.0f;
+    float h = 8.0f;
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-	glShadeModel(GL_SMOOTH);
-    glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // RECTÁNGULO JUGADOR 1
+    if (jugador1 != nullptr) {
+        float x1 = jugador1->getX();
+        float y1 = jugador1->getY();
+
+        glColor3ub(0, 0, 255);
+        glBegin(GL_QUADS);
+        glVertex2f(x1 - w / 2, y1);
+        glVertex2f(x1 + w / 2, y1);
+        glVertex2f(x1 + w / 2, y1 + h);
+        glVertex2f(x1 - w / 2, y1 + h);
+        glEnd();
+    }
+
+    // RECTÁNGULO JUGADOR 2
+    if (jugador2 != nullptr) {
+        float x2 = jugador2->getX();
+        float y2 = jugador2->getY();
+
+        glColor3ub(255, 105, 180);
+        glBegin(GL_QUADS);
+        glVertex2f(x2 - w / 2, y2);
+        glVertex2f(x2 + w / 2, y2);
+        glVertex2f(x2 + w / 2, y2 + h);
+        glVertex2f(x2 - w / 2, y2 + h);
+        glEnd();
+    }
+
+    glEnable(GL_LIGHTING);*/
+
 
     // fuentes para que se vea la vida ue le queda a cada jugador
-
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     ETSIDI::setFont("fuentes/Bitwise.ttf", 16);

@@ -20,8 +20,8 @@ private:
     void procesarGolpe(Personaje* atacante, Personaje* victima);
  
 
-	enum Estado { INSTRUCCIONES, JUGANDO, FIN }; //SOY LORENA ESTO ES PARA FINALIZAR EL COMBATE Y ANUNCIAR EL GANADOR  
-    Estado estado = INSTRUCCIONES;
+	enum Estado { JUGANDO, FIN }; //SOY LORENA ESTO ES PARA FINALIZAR EL COMBATE Y ANUNCIAR EL GANADOR  
+    Estado estado = JUGANDO;
     int ganador = 0;
 
     float posXj1, posYj1;

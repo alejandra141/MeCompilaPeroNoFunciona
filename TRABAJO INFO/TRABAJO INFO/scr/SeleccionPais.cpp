@@ -7,7 +7,7 @@ void SelectorPais::moverJ1(int dir) {
     indiceJ1 += dir;
     if (indiceJ1 < 0) indiceJ1 = nombres.size() - 1;
     if (indiceJ1 >= nombres.size()) indiceJ1 = 0;
-    ETSIDI::play("sonidos/bolos/Sample_0002.wav");
+    ETSIDI::play("sonidos/Bowling/Sample_0002.wav");
 }
 
 void SelectorPais::moverJ2(int dir) {
@@ -15,14 +15,14 @@ void SelectorPais::moverJ2(int dir) {
     indiceJ2 += dir;
     if (indiceJ2 < 0) indiceJ2 = nombres.size() - 1;
     if (indiceJ2 >= nombres.size()) indiceJ2 = 0;
-    ETSIDI::play("sonidos/bolos/Sample_0002.wav");
+    ETSIDI::play("sonidos/Bowling/Sample_0002.wav");
 }
 
 bool SelectorPais::confirmarJ1() {
     if (!confirmadoJ1) {
         paisJ1 = nombres[indiceJ1];
         confirmadoJ1 = true;
-        ETSIDI::play("sonidos/bolos/Sample_0000.wav");
+        ETSIDI::play("sonidos/Bowling/Sample_0000.wav");
     }
     return confirmadoJ1;
 }
@@ -31,7 +31,7 @@ bool SelectorPais::confirmarJ2() {
     if (!confirmadoJ2) {
         paisJ2 = nombres[indiceJ2];
         confirmadoJ2 = true;
-        ETSIDI::play("sonidos/bolos/Sample_0000.wav");
+        ETSIDI::play("sonidos/Bowling/Sample_0000.wav");
     }
     return confirmadoJ2;
 }
