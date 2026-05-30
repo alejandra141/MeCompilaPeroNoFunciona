@@ -11,8 +11,8 @@ CombateBaloncesto::CombateBaloncesto(Personaje* j1, Personaje* j2)
     j1(j1), j2(j2),
     posXj1(-8.0f), posYj1(-3.0f),
     posXj2(8.0f), posYj2(-3.0f),
-    estelaJ1(j1->getAtaque() >= UMBRAL_ESTELA),
-    estelaJ2(j2->getAtaque() >= UMBRAL_ESTELA),
+    estelaJ1(j1->getTipo() == "jugador_baloncesto"),
+    estelaJ2(j2->getTipo() == "jugador_baloncesto"),
     puntosJ1(0), puntosJ2(0),
     potenciaJ1(0.0f), potenciaJ2(0.0f),
     cargandoJ1(false), cargandoJ2(false),
@@ -205,29 +205,71 @@ void CombateBaloncesto::dibujar() {
     glDisable(GL_LIGHTING);
 
 
+    // Offset J1
+    float offJ1 = 0.0f;
+    std::string tipoJ1 = j1->getTipo();
+    if (tipoJ1 == "boxeador_kickboxing")  offJ1 = 0.5f;
+    else if (tipoJ1 == "boxeador_normal") offJ1 = 0.0f;
+    else if (tipoJ1 == "bolo_cranker")    offJ1 = 1.0f;
+    else if (tipoJ1 == "bolo_stronker")   offJ1 = 1.0f;
+    else if (tipoJ1 == "jugador_baloncesto") offJ1 = 5.0f;
+    else if (tipoJ1 == "fisio")           offJ1 = 0.5f;
+
+    // Offset J2
+    float offJ2 = 0.0f;
+    std::string tipoJ2 = j2->getTipo();
+    if (tipoJ2 == "boxeador_kickboxing")  offJ2 = 0.5f;
+    else if (tipoJ2 == "boxeador_normal") offJ2 = 0.0f;
+    else if (tipoJ2 == "bolo_cranker")    offJ2 = 1.0f;
+    else if (tipoJ2 == "bolo_stronker")   offJ2 = 1.0f;
+    else if (tipoJ2 == "jugador_baloncesto") offJ2 = 5.0f;
+    else if (tipoJ2 == "fisio")           offJ2 = 0.5f;
+
     float anchoPlayer = 4.5f;
     float altoPlayer = 11.0f;
+
+    //a ver el de baloncesto es enorme vamos a forzar que se haga más pequeño
+
+    if (j1->getTipo() == "jugador_baloncesto") {
+
+        anchoPlayer = 2.5f;
+        altoPlayer = 7.0f;
+
+    }
+
 
     // DIBUJA SPRITE JUGADOR 1 (Izquierda)
     if (j1 != nullptr && j1->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, j1->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(0, 1); glVertex3f(posXj1 - anchoPlayer, -10.0f, 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(posXj1 + anchoPlayer, -10.0f, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj1 + anchoPlayer, -10.0f + altoPlayer, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj1 - anchoPlayer, -10.0f + altoPlayer, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj1 - anchoPlayer, -14.0f + offJ1, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj1 + anchoPlayer, -14.0f + offJ1, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj1 + anchoPlayer, -14.0f + altoPlayer+offJ1, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj1 - anchoPlayer, -14.0f + altoPlayer+offJ1  , 0.0f);
 
         glEnd();
+    }
+
+    anchoPlayer = 4.5f;
+    altoPlayer = 11.0f;
+
+    //a ver el de baloncesto es enorme vamos a forzar que se haga más pequeño
+
+    if (j2->getTipo() == "jugador_baloncesto") {
+
+        anchoPlayer = 2.5f;
+        altoPlayer = 7.0f;
+
     }
 
     // DIBUJA SPRITE JUGADOR 2 (Derecha) 
     if (j2 != nullptr && j2->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, j2->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(1, 1); glVertex3f(posXj2 - anchoPlayer, -10.0f, 0.0f);
-        glTexCoord2d(0, 1); glVertex3f(posXj2 + anchoPlayer, -10.0f, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj2 + anchoPlayer, -10.0f + altoPlayer, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, -10.0f + altoPlayer, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj2 - anchoPlayer, -14.0f + offJ2, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj2 + anchoPlayer, -14.0f + offJ2, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj2 + anchoPlayer, -14.0f + altoPlayer+offJ2, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj2 - anchoPlayer, -14.0f + altoPlayer+offJ2, 0.0f);
         glEnd();
     }
 

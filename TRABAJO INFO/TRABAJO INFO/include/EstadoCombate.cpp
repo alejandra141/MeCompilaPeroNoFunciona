@@ -19,15 +19,22 @@ EstadoCombate::EstadoCombate(FlujoJuego* f, int tipo,
     atacante(atac), defensor(defen),
     filaDestino(fila), colDestino(col)
 {
+
+    //para poder poner siempre al J1 a la derecha y al j2  a la izquierda tenemos que ordenarlos
+    //usamos el operador ternario para que poder ordnarlo que si no 
+
+    Personaje* pLuz = (atac->getNumJugador() == 1) ? atac : defen;
+    Personaje* pOscuridad = (atac->getNumJugador() == 2) ? atac : defen;
+
     switch (tipo) {
     case 1:
-        combate = new CombateBaloncesto(atac, defen);  
+        combate = new CombateBaloncesto(pOscuridad, pLuz);  
         break;
     case 2:
-        combate = new CombateBolos(atac, defen);
+        combate = new CombateBolos(pOscuridad, pLuz);
         break;
     case 3:
-        combate = new CombateBoxeo(atac, defen, false);
+        combate = new CombateBoxeo(pOscuridad, pLuz, false);
         break;
     }
 }
@@ -57,17 +64,16 @@ void EstadoCombate::tecla(unsigned char key) {
 
                 int ganador = combate->getGanador();
 
-                Personaje* vencedor = (ganador == 1) ? atacante : defensor;
-                Personaje* perdedor = (ganador == 1) ? defensor : atacante;
+                // ganador 1 = ganó pOscuridad (que pasamos primero al combate)
+                // ganador 2 = ganó pLuz (que pasamos segundo)
+                Personaje* pLuz = (atacante->getNumJugador() == 1) ? atacante : defensor;
+                Personaje* pOscuridad = (atacante->getNumJugador() == 2) ? atacante : defensor;
 
-                // 1. Eliminar solo al perdedor
+                Personaje* vencedor = (ganador == 1) ? pOscuridad : pLuz;
+                Personaje* perdedor = (ganador == 1) ? pLuz : pOscuridad;
+
                 tablero.eliminarPersonaje(perdedor);
-
-                // 2. Colocar al vencedor en la casilla donde estaba el defensor
                 tablero.colocar(vencedor, filaDestino, colDestino);
-
-                // 3. La vida del vencedor ya está actualizada por el combate
-                //    No hay que hacer nada más
             }
 
             flujo->cambiarEstado(new EstadoTablero(flujo, paisJ1, paisJ2));

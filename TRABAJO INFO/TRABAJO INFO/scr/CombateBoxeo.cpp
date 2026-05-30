@@ -18,9 +18,9 @@ CombateBoxeo::CombateBoxeo(Personaje* p1, Personaje* p2, bool contraIA) {
     cooldownIA = 0.0f;
 
     // Posiciones del ring — solo internas, NO tocamos setPosicion
+    posXj1 = -2.0f; posYj1 = -8.0f;
+    posXj2 = 3.5f;  posYj2 = -8.0f;
 
-    posXj1 = -6.0f; posYj1 = -8.0f;
-    posXj2 = 6.0f;  posYj2 = -8.0f;
 }
 
 
@@ -104,9 +104,6 @@ void CombateBoxeo::detectarEntrada(char teclaPresionada) {
         ETSIDI::play("sonidos/boxeo/esquivo.wav");
     }
 
-    // ---------------------------------------------
-    // CONTROLES JUGADOR 2 (Lado derecho) --- por shora no hay IA
-    // ---------------------------------------------
     // Movimiento
     if (teclaPresionada == 'j' || teclaPresionada == 'J') {
         if (posXj2 > limiteIzquierdo) posXj2 -= 1.0f;
@@ -300,6 +297,29 @@ void CombateBoxeo::dibujar() {
         return; // salimos de la función para que NO dibuje los personajes ni las vidas todavía
     }
 
+    //las cosas se inicializan como cada a una alura vamos a meterle offset
+
+    float offJ1 = 0.0f;
+    std::string tipoJ1 = jugador1->getTipo();
+    if (tipoJ1 == "boxeador_kickboxing")     offJ1 = 0.5f;
+    else if (tipoJ1 == "boxeador_normal")    offJ1 = 0.0f;
+    else if (tipoJ1 == "bolo_cranker")       offJ1 = 1.0f;
+    else if (tipoJ1 == "bolo_stronker")      offJ1 = 1.0f;
+    else if (tipoJ1 == "jugador_baloncesto") offJ1 = 11.0f;
+    else if (tipoJ1 == "fisio")              offJ1 = 0.5f;
+
+    float offJ2 = 0.0f;
+    std::string tipoJ2 = jugador2->getTipo();
+    if (tipoJ2 == "boxeador_kickboxing")     offJ2 = 0.5f;
+    else if (tipoJ2 == "boxeador_normal")    offJ2 = 0.0f;
+    else if (tipoJ2 == "bolo_cranker")       offJ2 = 1.0f;
+    else if (tipoJ2 == "bolo_stronker")      offJ2 = 1.0f;
+    else if (tipoJ2 == "jugador_baloncesto") offJ2 = 11.0f;
+    else if (tipoJ2 == "fisio")              offJ2 = 0.5f;
+
+
+    float baseY = -20.0f; 
+
     // RENDERIZADO DE LOS SPRITES PNG REALES EN EL RING 
 
     glDisable(GL_DEPTH_TEST);
@@ -308,29 +328,42 @@ void CombateBoxeo::dibujar() {
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_LIGHTING);
 
-    // Por esto:
+ 
     float mitadW = 10.0f;
     float altoH = 21.0f;
+
+    if (jugador1->getTipo() == "jugador_baloncesto") {
+        mitadW = 6.0f;
+        altoH = 13.0f;
+    }
 
     // DIBUJA SPRITE JUGADOR 1
     if (jugador1 != nullptr && jugador1->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador1->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(0, 1); glVertex3f(posXj1 - mitadW, -19.0f, 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(posXj1 + mitadW, -19.0f, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj1 + mitadW, -19.0f + altoH, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj1 - mitadW, -19.0f + altoH, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj1 - mitadW, baseY + offJ1, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj1 + mitadW, baseY + offJ1, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj1 + mitadW, baseY + offJ1 + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj1 - mitadW, baseY + offJ1 + altoH, 0.0f);
         glEnd();
+    }
+
+    mitadW = 10.0f;
+    altoH = 21.0f;
+
+    if (jugador2->getTipo() == "jugador_baloncesto") {
+        mitadW = 6.0f;
+        altoH = 13.0f;
     }
 
     // DIBUJA SPRITE JUGADOR 2
     if (jugador2 != nullptr && jugador2->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador2->getSprite().getTexID());
         glBegin(GL_POLYGON);
-        glTexCoord2d(0, 1); glVertex3f(posXj2 - mitadW, -19.0f, 0.0f);
-        glTexCoord2d(1, 1); glVertex3f(posXj2 + mitadW, -19.0f, 0.0f);
-        glTexCoord2d(1, 0); glVertex3f(posXj2 + mitadW, -19.0f + altoH, 0.0f);
-        glTexCoord2d(0, 0); glVertex3f(posXj2 - mitadW, -19.0f + altoH, 0.0f);
+        glTexCoord2d(0, 1); glVertex3f(posXj2 - mitadW, baseY + offJ2, 0.0f);
+        glTexCoord2d(1, 1); glVertex3f(posXj2 + mitadW, baseY + offJ2, 0.0f);
+        glTexCoord2d(1, 0); glVertex3f(posXj2 + mitadW, baseY + offJ2 + altoH, 0.0f);
+        glTexCoord2d(0, 0); glVertex3f(posXj2 - mitadW, baseY + offJ2 + altoH, 0.0f);
         glEnd();
     }
 
