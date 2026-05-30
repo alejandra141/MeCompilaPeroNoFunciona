@@ -1,6 +1,3 @@
-
-
-//EstadoTablero.cpp
 #include "EstadoFinJuego.h"
 #include "EstadoTablero.h"
 #include "FlujoJuego.h"
@@ -38,14 +35,14 @@ void EstadoTablero::mueve(double dt) {
         );
     }
 }
+
 void EstadoTablero::dibujar() {
     tablero.dibuja();
-
 
     // calcula centro geométrico de la casilla actual del cursor
     Linea centro = tablero.centroCasilla(cursorFila, cursorCol);
 
-    // pintamos recuadro del cursos para que se vea donde estamos
+    // pintamos recuadro del cursor para que se vea donde estamos
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -54,13 +51,12 @@ void EstadoTablero::dibujar() {
     // tamaño del recuadro
     float radio = 0.9f;
 
-    //NUEVO IF
-
+    // colores como en el primero
     if (modoDestino) {
-        glColor4ub(0, 150, 255, 100); // Azul eléctrico (buscando destino)
+        glColor4ub(0, 150, 255, 100); // Azul (buscando destino)
     }
     else {
-        glColor4ub(255, 128, 0, 100); // Naranja vibrante (buscando personaje)
+        glColor4ub(255, 128, 0, 100); // Naranja (buscando personaje)
     }
 
     // dibujamos el cuadrado relleno del cursor 
@@ -71,10 +67,9 @@ void EstadoTablero::dibujar() {
     glVertex3f((float)(centro.x - radio), (float)(centro.y + radio), (float)(centro.z + 0.05f));
     glEnd();
 
-
     glLineWidth(3.0f);
     if (modoDestino) glColor3ub(255, 0, 0); // borde rojo 
-    else glColor3ub(255, 255, 255);       // borde blanco 
+    else glColor3ub(255, 255, 255);         // borde blanco 
 
     glBegin(GL_LINE_LOOP);
     glVertex3f((float)(centro.x - radio), (float)(centro.y - radio), (float)(centro.z + 0.06f));
@@ -83,18 +78,11 @@ void EstadoTablero::dibujar() {
     glVertex3f((float)(centro.x - radio), (float)(centro.y + radio), (float)(centro.z + 0.06f));
     glEnd();
 
-
     glDisable(GL_BLEND);
 
-
-    // para poner las estadísticas de la pieza bajo el cursor, al parecer en lenguaje videojuegos se llama hover
-
+    // hover de estadísticas
     piezaHover = tablero.getPersonajeEn(cursorFila, cursorCol);
     if (piezaHover != nullptr) {
-
-        
-        //vamos a poner aquí los mínimos por que no los quiero copiar 30 veces
-
         float yMin = 10.8f;
         float yMax = 12.0f;
         float xMin = -7.5f;
@@ -102,17 +90,14 @@ void EstadoTablero::dibujar() {
 
         glDisable(GL_LIGHTING);
         glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);                           
+        glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        //para el color del recuadro
+
         if (piezaHover->getNumJugador() == 1)
             glColor4f(0.0f, 0.0f, 0.08f, 0.85f);  // azulón J1
         else
             glColor4f(0.08f, 0.0f, 0.0f, 0.85f);
 
-
-        //ahora tiene que dejarse de solapar con el tablero el recuadro de arriba
         glBegin(GL_QUADS);
         glVertex2f(xMin, yMin);
         glVertex2f(xMax, yMin);
@@ -120,11 +105,8 @@ void EstadoTablero::dibujar() {
         glVertex2f(xMin, yMax);
         glEnd();
 
-
-        //para que los dos bandos salgan con colores diferentes
         if (piezaHover->getNumJugador() == 1)
             ETSIDI::setTextColor(0.2f, 0.6f, 1.0f);
-
         else
             ETSIDI::setTextColor(1.0f, 0.3f, 0.3f);
 
@@ -133,14 +115,12 @@ void EstadoTablero::dibujar() {
         else
             glColor4f(1.0f, 0.3f, 0.3f, 1.0f);   // borde rojo J2
 
-        //aquí dibujamos el cuadrado antes que las letras para que no se superponga nada
         glLineWidth(1.5f);
         glBegin(GL_LINE_LOOP);
         glVertex2f(-9.0f, yMin);
         glVertex2f(9.0f, yMin);
         glVertex2f(9.0f, yMax);
         glVertex2f(-9.0f, yMax);
-
         glEnd();
         glDisable(GL_BLEND);
 
@@ -149,28 +129,22 @@ void EstadoTablero::dibujar() {
             "ATK: " + std::to_string(piezaHover->getAtaque()) + "   " +
             "DEF: " + std::to_string(piezaHover->getDefensa());
 
-        ETSIDI::setFont("fuentes/Bitwise.ttf", 10);//la letra pequeña para que quepa
-
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 10);
         ETSIDI::printxy(stats.c_str(), -6.8f, 11.2f);
-
 
         glEnable(GL_LIGHTING);
         glEnable(GL_DEPTH_TEST);
     }
 
-    //tenemos que ponerle al fisio un panel de hechizos por que no se entiende nada de nada al lanzarlos
-
-
+    // panel de hechizos del fisio
     Fisio* fisioJ1 = nullptr;
     Fisio* fisioJ2 = nullptr;
     for (Personaje* p : j1->getPiezas())
-        if (p->getTipo() == "fisio" && p->estaVivo())
-        {
+        if (p->getTipo() == "fisio" && p->estaVivo()) {
             fisioJ1 = dynamic_cast<Fisio*>(p); break;
         }
     for (Personaje* p : j2->getPiezas())
-        if (p->getTipo() == "fisio" && p->estaVivo())
-        {
+        if (p->getTipo() == "fisio" && p->estaVivo()) {
             fisioJ2 = dynamic_cast<Fisio*>(p); break;
         }
 
@@ -179,7 +153,6 @@ void EstadoTablero::dibujar() {
         "4.Exchange", "5.Summon", "6.Revive", "7.Imprison"
     };
 
-    // Pintamos cada panel — primero J1 (izquierda), luego J2 (derecha)
     for (int bando = 1; bando <= 2; bando++) {
         Fisio* fisio = (bando == 1) ? fisioJ1 : fisioJ2;
         if (fisio == nullptr) continue;
@@ -188,10 +161,7 @@ void EstadoTablero::dibujar() {
         float xMin = esJ1 ? 9.8f : -15.0f;
         float xMax = esJ1 ? 15.0f : -9.8f;
         float xTexto = esJ1 ? 10.3f : -14.5f;
-        float xCentro = (xMin + xMax) / 2.0f;
         float xEstado = xTexto + 3.0f;
-
-        //les he puesto los nombres en inglés que son los que salen en el moodle
 
         bool usados[7] = {
             fisio->usadoTeleport, fisio->usadoHeal,    fisio->usadoShiftTime,
@@ -207,7 +177,6 @@ void EstadoTablero::dibujar() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Fondo
         glColor4f(0.0f, 0.0f, 0.08f, 0.85f);
         glBegin(GL_QUADS);
         glVertex2f(xMin, -9.0f);
@@ -216,7 +185,6 @@ void EstadoTablero::dibujar() {
         glVertex2f(xMin, 9.0f);
         glEnd();
 
-        // Borde
         if (esJ1) glColor4f(0.2f, 0.5f, 1.0f, 1.0f);
         else      glColor4f(1.0f, 0.3f, 0.3f, 1.0f);
         glLineWidth(1.0f);
@@ -228,59 +196,41 @@ void EstadoTablero::dibujar() {
         glEnd();
         glDisable(GL_BLEND);
 
-        // Título
-
-        if (esJ1) ETSIDI::setTextColor(0.3f, 0.6f, 1.0f);//colorines
+        if (esJ1) ETSIDI::setTextColor(0.3f, 0.6f, 1.0f);
         else      ETSIDI::setTextColor(1.0f, 0.4f, 0.4f);
 
         std::string titulo = esJ1 ? "J1-FISIO" : "J2-FISIO";
         ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
-        ETSIDI::printxy(titulo.c_str(), xTexto, 8.5f);//impresión
+        ETSIDI::printxy(titulo.c_str(), xTexto, 8.5f);
 
         ETSIDI::setFont("fuentes/Bitwise.ttf", 10);
 
-        // Los 7 hechizos
-
         float yBase = 7.3f;
         float paso = 2.0f;
-        float offsetEstado = 1.1f;//vamos a poner un offset por que se me está superponiendo el texto 
 
         for (int i = 0; i < 7; i++) {
             float y = yBase - i * paso;
 
             bool seleccionado = esTurnoEste && modoHechizo && (hechizoPendiente == i + 1);
 
-            // Nombre
             if (seleccionado) ETSIDI::setTextColor(1.0f, 1.0f, 0.0f);
             else if (usados[i]) ETSIDI::setTextColor(0.4f, 0.4f, 0.4f);
             else ETSIDI::setTextColor(0.9f, 0.9f, 0.9f);
 
             ETSIDI::printxy(nombres7[i].c_str(), xTexto, y);
 
-
-            // ponemos ok entre corchetes así como en un videojuego
             if (usados[i]) ETSIDI::setTextColor(0.4f, 0.4f, 0.4f);
             else ETSIDI::setTextColor(0.1f, 0.9f, 0.1f);
 
             std::string estado = usados[i] ? "[--]" : "[OK]";
-
-            //ETSIDI::printxy(estado.c_str(), xTexto, y - 0.7f);
-
-            //ETSIDI::printxy(estado.c_str(), xTexto, y - offsetEstado);//aquí el offse
-
             ETSIDI::printxy(estado.c_str(), xEstado, y);
-
-
         }
 
-        //quiero poner los turnos por aquí
-
         std::string turnoTxt;
-
         if (esTurnoEste) {
-             turnoTxt = "¡Es tu turno!";
-             ETSIDI::setTextColor(0.7f, 0.0f, 1.0f);
-             ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
+            turnoTxt = "¡Es tu turno!";
+            ETSIDI::setTextColor(0.7f, 0.0f, 1.0f);
+            ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
         }
         else {
             turnoTxt = "Turno rival";
@@ -288,33 +238,25 @@ void EstadoTablero::dibujar() {
             ETSIDI::setFont("fuentes/Bitwise.ttf", 10);
         }
 
-		ETSIDI::printxy(turnoTxt.c_str(), xTexto, -7.5f);
+        ETSIDI::printxy(turnoTxt.c_str(), xTexto, -7.5f);
 
-        // Instrucción abajo
         if (esTurnoEste && modoHechizo && hechizoPendiente > 0) {
-
             std::string inst = "Apunta+SPC";
             ETSIDI::setTextColor(1.0f, 1.0f, 0.0f);
             ETSIDI::printxy(inst.c_str(), xTexto, -8.5f);
         }
         else if (esTurnoEste) {
-
             std::string inst = "[H]=hechizo";
             ETSIDI::setTextColor(0.5f, 0.5f, 0.5f);
             ETSIDI::printxy(inst.c_str(), xTexto, -8.5f);
         }
 
-        //ESTO NO SE BORRAAAAA
         glEnable(GL_LIGHTING);
         glEnable(GL_DEPTH_TEST);
-
     }
 }
 
-
 void EstadoTablero::teclaEspecial(int key) {
-
-    //mejorado para que no se salga de la matriz 9x9
     if (key == GLUT_KEY_UP) {
         if (cursorFila < 8) cursorFila++;
     }
@@ -329,17 +271,10 @@ void EstadoTablero::teclaEspecial(int key) {
     }
 
     glutPostRedisplay();
-
 }
 
-
 void EstadoTablero::tecla(unsigned char key) {
-
-
-    //BUENO POR AQUÍ LOS HECHIZOS DEL FISIO CON LA TECLA H
-
-      // Primero localizamos al Fisio y que no esté muerto, porque si no no se puede lanzar hechizos
-
+    // hechizos del fisio con H
     Fisio* fisioActivo = nullptr;
     Jugador* jugadorActual = (gestionTurnos.getTurnoActual() == BUENOS) ? j1 : j2;
     for (Personaje* p : jugadorActual->getPiezas()) {
@@ -349,7 +284,6 @@ void EstadoTablero::tecla(unsigned char key) {
         }
     }
 
-    // H lanza los hechizos
     if (key == 'h' || key == 'H') {
         if (fisioActivo != nullptr) {
             modoHechizo = !modoHechizo;
@@ -358,20 +292,19 @@ void EstadoTablero::tecla(unsigned char key) {
             std::cout << (modoHechizo ? "[HECHIZO] Elige hechizo 1-7" : "[HECHIZO] Cancelado") << std::endl;
         }
         glutPostRedisplay();
-        return; // no procesar más teclas
+        return;
     }
 
-    // Si estamos en modo hechizo, 1 al 7 selecciona el hechizo
+    // selección de hechizo 1–7
     if (modoHechizo && fisioActivo != nullptr) {
         if (key >= '1' && key <= '7') {
             hechizoPendiente = key - '0';
 
-
-            //ESTE ES EL SHIFT TIME QUE NO NECESITA OBJETIVOS EN EL TABLERO
+            // Shift Time solo aquí, como en el segundo
             if (hechizoPendiente == 3) {
                 bool exito = fisioActivo->lanzarShiftTime(tablero);
                 if (exito) {
-                    gestionTurnos.cambiarTurno(); // ← ya estaba, está bien
+                    gestionTurnos.cambiarTurno();
                     std::cout << "[SHIFT TIME] ¡Ciclo invertido!" << std::endl;
                 }
                 modoHechizo = false;
@@ -383,14 +316,12 @@ void EstadoTablero::tecla(unsigned char key) {
         }
     }
 
-
-    // se pulsa espacio para seleccionar pieza o confirmar destino
-   // se pulsa espacio para seleccionar pieza o confirmar destino
+    // espacio: selección / destino / hechizos
     if (key == ' ') {
         int f = cursorFila;
         int c = cursorCol;
 
-        // HECHIZOS: tienen su propio flujo, no dependen de modoDestino
+        // flujo de hechizos
         if (modoHechizo && hechizoPendiente > 0 && fisioActivo != nullptr) {
             Personaje* objetivo = tablero.getPersonajeEn(f, c);
 
@@ -404,7 +335,6 @@ void EstadoTablero::tecla(unsigned char key) {
 
             bool exito = false;
             switch (hechizoPendiente) {
-
             case 1: // Teleport
                 if (primerObjetivo == nullptr) {
                     if (objetivo && objetivo->getNumJugador() == fisioActivo->getNumJugador()) {
@@ -512,10 +442,10 @@ void EstadoTablero::tecla(unsigned char key) {
             piezaSeleccionada = nullptr;
             modoDestino = false;
             glutPostRedisplay();
-            return;  // salimos, no procesamos movimiento normal
+            return;
         }
 
-        // MOVIMIENTO NORMAL — solo si no estamos en modo hechizo
+        // movimiento normal (no hechizo)
         if (!modoDestino) {
             if (tablero.hayPiezaEn(f, c)) {
                 Personaje* piezaAux = tablero.getPersonajeEn(f, c);
@@ -525,6 +455,12 @@ void EstadoTablero::tecla(unsigned char key) {
                 if (esTurnoCorrecto) {
                     piezaSeleccionada = piezaAux;
                     modoDestino = true;
+                    // sonido de selección válida (del primero)
+                    ETSIDI::play("sonidos/genericos/seleccion_personaje_valido.wav");
+                }
+                else {
+                    // sonido de selección no válida (del primero)
+                    ETSIDI::play("sonidos/genericos/seleccion_personaje_no_valido.wav");
                 }
             }
         }
@@ -562,15 +498,16 @@ void EstadoTablero::tecla(unsigned char key) {
                     piezaSeleccionada = nullptr;
                     modoDestino = false;
                 }
+                else {
+                    // destino no válido (sonido del primero)
+                    ETSIDI::play("sonidos/genericos/destino_no_valido.wav");
+                }
             }
         }
 
         glutPostRedisplay();
     }
-
-
 }
-
 
 void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int colDestino) {
     Personaje* defensor = tablero.getPersonajeEn(filaDestino, colDestino);
@@ -592,7 +529,6 @@ void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int 
 
     if (colorCasilla == 0) {
         // Casilla NEGRA → deporte del bando Oscuridad (J2)
-        // Buscamos qué tipo es el personaje de J2 en este combate
         Personaje* piezaOscuridad = (atacante->getNumJugador() == 2) ? atacante : defensor;
         tipoCombate = getTipoCombatePorPersonaje(piezaOscuridad);
     }
@@ -611,8 +547,6 @@ void EstadoTablero::comprobarColision(Personaje* atacante, int filaDestino, int 
         atacante, defensor, filaDestino, colDestino
     );
 }
-
-
 
 int EstadoTablero::getTipoCombatePorPersonaje(Personaje* p) {
     std::string tipo = p->getTipo();

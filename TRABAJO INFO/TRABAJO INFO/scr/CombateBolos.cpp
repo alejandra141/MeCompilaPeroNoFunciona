@@ -15,7 +15,7 @@ CombateBolos::CombateBolos(Personaje* j1, Personaje* j2)
     potenciaJ1(0), potenciaJ2(0),
     cargandoJ1(false), cargandoJ2(false),
     lanzandoJ1(false), lanzandoJ2(false),
-    tiempoFinJuego(0), estado(JUGANDO), ganador(0)
+    tiempoFinJuego(0), estado(INSTRUCCIONES), ganador(0)
 {
     //se que esto no esta muy bien pero es que habia mucho lag y es para cargar las texturas antes y que se quite el lag
     ETSIDI::getTexture("elementos/bola bolos.png");
@@ -33,6 +33,11 @@ CombateBolos::CombateBolos(Personaje* j1, Personaje* j2)
     }
 
     crearBolos();
+}
+
+void CombateBolos::iniciarCombate() {
+
+    ETSIDI::play("sonidos/genericos/entrada_combate.wav");
 }
 
 void CombateBolos::comprobarColisiones() {
@@ -53,6 +58,10 @@ void CombateBolos::comprobarColisiones() {
                     tiempoEfectoJ1 = 1.5f;
 
                     j1DerriboEnEsteLanzamiento = true;
+
+                    // se cae 1 solo bolo
+                    ETSIDI::play("sonidos/bolos/caida_bolo.wav");
+
                 }
             }
         }
@@ -85,6 +94,10 @@ void CombateBolos::comprobarColisiones() {
                     tiempoEfectoJ2 = 1.5f;
 
                     j2DerriboEnEsteLanzamiento = true;
+
+                    // se cae 1 solo bolo
+                    ETSIDI::play("sonidos/bolos/caida_bolo.wav");
+
                 }
             }
         }
@@ -99,21 +112,27 @@ void CombateBolos::comprobarColisiones() {
         }
     }
 
-
     // para finalizar el  juego
-    if (bolosDerribadosJ1 >= 6 && estado == JUGANDO) {
+    if ((bolosDerribadosJ1 >= 6 || bolosDerribadosJ2 >= 6) && estado == JUGANDO) {
         estado = FIN;
-        ganador = 1;
+
+        if (bolosDerribadosJ1 >= 6) {
+            ganador = 1;
+        }
+        else if (bolosDerribadosJ2 >= 6) {
+            ganador = 2;
+        }
+
+        // cuando uno de los dos gane sonara el publico aplaudiendo
+        ETSIDI::play("sonidos/genericos/CrowdCheer.wav");
     }
 
-    if (bolosDerribadosJ2 >= 6 && estado == JUGANDO) {
-        estado = FIN;
-        ganador = 2;
-    }
 }
 
 void CombateBolos::mueve(double dt) {
 
+    // si estamos leyendo las instrucciones, congelamos el movimiento 
+    if (estado == INSTRUCCIONES) return;
 
     if (dt > 0.016) dt = 0.016;
 
@@ -148,13 +167,18 @@ void CombateBolos::mueve(double dt) {
     if (tiempoEfectoJ1 > 0) tiempoEfectoJ1 -= (float)dt;
     if (tiempoEfectoJ2 > 0) tiempoEfectoJ2 -= (float)dt;
 
-
-
-
 }
 
 
 void CombateBolos::tecla(unsigned char key) {
+
+    if (estado == INSTRUCCIONES) {
+        if (key == ' ' || key == 13) { // al pulsar Espacio o Enter, arranca el combate
+            iniciarCombate(); // suena la campana de inicio
+            estado = JUGANDO;
+        }
+        return; // bloquea la carga de potencia mientras leen las instrucciones
+    }
 
     //tenemos que poner que la potencia se cargue solo si la bola no está activa
     if (key == 'w' && !bolaJ1.activa) cargandoJ1 = true;
@@ -232,6 +256,7 @@ void CombateBolos::dibujar() {
     bolaJ2.dibuja();
 
 
+    //RENDERIZADO DE LOS SPRITES PNG REALES EN LA BOLERA
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -241,6 +266,7 @@ void CombateBolos::dibujar() {
     float anchoPlayer = 2.0f;
     float altoPlayer = 5.0f;
 
+    //DIBUJAR JUGADOR 1
     if (jugador1 != nullptr && jugador1->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador1->getSprite().getTexID());
         glBegin(GL_POLYGON);
@@ -251,6 +277,7 @@ void CombateBolos::dibujar() {
         glEnd();
     }
 
+    //DIBUJAR JUGADOR 2
     if (jugador2 != nullptr && jugador2->getSprite().getTexID() != 0) {
         glBindTexture(GL_TEXTURE_2D, jugador2->getSprite().getTexID());
         glBegin(GL_POLYGON);
@@ -261,199 +288,307 @@ void CombateBolos::dibujar() {
         glEnd();
     }
 
-    glEnable(GL_LIGHTING);
+    glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glShadeModel(GL_SMOOTH);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_LIGHTING);
+
+    // INSTRUCCIONES 
+
+    if (estado == INSTRUCCIONES) {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // RECUADRO NEGRO TRANSLÚCIDO EN EL MEDIO
+        glColor4ub(0, 0, 0, 220);
+        glBegin(GL_QUADS);
+        glVertex2f(-12.0f, -6.0f);
+        glVertex2f(12.0f, -6.0f);
+        glVertex2f(12.0f, 7.0f);
+        glVertex2f(-12.0f, 7.0f);
+        glEnd();
+
+        // BORDE BLANCO
+        glLineWidth(3.0f);
+        glColor3ub(255, 255, 255);
+        glBegin(GL_LINE_LOOP);
+        glVertex2f(-12.0f, -6.0f);
+        glVertex2f(12.0f, -6.0f);
+        glVertex2f(12.0f, 7.0f);
+        glVertex2f(-12.0f, 7.0f);
+        glEnd();
+        glDisable(GL_BLEND);
+
+        // TEXTOS CON LAS INSTRUCCIONES
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 24);
+        ETSIDI::setTextColor(1, 1, 0); // amarillo
+        ETSIDI::printxy("COMBATE BOLOS CONTROLES", -9.5f, 5.2f);
+
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 14);
+
+        //CONTROLES GENERALES
+        ETSIDI::setTextColor(1, 1, 1); // blanco
+        ETSIDI::printxy("CONTROLES GENERALES", -7.5f, 4.0f);
+        ETSIDI::printxy("- Apuntado: Automatico", -9.0f, 2.0f);
+        ETSIDI::printxy("- Lanzar: Soltar tecla", -9.0f, 1.0f);
+
+        // CONTROLES JUGADOR 1 
+        ETSIDI::setTextColor(0.2f, 0.6f, 1.0f); // azul
+        ETSIDI::printxy("JUGADOR 1 (IZQUIERDA)", -11.0f, -1.0f);
+        ETSIDI::setTextColor(1, 1, 1);
+        ETSIDI::printxy("- Mantener Potencia: W", -11.0f, -2.0f);
+
+        // CONTROLES JUGADOR 2 
+        ETSIDI::setTextColor(1.0f, 0.4f, 0.7f); // rosa
+        ETSIDI::printxy("JUGADOR 2 (DERECHA)", 1.5f, -1.0f);
+        ETSIDI::setTextColor(1, 1, 1);
+        ETSIDI::printxy("- Mantener Potencia: I", 1.5f, -2.0f);
+
+        // SALIDA
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 16);
+        ETSIDI::setTextColor(1, 0, 0); //rojo
+        ETSIDI::printxy("PULSA ENTER/ESPACIO PARA EMPEZAR LA PELEA", -10.5f, -4.0f);
+
+    }
 
 
     //AQUI VAMOS A PINTAR LAS BARRITAS DE POTENCIA, QUE SE VAYAN LLENANDO SEGÚN LA POTENCIA QUE SE VAYA CARGANDO
 
-    glDisable(GL_DEPTH_TEST);
-    glColor3f(0.3f, 0.3f, 0.3f);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_DEPTH_TEST);
-
-    // Fondo gris J1
-    glColor3f(0.3f, 0.3f, 0.3f);
-    float barraX1 = -12.0f;
-    float barraBaseY = -5.0f;
-    float barraAlto = 8.0f;
-    float barraAncho = 1.0f;
-    glBegin(GL_QUADS);
-    glVertex2f(barraX1, barraBaseY);
-    glVertex2f(barraX1 + barraAncho, barraBaseY);
-    glVertex2f(barraX1 + barraAncho, barraBaseY + barraAlto);
-    glVertex2f(barraX1, barraBaseY + barraAlto);
-    glEnd();
-
-    // Relleno J1
-    float altoRelleno = (potenciaJ1 / 10.0f) * barraAlto;
-
-    glBegin(GL_QUADS);
-    glColor3f(0.0f, 1.0f, 0.0f);  // El verde tiene que ir abajito que es poca potencia
-    glVertex2f(barraX1, barraBaseY);
-    glVertex2f(barraX1 + barraAncho, barraBaseY);
-    glColor3f(1.0f, 0.0f, 0.0f);  // El rojo tiene que ir arribita que es mucha potencia
-    glVertex2f(barraX1 + barraAncho, barraBaseY + altoRelleno);
-    glVertex2f(barraX1, barraBaseY + altoRelleno);
-    glEnd();
-
-
-    // Fondo gris J2
-    glColor3f(0.3f, 0.3f, 0.3f);
-    float barraX2 = 11.5f;
-    glBegin(GL_QUADS);
-    glVertex2f(barraX2, barraBaseY);
-    glVertex2f(barraX2 + barraAncho, barraBaseY);
-    glVertex2f(barraX2 + barraAncho, barraBaseY + barraAlto);
-    glVertex2f(barraX2, barraBaseY + barraAlto);
-    glEnd();
-
-
-    // Relleno J2
-    float altoRelleno2 = (potenciaJ2 / 10.0f) * barraAlto;
-    glBegin(GL_QUADS);
-    glColor3f(0.0f, 1.0f, 0.0f); //bueno esto es lo del verde tmb
-    glVertex2f(barraX2, barraBaseY);
-    glVertex2f(barraX2 + barraAncho, barraBaseY);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex2f(barraX2 + barraAncho, barraBaseY + altoRelleno2);
-    glVertex2f(barraX2, barraBaseY + altoRelleno2);
-    glEnd();
-
-    glEnable(GL_DEPTH_TEST);   // ← reactiva al final
-
-
-    // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
-
-
-       // ESTO ES EL PUNTERO DE J1
-    float cx1 = posXj1;
-    float baseY = posYj1; 
-    float longitud = j1esEspecialista ? 6.0f : 4.0f;
-    float puntaX1 = cx1 + sin(anguloJ1) * longitud;
-    float puntaY1 = baseY + longitud;
-
-    glBegin(GL_TRIANGLES);
-    glColor4f(1.0f, 1.0f, 0.0f, 0.9f);
-    glVertex2f(cx1 - 0.2f, baseY);
-    glColor4f(1.0f, 0.5f, 0.0f, 0.9f);
-    glVertex2f(cx1 + 0.2f, baseY);
-    glColor4f(0.0f, 1.0f, 0.2f, 0.9f);
-    glVertex2f(puntaX1, puntaY1);
-    glEnd();
-
-    glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
-    glLineWidth(2.0f);
-    glBegin(GL_LINE_LOOP);
-    glVertex2f(cx1 - 0.2f, baseY);
-    glVertex2f(cx1 + 0.2f, baseY);
-    glVertex2f(puntaX1, puntaY1);
-    glEnd();
-
-    // A VER ESTO ES EL PUNTERO DE J2
-    float cx2 = posXj2;
-    float longitud2 = j2esEspecialista ? 6.0f : 4.0f;
-    float puntaX2 = cx2 + sin(anguloJ2) * longitud2;
-    float puntaY2 = baseY + longitud2;
-
-    glBegin(GL_TRIANGLES);
-    glColor4f(0.0f, 1.0f, 1.0f, 0.9f);
-    glVertex2f(cx2 - 0.2f, baseY);
-    glColor4f(1.0f, 0.0f, 1.0f, 0.9f);
-    glVertex2f(cx2 + 0.2f, baseY);
-    glColor4f(1.0f, 1.0f, 0.0f, 0.9f);
-    glVertex2f(puntaX2, puntaY2);
-    glEnd();
-
-    glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
-    glLineWidth(2.0f);
-    glBegin(GL_LINE_LOOP);
-    glVertex2f(cx2 - 0.2f, baseY);
-    glVertex2f(cx2 + 0.2f, baseY);
-    glVertex2f(puntaX2, puntaY2);
-    glEnd();
-
-
-    // vamos a dibujar un marcador bien chulo por aquí jujujuju
-
-
-    // A VER EL MARACDOR SE VE BIEN MAL PONEMOS POR AQUÍ UN FONDO PARA QUE SE VEA MEJOR
-
-    // estas lineas se supone que hay que ponerlas para que se pinte por debajo el fondo 
-    glDisable(GL_DEPTH_TEST); // por aquí anda la clave del éxito
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // MARCADOR J1
-    // Fondo oscuro
-    glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
-    glBegin(GL_QUADS);
-    glVertex2f(-14.0f, 4.0f);
-    glVertex2f(-8.0f, 4.0f);
-    glVertex2f(-8.0f, 6.5f);
-    glVertex2f(-14.0f, 6.5f);
-    glEnd();
-
-    // Texto
-    glColor3f(1.0f, 1.0f, 0.0f);
-    glRasterPos2f(-13.5f, 5.0f);
-    std::string txtJ1 = "J1: " + std::to_string(bolosDerribadosJ1) + " / 6";
-    for (char c : txtJ1)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-
-
-    // MARCADOR J2
-    // Fondo oscuro
-    glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
-    glBegin(GL_QUADS);
-    glVertex2f(8.0f, 4.0f);
-    glVertex2f(14.0f, 4.0f);
-    glVertex2f(14.0f, 6.5f);
-    glVertex2f(8.0f, 6.5f);
-    glEnd();
-
-    // Texto
-    glColor3f(0.0f, 1.0f, 1.0f);
-    glRasterPos2f(8.5f, 5.0f);
-    std::string txtJ2 = "J2: " + std::to_string(bolosDerribadosJ2) + " / 6";
-    for (char c : txtJ2)
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-
-
-    // ponemos todo normal de nuevo
-    glDisable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
-
-    ETSIDI::setTextColor(1, 0, 0); // vida
-    ETSIDI::printxy(("Vida J1: " + std::to_string(jugador1->getVida())).c_str(), -15, 7.0);
-    ETSIDI::printxy(("Vida J2: " + std::to_string(jugador2->getVida())).c_str(), 5.0, 7.0);
-
-    // vamos a poner 
-
-    //SOY LORENA ESTO ES PARA QUE ANUNCIA EL GANADOR Y PULSANDO C VUELVES AL TABLERO 
-    if (estado == FIN) {
-
+    if (estado == JUGANDO || estado == FIN) {
+        glShadeModel(GL_SMOOTH);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+        glColor3f(0.3f, 0.3f, 0.3f);
         glDisable(GL_LIGHTING);
         glDisable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
 
-        ETSIDI::setTextColor(1, 1, 0);
 
-        if (ganador == 1)
-            ETSIDI::printxy("GANADOR: JUGADOR 1", -7, 5);
-        else if (ganador == 2)
-            ETSIDI::printxy("GANADOR: JUGADOR 2", -7, 5);
 
-        ETSIDI::setTextColor(1, 0, 0);
-        ETSIDI::printxy("Pulsa C para volver", -7, 3);
+
+        // Fondo gris J1
+        glColor3f(0.3f, 0.3f, 0.3f);
+        float barraX1 = -12.0f;
+        float barraBaseY = -5.0f;
+        float barraAlto = 8.0f;
+        float barraAncho = 1.0f;
+        glBegin(GL_QUADS);
+        glVertex2f(barraX1, barraBaseY);
+        glVertex2f(barraX1 + barraAncho, barraBaseY);
+        glVertex2f(barraX1 + barraAncho, barraBaseY + barraAlto);
+        glVertex2f(barraX1, barraBaseY + barraAlto);
+        glEnd();
+
+        // Relleno J1
+        float altoRelleno = (potenciaJ1 / 10.0f) * barraAlto;
+
+        glBegin(GL_QUADS);
+        glColor3f(0.0f, 1.0f, 0.0f);  // El verde tiene que ir abajito que es poca potencia
+        glVertex2f(barraX1, barraBaseY);
+        glVertex2f(barraX1 + barraAncho, barraBaseY);
+        glColor3f(1.0f, 0.0f, 0.0f);  // El rojo tiene que ir arribita que es mucha potencia
+        glVertex2f(barraX1 + barraAncho, barraBaseY + altoRelleno);
+        glVertex2f(barraX1, barraBaseY + altoRelleno);
+        glEnd();
+
+
+        // Fondo gris J2
+        glColor3f(0.3f, 0.3f, 0.3f);
+        float barraX2 = 11.5f;
+        glBegin(GL_QUADS);
+        glVertex2f(barraX2, barraBaseY);
+        glVertex2f(barraX2 + barraAncho, barraBaseY);
+        glVertex2f(barraX2 + barraAncho, barraBaseY + barraAlto);
+        glVertex2f(barraX2, barraBaseY + barraAlto);
+        glEnd();
+
+
+        // Relleno J2
+        float altoRelleno2 = (potenciaJ2 / 10.0f) * barraAlto;
+        glBegin(GL_QUADS);
+        glColor3f(0.0f, 1.0f, 0.0f); //bueno esto es lo del verde tmb
+        glVertex2f(barraX2, barraBaseY);
+        glVertex2f(barraX2 + barraAncho, barraBaseY);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex2f(barraX2 + barraAncho, barraBaseY + altoRelleno2);
+        glVertex2f(barraX2, barraBaseY + altoRelleno2);
+        glEnd();
+
+        glEnable(GL_DEPTH_TEST);
+
+
+        // VAMOS A PINTAR LAS ESTELAS DE APUNTAR POR AQUÍ
+
+
+        // ESTO ES EL PUNTERO DE J1
+        float cx1 = posXj1;
+        float baseY = posYj1;
+        float longitud = j1esEspecialista ? 6.0f : 4.0f;
+        float puntaX1 = cx1 + sin(anguloJ1) * longitud;
+        float puntaY1 = baseY + longitud;
+
+        glBegin(GL_TRIANGLES);
+        glColor4f(1.0f, 1.0f, 0.0f, 0.9f);
+        glVertex2f(cx1 - 0.2f, baseY);
+        glColor4f(1.0f, 0.5f, 0.0f, 0.9f);
+        glVertex2f(cx1 + 0.2f, baseY);
+        glColor4f(0.0f, 1.0f, 0.2f, 0.9f);
+        glVertex2f(puntaX1, puntaY1);
+        glEnd();
+
+        glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
+        glLineWidth(2.0f);
+        glBegin(GL_LINE_LOOP);
+        glVertex2f(cx1 - 0.2f, baseY);
+        glVertex2f(cx1 + 0.2f, baseY);
+        glVertex2f(puntaX1, puntaY1);
+        glEnd();
+
+        // A VER ESTO ES EL PUNTERO DE J2
+        float cx2 = posXj2;
+        float longitud2 = j2esEspecialista ? 6.0f : 4.0f;
+        float puntaX2 = cx2 + sin(anguloJ2) * longitud2;
+        float puntaY2 = baseY + longitud2;
+
+        glBegin(GL_TRIANGLES);
+        glColor4f(0.0f, 1.0f, 1.0f, 0.9f);
+        glVertex2f(cx2 - 0.2f, baseY);
+        glColor4f(1.0f, 0.0f, 1.0f, 0.9f);
+        glVertex2f(cx2 + 0.2f, baseY);
+        glColor4f(1.0f, 1.0f, 0.0f, 0.9f);
+        glVertex2f(puntaX2, puntaY2);
+        glEnd();
+
+        glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
+        glLineWidth(2.0f);
+        glBegin(GL_LINE_LOOP);
+        glVertex2f(cx2 - 0.2f, baseY);
+        glVertex2f(cx2 + 0.2f, baseY);
+        glVertex2f(puntaX2, puntaY2);
+        glEnd();
+
+
+        // vamos a dibujar un marcador bien chulo por aquí jujujuju
+
+
+        // A VER EL MARACDOR SE VE BIEN MAL PONEMOS POR AQUÍ UN FONDO PARA QUE SE VEA MEJOR
+
+        // estas lineas se supone que hay que ponerlas para que se pinte por debajo el fondo 
+        glDisable(GL_DEPTH_TEST); // por aquí anda la clave del éxito
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // MARCADOR J1
+        // Fondo oscuro
+        glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
+        glBegin(GL_QUADS);
+        glVertex2f(-14.0f, 9.0f);
+        glVertex2f(-10.0f, 9.0f);
+        glVertex2f(-10.0f, 10.5f);
+        glVertex2f(-14.0f, 10.5f);
+
+        glEnd();
+
+        // Texto
+        glColor3ub(50, 150, 255); //azul
+        glRasterPos2f(-13.5f, 9.5f);
+        std::string txtJ1 = "J1: " + std::to_string(bolosDerribadosJ1) + " / 6";
+        for (char c : txtJ1)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+
+        // MARCADOR J2
+        // Fondo oscuro
+        glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
+        glBegin(GL_QUADS);
+        glVertex2f(10.0f, 9.0f);
+        glVertex2f(14.0f, 9.0f);
+        glVertex2f(14.0f, 10.5f);
+        glVertex2f(10.0f, 10.5f);
+
+        glEnd();
+
+        // Texto
+        glColor3ub(255, 100, 180); //rosa
+        glRasterPos2f(10.5f, 9.5f);
+        std::string txtJ2 = "J2: " + std::to_string(bolosDerribadosJ2) + " / 6";
+        for (char c : txtJ2)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
+
+
+        // ponemos todo normal de nuevo
+        glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+
     }
+
+    /// PANTALLA FIN DE JUEGO
+    if (estado == FIN) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
+
+        // RECUADRO NEGRO TRANSLÚCIDO
+        glColor4ub(0, 0, 0, 230);
+        glBegin(GL_QUADS);
+        glVertex2f(-10.0f, -4.0f);
+        glVertex2f(10.0f, -4.0f);
+        glVertex2f(10.0f, 5.0f);
+        glVertex2f(-10.0f, 5.0f);
+        glEnd();
+
+        // BORDE  SEGÚN EL GANADOR 
+        glLineWidth(3.0f);
+        if (ganador == 1) {
+            glColor3ub(50, 150, 255); // borde Azul para Jugador 1
+        }
+        else {
+            glColor3ub(255, 100, 180); // borde Rosa para Jugador 2
+        }
+
+        glBegin(GL_LINE_LOOP);
+        glVertex2f(-10.0f, -4.0f);
+        glVertex2f(10.0f, -4.0f);
+        glVertex2f(10.0f, 5.0f);
+        glVertex2f(-10.0f, 5.0f);
+        glEnd();
+        glDisable(GL_BLEND);
+
+
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 22);
+        ETSIDI::setTextColor(1.0f, 1.0f, 1.0f); //blanco
+        ETSIDI::printxy("FIN DE PARTIDA", -5.0f, 2.5f);
+
+        //  GANADOR CON SU COLOR ASIGNADO
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 16);
+        if (ganador == 1) {
+            ETSIDI::setTextColor(0.2f, 0.6f, 1.0f); // azul
+            ETSIDI::printxy("GANADOR: JUGADOR 1", -5.2f, 0.8f);
+        }
+        else if (ganador == 2) {
+            ETSIDI::setTextColor(1.0f, 0.4f, 0.7f); // rosa
+            ETSIDI::printxy("GANADOR: JUGADOR 2", -5.2f, 0.8f);
+        }
+
+        //  SALIDA 
+        ETSIDI::setFont("fuentes/Bitwise.ttf", 14);
+        ETSIDI::setTextColor(1.0f, 0.0f, 0.0f); //rojo
+        ETSIDI::printxy("Pulsa C para volver al tablero", -6.0f, -2.0f);
+    }
+
+    glEnable(GL_LIGHTING);
 
 }
 
@@ -463,10 +598,11 @@ void CombateBolos::crearBolos() {
 
     float cx1 = -5.0f;
     float cx2 = 5.0f;
-    float cy = -1.0f;  // más abajo
+    float cy = -1.0f; 
     float sepX = 1.6f;
     float sepY = 2.4f;
 
+    // CARRIL IZQUIERDO (J1)
     bolos.push_back(Bolo(cx1 - sepX, cy));
     bolos.push_back(Bolo(cx1, cy));
     bolos.push_back(Bolo(cx1 + sepX, cy));
@@ -474,7 +610,7 @@ void CombateBolos::crearBolos() {
     bolos.push_back(Bolo(cx1 + sepX / 2, cy + sepY));
     bolos.push_back(Bolo(cx1, cy + sepY * 2));
 
-    // ── CARRIL DERECHO (J2) ──
+    // CARRIL DERECHO (J2)
     bolos.push_back(Bolo(cx2 - sepX, cy));
     bolos.push_back(Bolo(cx2, cy));
     bolos.push_back(Bolo(cx2 + sepX, cy));
