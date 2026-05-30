@@ -154,6 +154,8 @@
     <ClCompile Include="scr\Cuadrado.cpp" />
     <ClCompile Include="scr\DisparoBasket.cpp" />
     <ClCompile Include="scr\EstadoFinJuego.cpp" />
+    <ClCompile Include="scr\EstadoInicio.cpp" />
+    <ClCompile Include="scr\EstadoInstrucciones.cpp" />
     <ClCompile Include="scr\EstadoJuego.cpp" />
     <ClCompile Include="scr\EstadoSeleccionPais.cpp" />
     <ClCompile Include="scr\EstadoTablero.cpp" />
@@ -195,6 +197,8 @@
     <ClInclude Include="include\DisparoBasket.h" />
     <ClInclude Include="include\EstadoCombate.h" />
     <ClInclude Include="include\EstadoFinJuego.h" />
+    <ClInclude Include="include\EstadoInicio.h" />
+    <ClInclude Include="include\EstadoInstrucciones.h" />
     <ClInclude Include="include\EstadoJuego.h" />
     <ClInclude Include="include\EstadoSeleccionPais.h" />
     <ClInclude Include="include\EstadoTablero.h" />

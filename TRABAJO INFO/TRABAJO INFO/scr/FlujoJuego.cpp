@@ -1,12 +1,12 @@
 #include "FlujoJuego.h"
 #include "EstadoSeleccionPais.h"   
 #include "EstadoTablero.h"
-
+#include "EstadoInicio.h"
 
 FlujoJuego::FlujoJuego()
     : jugador1(1), jugador2(2)   
 {
-    estadoActual = new EstadoSeleccionPais(this);
+    estadoActual = new EstadoInicio(this);
 }
 FlujoJuego::~FlujoJuego() {
     delete estadoActual;

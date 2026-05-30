@@ -68,9 +68,9 @@ void SelectorPais::dibuja() const {
     ETSIDI::setFont("fuentes/Bitwise.ttf", 30);
 
     // TITULOS
-    ETSIDI::setTextColor(1.0f, 0.45f, 0.0f);
-    ETSIDI::printxy("Jugador 2", 4, 8);
-    ETSIDI::printxy("Jugador 1", -8, 8);
+    ETSIDI::setTextColor(0.8f, 0.0f, 1.0f);
+    ETSIDI::printxy("Jugador 1", 4, 8);
+    ETSIDI::printxy("Jugador 2", -8, 8);
 
     //PREPARADOOOS!!
     ETSIDI::setFont("fuentes/Bitwise.ttf", 16);

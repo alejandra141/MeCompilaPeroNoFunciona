@@ -57,9 +57,9 @@ public:
     int getDefensa() const { return defensa; }
     int getVidaMax() const { return vidaMax; }
 
-    float getPosX() const { return posicion.x; }
-    float getPosY() const { return posicion.y; }
-    float getPosZ() const { return posicion.z; }
+    float getPosX() const { return (float)posicion.x; }
+    float getPosY() const { return (float)posicion.y; }
+    float getPosZ() const { return (float)posicion.z; }
 
     std::string getTipo()   const;
    
