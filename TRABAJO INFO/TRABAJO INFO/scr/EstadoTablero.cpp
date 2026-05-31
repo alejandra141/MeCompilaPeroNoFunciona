@@ -389,15 +389,26 @@ void EstadoTablero::tecla(unsigned char key) {
                 }
                 break;
 
-            case 5: // Summon
+            case 5: // Summon — elimina pieza enemiga que no sea Fisio
+                if (objetivo == nullptr || objetivo->getNumJugador() == fisioActivo->getNumJugador()) {
+                    std::cout << "[SUMMON] Objetivo inválido." << std::endl;
+                    modoHechizo = false; hechizoPendiente = 0;
+                    break;
+                }
+                if (objetivo->getTipo() == "fisio") {
+                    std::cout << "[SUMMON] No puedes eliminar al Fisio rival." << std::endl;
+                    modoHechizo = false; hechizoPendiente = 0;
+                    break;
+                }
                 exito = fisioActivo->lanzarSummon(objetivo, tablero);
                 if (exito) {
                     Jugador* rival = (gestionTurnos.getTurnoActual() == BUENOS) ? j2 : j1;
-                    rival->eliminarPieza(objetivo);
+                    objetivo->recibirDanio(objetivo->getVida() + 1);
+                    tablero.eliminarPersonaje(objetivo);
                     std::cout << "[SUMMON] ¡Enemigo eliminado!" << std::endl;
                 }
                 else {
-                    std::cout << "[SUMMON] Fallido." << std::endl;
+                    std::cout << "[SUMMON] Fallido (ya usado)." << std::endl;
                 }
                 modoHechizo = false; hechizoPendiente = 0;
                 break;
