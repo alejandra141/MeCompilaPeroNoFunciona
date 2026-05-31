@@ -19,12 +19,11 @@ void OnMouseClick(int button, int state, int x, int y);
 void OnKeyboardUp(unsigned char key, int x, int y); //este es el que he añadido el 25 de mayo
 void OnKeyboardSpecialDown(int key, int x, int y);
 void OnKeyboardSpecialUp(int key, int x, int y);
-
+void precargarTexturas();
 
 
 int main(int argc, char* argv[])
 {
-    
     glutInit(&argc, argv);
     glutInitWindowSize(800, 600);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -43,7 +42,7 @@ int main(int argc, char* argv[])
     glutSpecialFunc(OnKeyboardSpecialDown);
     glutSpecialUpFunc(OnKeyboardSpecialUp);
 
-
+    precargarTexturas();
     glutMainLoop();
     return 0;
 }
@@ -118,3 +117,33 @@ void OnMouseClick(int button, int state, int x, int y) {
 
 }
 
+//el juego va fatal de lento y he buscado y lo mejor es hacer una precarga entonces lo voy a poner aquí a ver
+//bueno bueno bueno chicas esto funciona de PERLAS, lo único que ahora tarda más en cargar al principio
+//pero luego va todo super fluido, así que creo que merece la pena, así que genial
+
+void precargarTexturas() {
+    // Fondos
+    ETSIDI::getTexture("fondos/creadoras.png");
+    ETSIDI::getTexture("fondos/Fondo_baloncesto.png");
+    ETSIDI::getTexture("fondos/Bolera_2.png");
+    ETSIDI::getTexture("fondos/fondo boxeo.png");
+
+    // Elementos
+    ETSIDI::getTexture("elementos/bola bolos.png");
+    ETSIDI::getTexture("elementos/bolo.png");
+
+    // Personajes de todos los países
+    std::vector<std::string> paises = { "Espana", "Francia", "Inglaterra", "Italia", "Usa" };
+    std::vector<std::string> bandos = { "buenos", "malos" };
+    std::vector<std::string> tipos = {
+        "Cranker", "Stronker", "Baloncesto",
+        "Fisio", "BoxeadorNormal", "BoxeadorKickboxing"
+    };
+
+    for (const std::string& pais : paises)
+        for (const std::string& bando : bandos)
+            for (const std::string& tipo : tipos) {
+                std::string ruta = "Personajes/" + pais + "/" + bando + "/" + tipo + ".png";
+                ETSIDI::getTexture(ruta.c_str());
+            }
+}
