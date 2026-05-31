@@ -72,6 +72,9 @@ void EstadoCombate::tecla(unsigned char key) {
                 Personaje* vencedor = (ganador == 1) ? pOscuridad : pLuz;
                 Personaje* perdedor = (ganador == 1) ? pLuz : pOscuridad;
 
+                // hay que matar al personaje por que no se están muriendo madre mía
+                perdedor->recibirDanio(perdedor->getVida() + 1); 
+
                 tablero.eliminarPersonaje(perdedor);
                 tablero.colocar(vencedor, filaDestino, colDestino);
             }
