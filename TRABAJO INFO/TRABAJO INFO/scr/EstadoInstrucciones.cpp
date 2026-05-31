@@ -60,14 +60,6 @@ void EstadoInstrucciones::dibujar() {
     ETSIDI::printxy("Mueve tus piezas y combate en minijuegos para eliminar al rival.", -13.0f, 5.7f);
     ETSIDI::printxy("Gana controlando las 5 casillas de poder o eliminando al rival.", -13.0f, 4.9f);
 
-    // SEPARADOR
-    //glLineWidth(1.0f);
-    //glColor3f(0.4f, 0.0f, 0.8f);
-    //glBegin(GL_LINES);
-    //glVertex2f(-13.0f, 4.2f);
-    //glVertex2f(13.0f, 4.2f);
-    //glEnd();
-
     // CONTROLES TABLERO — dos columnas
     ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
     ETSIDI::setTextColor(0.3f, 0.7f, 1.0f);
@@ -93,12 +85,6 @@ void EstadoInstrucciones::dibujar() {
     ETSIDI::printxy("2.Heal         6.Revive", 1.0f, -0.5f);
     ETSIDI::printxy("3.ShiftTime    7.Imprison", 1.0f, -1.5f);
     ETSIDI::printxy("4.Exchange", 1.0f, -2.5f);
-
-    // SEPARADOR
-    //glBegin(GL_LINES);
-    //vertex2f(-13.0f, -2.3f);
-    //vertex2f(13.0f, -2.3f);
-    //glEnd();
 
     // CASILLAS
     ETSIDI::setFont("fuentes/Bitwise.ttf", 12);
